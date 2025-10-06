@@ -1,0 +1,16 @@
+{
+  "name": "calendar",
+  "version": "dev. 25w41",
+  "description": "Don't miss appointments with destiny (or the dentist).",
+  "scripts": {
+    "types": "cd client && bun tsc && cd ../server && bun tsc"
+  },
+  "dependencies": {
+    "node-ical": "^0.21.0",
+    "react-big-calendar": "^1.19.4",
+    "react-markdown": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/react-big-calendar": "^1.16.3"
+  }
+}
