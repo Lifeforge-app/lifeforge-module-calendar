@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { FormModal, defineForm } from 'lifeforge-ui'
+import { useTranslation } from 'react-i18next'
 
 function YearMonthSelector({
   onClose,
@@ -10,6 +10,8 @@ function YearMonthSelector({
     onSelect: (year: number, month: number) => void
   }
 }) {
+  const { t } = useTranslation('common.misc')
+
   const { formProps } = defineForm<{
     year: number
     month: number
@@ -51,7 +53,7 @@ function YearMonthSelector({
           const month = index + 1
 
           return {
-            text: t('common.misc:dates.months.' + (month - 1).toString()),
+            text: t('dates.months.' + (month - 1).toString()),
             value: month
           }
         }),
