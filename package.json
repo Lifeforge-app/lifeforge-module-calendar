@@ -6,9 +6,16 @@
     "types": "cd client && bun tsc && cd ../server && bun tsc"
   },
   "dependencies": {
+    "lifeforge-ui": "workspace:*",
+    "moment": "^2.30.1",
     "node-ical": "^0.21.0",
+    "nuqs": "^2.7.1",
     "react-big-calendar": "^1.19.4",
-    "react-markdown": "^10.1.0"
+    "react-markdown": "^10.1.0",
+    "rrule": "^2.8.1",
+    "shared": "workspace:*",
+    "tailwindcss": "^4.1.14",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/react-big-calendar": "^1.16.3"
