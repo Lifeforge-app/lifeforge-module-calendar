@@ -170,5 +170,11 @@
   "widgets": {
     "todaysEvent": "今天的事件",
     "miniCalendar": "迷你日曆"
+  },
+  "empty": {
+    "calendars": {
+      "title": "未找到日曆",
+      "description": "您可以透過點擊上面的加號按鈕來創建日曆。"
+    }
   }
 }

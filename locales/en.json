@@ -170,5 +170,11 @@
   "widgets": {
     "todaysEvent": "Today's Events",
     "miniCalendar": "Mini Calendar"
+  },
+  "empty": {
+    "calendars": {
+      "title": "No Calendars Found",
+      "description": "You can create calendars by clicking the plus button above."
+    }
   }
 }

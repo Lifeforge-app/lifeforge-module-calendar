@@ -1,9 +1,13 @@
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'
 import forgeAPI from '@/utils/forgeAPI'
-import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
-import { SidebarTitle, WithQuery, useModalStore } from 'lifeforge-ui'
+import {
+  EmptyStateScreen,
+  SidebarTitle,
+  WithQuery,
+  useModalStore
+} from 'lifeforge-ui'
 import { useCallback } from 'react'
 
 import CalendarListItem from './components/CalendarListItem'
@@ -61,13 +65,12 @@ function CalendarList({
               ))}
             </ul>
           ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-3 px-2">
-              <Icon className="size-12" icon="tabler:article-off" />
-              <p className="text-lg font-medium">Oops, no calendars found.</p>
-              <p className="text-bg-500 text-center text-sm">
-                You can create calendars by clicking the plus button above.
-              </p>
-            </div>
+            <EmptyStateScreen
+              smaller
+              icon="tabler:calendar"
+              name="calendars"
+              namespace="apps.calendar"
+            />
           )}
         </section>
       )}

@@ -71,7 +71,7 @@ function CalendarModule() {
         />
         <ContentWrapperWithSidebar>
           <Scrollbar>
-            <div className="size-full pr-4 pb-8">
+            <div className="size-full pb-8 pr-4">
               <CalendarComponent
                 events={rawEventsQuery.data ?? []}
                 selectedCalendar={selectedCalendar}

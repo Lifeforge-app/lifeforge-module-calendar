@@ -170,5 +170,11 @@
   "widgets": {
     "todaysEvent": "Acara Hari Ini",
     "miniCalendar": "Kalendar Mini"
+  },
+  "empty": {
+    "calendars": {
+      "title": "Tiada Kalendar Dijumpai",
+      "description": "Anda boleh mencipta kalendar dengan mengklik butang tambah di atas."
+    }
   }
 }
