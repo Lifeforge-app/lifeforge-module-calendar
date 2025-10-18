@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Button } from 'lifeforge-ui'
 import { useMemo } from 'react'
 import Markdown from 'react-markdown'
-import { Link } from 'react-router'
+import { Link } from 'shared'
 
 import type { CalendarEvent } from '../../..'
 

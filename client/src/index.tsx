@@ -10,8 +10,8 @@ import {
   Scrollbar
 } from 'lifeforge-ui'
 import { useModalStore } from 'lifeforge-ui'
-import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect } from 'react'
+import { parseAsString, useQueryState } from 'shared'
 
 import CalendarComponent from './components/Calendar'
 import Sidebar from './components/Sidebar'

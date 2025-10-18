@@ -15,8 +15,8 @@ import {
 } from 'lifeforge-ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Link } from 'react-router'
 import { Tooltip } from 'react-tooltip'
+import { Link } from 'shared'
 import type { InferOutput } from 'shared'
 import { useSidebarState } from 'shared'
 import type { WidgetConfig } from 'shared'
@@ -97,7 +97,7 @@ function EventItem({
             noArrow
             openOnClick
             className={clsx(
-              'bg-bg-50! text-bg-800! border-bg-200 dark:border-bg-700 shadow-custom dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 rounded-md! border p-4! text-base!',
+              'bg-bg-50! text-bg-800! border-bg-200 dark:border-bg-700 shadow-custom dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 rounded-md! p-4! text-base! border',
               sidebarExpanded ? 'z-[-1] lg:z-0' : 'z-0'
             )}
             id={`calendar-event-${event.id}`}
@@ -140,7 +140,7 @@ export default function TodaysEvent() {
       componentBesideTitle={
         <Button
           as={Link}
-          className="mr-2 p-2!"
+          className="p-2! mr-2"
           icon="tabler:chevron-right"
           to="/calendar"
           variant="plain"
