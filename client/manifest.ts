@@ -7,5 +7,5 @@ export default {
   routes: {
     calendar: lazy(() => import('@'))
   },
-  category: '01.Productivity'
+  category: 'Productivity'
 } satisfies ModuleConfig
