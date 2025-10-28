@@ -1,5 +1,8 @@
 import { PBService } from '@functions/database'
+import { LoggingService } from '@functions/logging/loggingService'
+import fs from 'fs'
 import moment from 'moment'
+import path from 'path'
 
 import { ICalSyncService } from './icalSyncing'
 
@@ -179,37 +182,31 @@ export default async function getEvents({
 
   allEvents.push(...formattedIcalEvents)
 
-  // Get todo entries
-  const todoEntries = (
-    await pb.getFullList
-      .collection('todo_list__entries')
-      .filter([
-        { field: 'due_date', operator: '>=', value: startMoment },
-        { field: 'due_date', operator: '<=', value: endMoment }
-      ])
-      .execute()
-      .catch(() => [])
-  ).map(entry => ({
-    id: entry.id,
-    type: 'single' as const,
-    title: entry.summary,
-    start: entry.due_date,
-    end: moment(entry.due_date).add(1, 'millisecond').toISOString(),
-    category: '_todo',
-    calendar: '',
-    description: entry.notes,
-    location: '',
-    location_coords: { lat: 0, lon: 0 },
-    reference_link: `/todo-list?entry=${entry.id}`,
-    is_strikethrough: entry.done
-  }))
+  const externalEventGetterFiles = fs.globSync('../apps/*/server/events.ts')
 
-  allEvents.push(...todoEntries)
+  LoggingService.debug(
+    `Found ${externalEventGetterFiles.length} external event getter files`,
+    'CALENDAR'
+  )
 
-  // Get movie entries
-  
+  for (const file of externalEventGetterFiles) {
+    try {
+      const { default: getEvents } = await import(path.resolve(file))
 
-  allEvents.push(...movieEntries)
+      const entries = await getEvents({
+        pb,
+        start: startMoment,
+        end: endMoment
+      })
+
+      allEvents.push(...entries)
+    } catch {
+      LoggingService.warn(
+        'Cannot import external events from ' + file,
+        'CALENDAR'
+      )
+    }
+  }
 
   return allEvents
 }
