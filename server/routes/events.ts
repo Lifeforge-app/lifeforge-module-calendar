@@ -231,10 +231,9 @@ const scanImage = forgeController
           role: 'user',
           content: [
             {
-              type: 'image_url',
-              image_url: {
-                url: `data:image/jpeg;base64,${base64Image}`
-              }
+              type: 'input_image',
+              image_url: `data:${file.mimetype};base64,${base64Image}`,
+              detail: 'auto'
             }
           ]
         }
