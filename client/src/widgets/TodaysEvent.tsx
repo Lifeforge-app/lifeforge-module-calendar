@@ -181,7 +181,7 @@ export default function TodaysEvent() {
                       smaller
                       icon="tabler:calendar-off"
                       name="event"
-                      namespace="apps.dashboard"
+                      namespace="apps.calendar"
                       tKey="widgets.todaysEvent"
                     />
                   </div>
