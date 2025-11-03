@@ -1,6 +1,22 @@
 {
   "title": "日曆",
   "description": "不要錯過與命運（或牙醫）的約會。",
+  "widgets": {
+    "miniCalendar": {
+      "title": "迷你行事曆",
+      "description": "在小型行事曆中查看即將到來的事件。"
+    },
+    "todaysEvent": {
+      "title": "今日事件",
+      "description": "提醒您今天的活動。",
+      "empty": {
+        "event": {
+          "title": "沒有事件",
+          "description": "您今天沒有任何活動。"
+        }
+      }
+    }
+  },
   "view": {
     "day": "日視圖",
     "month": "月視圖",

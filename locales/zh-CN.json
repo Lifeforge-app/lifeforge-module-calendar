@@ -1,6 +1,22 @@
 {
   "title": "日历",
   "description": "不要错过与命运（或牙医）的约会。",
+  "widgets": {
+    "miniCalendar": {
+      "title": "迷你行事历",
+      "description": "在小型行事历中查看即将到来的事件。"
+    },
+    "todaysEvent": {
+      "title": "今日事件",
+      "description": "提醒您今天的活动。",
+      "empty": {
+        "event": {
+          "title": "没有事件",
+          "description": "您今天没有任何活动。"
+        }
+      }
+    }
+  },
   "view": {
     "day": "日视图",
     "month": "月视图",
@@ -166,10 +182,6 @@
       "month": "个月",
       "year": "年"
     }
-  },
-  "widgets": {
-    "todaysEvent": "今天的事件",
-    "miniCalendar": "迷你日历"
   },
   "empty": {
     "calendars": {

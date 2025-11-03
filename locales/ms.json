@@ -1,6 +1,22 @@
 {
   "title": "Kalendar",
   "description": "Jangan terlepas janji temu dengan takdir (atau doktor gigi).",
+  "widgets": {
+    "miniCalendar": {
+      "title": "Kalendar Mini",
+      "description": "Lihat acara yang akan datang dalam kalendar kecil."
+    },
+    "todaysEvent": {
+      "title": "Acara Hari Ini",
+      "description": "Mengingatkan anda tentang aktiviti hari ini.",
+      "empty": {
+        "event": {
+          "title": "Tiada Acara",
+          "description": "Anda tiada aktiviti hari ini."
+        }
+      }
+    }
+  },
   "view": {
     "day": "Harian",
     "month": "Bulanan",
@@ -166,10 +182,6 @@
       "month": "Bulan",
       "year": "Tahun"
     }
-  },
-  "widgets": {
-    "todaysEvent": "Acara Hari Ini",
-    "miniCalendar": "Kalendar Mini"
   },
   "empty": {
     "calendars": {

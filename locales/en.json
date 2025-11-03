@@ -1,6 +1,22 @@
 {
   "title": "Calendar",
   "description": "Don't miss appointments with destiny (or the dentist).",
+  "widgets": {
+    "miniCalendar": {
+      "title": "Mini Calendar",
+      "description": "View upcoming events in a small calendar."
+    },
+    "todaysEvent": {
+      "title": "Today's Event",
+      "description": "Reminds you of today's activities.",
+      "empty": {
+        "event": {
+          "title": "No Events",
+          "description": "You have no activities today."
+        }
+      }
+    }
+  },
   "view": {
     "day": "Day",
     "month": "Month",
@@ -166,10 +182,6 @@
       "month": "Months",
       "year": "Years"
     }
-  },
-  "widgets": {
-    "todaysEvent": "Today's Events",
-    "miniCalendar": "Mini Calendar"
   },
   "empty": {
     "calendars": {
