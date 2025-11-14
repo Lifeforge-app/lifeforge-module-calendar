@@ -36,7 +36,10 @@ function NavigationControl({
       <div className="flex min-w-0 items-center gap-2 text-center text-2xl font-medium">
         <DateRangeLabel label={label} onNavigate={onNavigate} />
         {isEventLoading && (
-          <Icon className="text-bg-500 h-5 w-5" icon="svg-spinners:180-ring" />
+          <Icon
+            className="text-bg-500 h-5 w-5"
+            icon="svg-spinners:ring-resize"
+          />
         )}
       </div>
     </div>
