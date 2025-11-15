@@ -5,7 +5,7 @@ export default {
   name: 'Calendar',
   icon: 'tabler:calendar',
   routes: {
-    calendar: lazy(() => import('@'))
+    '/': lazy(() => import('@'))
   },
   category: 'Productivity'
 } satisfies ModuleConfig
