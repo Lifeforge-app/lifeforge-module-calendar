@@ -7,7 +7,12 @@ import { ICalSyncService } from '../functions/icalSyncing'
 
 const list = forgeController
   .query()
-  .description('Get all calendars')
+  .description({
+    en: 'Get all calendars',
+    ms: 'Dapatkan semua kalendar',
+    'zh-CN': '获取所有日历',
+    'zh-TW': '獲取所有日曆'
+  })
   .input({})
   .callback(({ pb }) =>
     pb.getFullList
@@ -18,7 +23,12 @@ const list = forgeController
 
 const getById = forgeController
   .query()
-  .description('Get a calendar by ID')
+  .description({
+    en: 'Get a specific calendar by ID',
+    ms: 'Dapatkan kalendar tertentu mengikut ID',
+    'zh-CN': '根据 ID 获取特定日历',
+    'zh-TW': '根據 ID 獲取特定日曆'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -33,7 +43,12 @@ const getById = forgeController
 
 const create = forgeController
   .mutation()
-  .description('Create a new calendar')
+  .description({
+    en: 'Create a new calendar with optional ICS sync',
+    ms: 'Cipta kalendar baharu dengan pilihan sinkronisasi ICS',
+    'zh-CN': '创建新日历，支持 ICS 同步',
+    'zh-TW': '創建新日曆，支持 ICS 同步'
+  })
   .input({
     body: SCHEMAS.calendar.calendars.schema
       .pick({
@@ -68,7 +83,12 @@ const create = forgeController
 
 const update = forgeController
   .mutation()
-  .description('Update an existing calendar')
+  .description({
+    en: 'Update calendar name and color',
+    ms: 'Kemas kini nama dan warna kalendar',
+    'zh-CN': '更新日历名称和颜色',
+    'zh-TW': '更新日曆名稱和顏色'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -87,7 +107,12 @@ const update = forgeController
 
 const remove = forgeController
   .mutation()
-  .description('Delete an existing calendar')
+  .description({
+    en: 'Delete a calendar',
+    ms: 'Padam kalendar',
+    'zh-CN': '删除日历',
+    'zh-TW': '刪除日曆'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -103,7 +128,12 @@ const remove = forgeController
 
 const validateICS = forgeController
   .mutation()
-  .description('Validate an ICS URL')
+  .description({
+    en: 'Validate if an ICS URL is accessible',
+    ms: 'Sahkan jika URL ICS boleh diakses',
+    'zh-CN': '验证 ICS URL 是否可访问',
+    'zh-TW': '驗證 ICS URL 是否可訪問'
+  })
   .input({
     body: z.object({
       icsUrl: z.url()

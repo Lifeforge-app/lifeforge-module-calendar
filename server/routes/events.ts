@@ -44,7 +44,12 @@ const CreateAndUpdateEventSchema = SCHEMAS.calendar.events.schema
 
 const getByDateRange = forgeController
   .query()
-  .description('Get events by date range')
+  .description({
+    en: 'Get events within a date range',
+    ms: 'Dapatkan acara dalam julat tarikh',
+    'zh-CN': '获取日期范围内的事件',
+    'zh-TW': '獲取日期範圍內的事件'
+  })
   .input({
     query: z.object({
       start: z.string(),
@@ -55,7 +60,12 @@ const getByDateRange = forgeController
 
 const getToday = forgeController
   .query()
-  .description("Get today's events")
+  .description({
+    en: "Get today's events",
+    ms: 'Dapatkan acara hari ini',
+    'zh-CN': '获取今天的事件',
+    'zh-TW': '獲取今天的事件'
+  })
   .input({})
   .callback(async ({ pb }) => {
     const day = moment().format('YYYY-MM-DD')
@@ -69,7 +79,12 @@ const getToday = forgeController
 
 const getById = forgeController
   .query()
-  .description('Get an event by ID')
+  .description({
+    en: 'Get a specific event by ID',
+    ms: 'Dapatkan acara tertentu mengikut ID',
+    'zh-CN': '根据 ID 获取特定事件',
+    'zh-TW': '根據 ID 獲取特定事件'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -84,7 +99,12 @@ const getById = forgeController
 
 const create = forgeController
   .mutation()
-  .description('Create a new event')
+  .description({
+    en: 'Create a new event',
+    ms: 'Cipta acara baharu',
+    'zh-CN': '创建新事件',
+    'zh-TW': '創建新事件'
+  })
   .input({
     body: CreateAndUpdateEventSchema
   })
@@ -165,7 +185,12 @@ const create = forgeController
 
 const scanImage = forgeController
   .mutation()
-  .description('Scan an image to extract event data')
+  .description({
+    en: 'Extract event details from image using AI',
+    ms: 'Ekstrak butiran acara dari gambar menggunakan AI',
+    'zh-CN': '使用 AI 从图片中提取事件详情',
+    'zh-TW': '使用 AI 從圖片中提取事件詳情'
+  })
   .input({})
   .media({
     file: {
@@ -276,7 +301,12 @@ const scanImage = forgeController
 
 const addException = forgeController
   .mutation()
-  .description('Add an exception to a recurring event')
+  .description({
+    en: 'Add exception date to recurring event',
+    ms: 'Tambah tarikh pengecualian ke acara berulang',
+    'zh-CN': '为周期事件添加异常日期',
+    'zh-TW': '為周期事件添加異常日期'
+  })
   .input({
     query: z.object({
       id: z.string(),
@@ -313,7 +343,12 @@ const addException = forgeController
 
 const update = forgeController
   .mutation()
-  .description('Update an existing event')
+  .description({
+    en: 'Update event details',
+    ms: 'Kemas kini butiran acara',
+    'zh-CN': '更新事件详情',
+    'zh-TW': '更新事件詳情'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -420,7 +455,12 @@ const update = forgeController
 
 const remove = forgeController
   .mutation()
-  .description('Delete an existing event')
+  .description({
+    en: 'Delete an event',
+    ms: 'Padam acara',
+    'zh-CN': '删除事件',
+    'zh-TW': '刪除事件'
+  })
   .input({
     query: z.object({
       id: z.string()

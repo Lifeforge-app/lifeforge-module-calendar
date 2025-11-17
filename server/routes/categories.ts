@@ -5,7 +5,12 @@ import z from 'zod'
 
 const list = forgeController
   .query()
-  .description('Get all calendar categories')
+  .description({
+    en: 'Get all event categories',
+    ms: 'Dapatkan semua kategori acara',
+    'zh-CN': '获取所有事件类别',
+    'zh-TW': '獲取所有事件類別'
+  })
   .input({})
   .callback(({ pb }) =>
     pb.getFullList.collection('calendar__categories').sort(['name']).execute()
@@ -13,7 +18,12 @@ const list = forgeController
 
 const getById = forgeController
   .query()
-  .description('Get a calendar category by ID')
+  .description({
+    en: 'Get a specific event category by ID',
+    ms: 'Dapatkan kategori acara tertentu mengikut ID',
+    'zh-CN': '根据 ID 获取特定事件类别',
+    'zh-TW': '根據 ID 獲取特定事件類別'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -28,7 +38,12 @@ const getById = forgeController
 
 const create = forgeController
   .mutation()
-  .description('Create a new calendar category')
+  .description({
+    en: 'Create a new event category',
+    ms: 'Cipta kategori acara baharu',
+    'zh-CN': '创建新事件类别',
+    'zh-TW': '創建新事件類別'
+  })
   .input({
     body: SCHEMAS.calendar.categories.schema
   })
@@ -46,7 +61,12 @@ const create = forgeController
 
 const update = forgeController
   .mutation()
-  .description('Update an existing calendar category')
+  .description({
+    en: 'Update event category details',
+    ms: 'Kemas kini butiran kategori acara',
+    'zh-CN': '更新事件类别详情',
+    'zh-TW': '更新事件類別詳情'
+  })
   .input({
     query: z.object({
       id: z.string()
@@ -70,7 +90,12 @@ const update = forgeController
 
 const remove = forgeController
   .mutation()
-  .description('Delete an existing calendar category')
+  .description({
+    en: 'Delete an event category',
+    ms: 'Padam kategori acara',
+    'zh-CN': '删除事件类别',
+    'zh-TW': '刪除事件類別'
+  })
   .input({
     query: z.object({
       id: z.string()
