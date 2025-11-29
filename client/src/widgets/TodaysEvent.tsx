@@ -8,9 +8,9 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import {
   Button,
-  DashboardItem,
   EmptyStateScreen,
   Scrollbar,
+  Widget,
   WithQuery
 } from 'lifeforge-ui'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -97,7 +97,7 @@ function EventItem({
             noArrow
             openOnClick
             className={clsx(
-              'bg-bg-50! text-bg-800! border-bg-200 dark:border-bg-700 shadow-custom dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 rounded-md! p-4! text-base! border',
+              'bg-bg-50! text-bg-800! border-bg-200 dark:border-bg-700 shadow-custom dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 rounded-md! border p-4! text-base!',
               sidebarExpanded ? 'z-[-1] lg:z-0' : 'z-0'
             )}
             id={`calendar-event-${event.id}`}
@@ -135,17 +135,17 @@ export default function TodaysEvent() {
   )
 
   return (
-    <DashboardItem
-      className="pr-4"
-      componentBesideTitle={
+    <Widget
+      actionComponent={
         <Button
           as={Link}
-          className="p-2! mr-2"
+          className="mr-2 p-2!"
           icon="tabler:chevron-right"
           to="/calendar"
           variant="plain"
         />
       }
+      className="pr-4"
       icon="tabler:calendar"
       namespace="apps.calendar"
       title="Todays Event"
@@ -180,9 +180,11 @@ export default function TodaysEvent() {
                     <EmptyStateScreen
                       smaller
                       icon="tabler:calendar-off"
-                      name="event"
-                      namespace="apps.calendar"
-                      tKey="widgets.todaysEvent"
+                      message={{
+                        id: 'event',
+                        namespace: 'apps.calendar',
+                        tKey: 'widgets.todaysEvent'
+                      }}
                     />
                   </div>
                 )
@@ -191,7 +193,7 @@ export default function TodaysEvent() {
           )}
         </WithQuery>
       </Scrollbar>
-    </DashboardItem>
+    </Widget>
   )
 }
 

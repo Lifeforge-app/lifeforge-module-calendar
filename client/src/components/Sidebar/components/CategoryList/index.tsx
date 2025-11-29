@@ -27,12 +27,13 @@ function CategoryList({
       {categories => (
         <section className="flex w-full min-w-0 flex-1 flex-col">
           <SidebarTitle
-            actionButtonIcon="tabler:plus"
-            actionButtonOnClick={() =>
-              open(ModifyCategoryModal, {
-                type: 'create'
-              })
-            }
+            actionButton={{
+              icon: 'tabler:plus',
+              onClick: () =>
+                open(ModifyCategoryModal, {
+                  type: 'create'
+                })
+            }}
             label="Categories"
             namespace="apps.calendar"
           />

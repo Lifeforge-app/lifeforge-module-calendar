@@ -3,7 +3,7 @@ import MiniCalendarHeader from '@/components/Sidebar/components/MiniCalendar/com
 import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Button, DashboardItem, WithQuery } from 'lifeforge-ui'
+import { Button, Widget, WithQuery } from 'lifeforge-ui'
 import { useState } from 'react'
 import { Link } from 'shared'
 import type { WidgetConfig } from 'shared'
@@ -35,9 +35,9 @@ export default function MiniCalendar() {
   )
 
   return (
-    <DashboardItem
+    <Widget
       className="higher-z"
-      componentBesideTitle={
+      actionComponent={
         <Button
           as={Link}
           className="p-2!"
@@ -69,7 +69,7 @@ export default function MiniCalendar() {
           )}
         </WithQuery>
       </div>
-    </DashboardItem>
+    </Widget>
   )
 }
 

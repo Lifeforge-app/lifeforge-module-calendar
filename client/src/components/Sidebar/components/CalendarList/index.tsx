@@ -47,8 +47,10 @@ function CalendarList({
       {calendars => (
         <section className="flex w-full min-w-0 flex-1 flex-col">
           <SidebarTitle
-            actionButtonIcon="tabler:plus"
-            actionButtonOnClick={handleCreate}
+            actionButton={{
+              icon: 'tabler:plus',
+              onClick: handleCreate
+            }}
             label="Calendars"
             namespace="apps.calendar"
           />
@@ -68,8 +70,10 @@ function CalendarList({
             <EmptyStateScreen
               smaller
               icon="tabler:calendar"
-              name="calendars"
-              namespace="apps.calendar"
+              message={{
+                id: 'calendars',
+                namespace: 'apps.calendar'
+              }}
             />
           )}
         </section>
