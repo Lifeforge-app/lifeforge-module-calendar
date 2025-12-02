@@ -18,7 +18,7 @@ import { createPortal } from 'react-dom'
 import { Tooltip } from 'react-tooltip'
 import { Link } from 'shared'
 import type { InferOutput } from 'shared'
-import { useSidebarState } from 'shared'
+import { useMainSidebarState } from 'shared'
 import type { WidgetConfig } from 'shared'
 
 function EventItem({
@@ -28,7 +28,7 @@ function EventItem({
   categories: InferOutput<typeof forgeAPI.calendar.categories.list>
   event: CalendarEvent
 }) {
-  const { sidebarExpanded } = useSidebarState()
+  const { sidebarExpanded } = useMainSidebarState()
 
   const [width, setWidth] = useState(0)
 

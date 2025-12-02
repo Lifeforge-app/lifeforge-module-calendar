@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { memo } from 'react'
 import { createPortal } from 'react-dom'
 import { Tooltip } from 'react-tooltip'
-import { useSidebarState } from 'shared'
+import { useMainSidebarState } from 'shared'
 
 import { type CalendarCategory, type CalendarEvent } from '../../../index.js'
 import EventDetails from '../../EventDetails/index.js'
@@ -14,7 +14,7 @@ function EventItemTooltip({
   event: CalendarEvent
   category: CalendarCategory | undefined
 }) {
-  const { sidebarExpanded } = useSidebarState()
+  const { sidebarExpanded } = useMainSidebarState()
 
   return createPortal(
     <Tooltip
