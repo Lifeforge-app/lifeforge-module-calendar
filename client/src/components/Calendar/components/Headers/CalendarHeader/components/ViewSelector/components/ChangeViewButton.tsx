@@ -19,7 +19,7 @@ function ChangeViewButton({
       className={clsx(
         'hover:bg-bg-100 dark:hover:bg-bg-800 w-full truncate rounded-md p-3 px-4 font-medium whitespace-nowrap transition-all',
         view.toLowerCase() === currentView
-          ? 'bg-bg-200/50 text-bg-800 dark:bg-bg-800 dark:text-bg-200 font-medium shadow-xs'
+          ? 'bg-bg-200/50 border-bg-500/20 text-bg-800 dark:bg-bg-800 dark:text-bg-200 font-medium shadow-xs in-[.bordered]:border-2'
           : 'text-bg-500'
       )}
       onClick={() => {

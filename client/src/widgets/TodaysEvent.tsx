@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import dayjs from 'dayjs'
 import {
   Button,
+  Card,
   EmptyStateScreen,
   Scrollbar,
   Widget,
@@ -32,7 +33,7 @@ function EventItem({
 
   const [width, setWidth] = useState(0)
 
-  const ref = useRef<HTMLLIElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const handleResize = () => {
     if (ref.current) {
@@ -63,11 +64,11 @@ function EventItem({
 
   return (
     <>
-      <li
+      <Card
         key={event.id}
         ref={ref}
         className={clsx(
-          'flex-between shadow-custom component-bg-lighter flex cursor-pointer gap-3 rounded-lg p-4'
+          'flex-between component-bg-lighter flex cursor-pointer gap-3'
         )}
         data-tooltip-id={`calendar-event-${event.id}`}
       >
@@ -89,7 +90,7 @@ function EventItem({
           </div>
           <div className="font-semibold">{event.title}</div>
         </div>
-      </li>
+      </Card>
       {
         createPortal(
           <Tooltip

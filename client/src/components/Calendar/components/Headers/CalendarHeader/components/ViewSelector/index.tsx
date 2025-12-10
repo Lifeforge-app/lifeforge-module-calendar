@@ -11,7 +11,7 @@ function ViewSelector({
   onView: (view: View) => void
 }) {
   return (
-    <div className="shadow-custom component-bg mb-4 flex w-full gap-1 rounded-md p-2">
+    <div className="shadow-custom in-[.bordered]:border-2 border-bg-500/20 component-bg mb-4 flex w-full gap-1 rounded-md p-2">
       {['Month', 'Week', 'Day', 'Agenda'].map(view => (
         <ChangeViewButton
           key={view}

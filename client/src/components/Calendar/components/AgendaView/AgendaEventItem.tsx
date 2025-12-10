@@ -2,8 +2,8 @@ import EventDetails from '@/components/Calendar/components/EventDetails'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
 import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import { useMemo } from 'react'
+import {Card} from "lifeforge-ui"
 
 import type { CalendarCategory, CalendarEvent } from '../..'
 
@@ -25,18 +25,15 @@ function AgendaEventItem({ event }: { event: CalendarEvent }) {
   }, [categoriesQuery, event.category])
 
   return (
-    <div
-      className={clsx(
-        'component-bg',
-        'shadow-custom relative min-w-96 rounded-md p-4 pl-9 before:absolute before:top-4 before:left-4 before:h-[calc(100%-2rem)] before:w-1 before:rounded-full before:bg-[var(--bg-color)]'
-      )}
+    <Card
+      className="relative min-w-96 pl-9 before:absolute before:top-4 before:left-4 before:h-[calc(100%-2rem)] before:w-1 before:rounded-full before:bg-(--bg-color)"
       style={{
         // @ts-expect-error - CSS variable
         '--bg-color': category?.color ?? ''
       }}
     >
       <EventDetails category={category} event={event} />
-    </div>
+    </Card>
   )
 }
 

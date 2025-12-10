@@ -51,7 +51,7 @@ function CalendarHeader({
     <>
       <div className="mb-4 flex w-full min-w-0 items-end justify-between gap-3">
         <NavigationControl label={label} onNavigate={onNavigate} />
-        <div className="flex hidden gap-2 md:flex">
+        <div className="hidden gap-2 md:flex">
           <Button
             className=""
             icon="tabler:calendar-pin"
