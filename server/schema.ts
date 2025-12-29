@@ -15,7 +15,6 @@ const calendarSchemas = {
       updated: z.string()
     }),
     raw: {
-      id: 'aq4whvpwcarmpux',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -27,7 +26,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -41,7 +39,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'flvfazzo',
           max: 0,
           min: 0,
           name: 'title',
@@ -54,9 +51,8 @@ const calendarSchemas = {
         },
         {
           cascadeDelete: false,
-          collectionId: 'lgqrpjmgz6rmsrg',
+          collectionId: 'calendar__categories',
           hidden: false,
-          id: 'msdsakrs',
           maxSelect: 1,
           minSelect: 0,
           name: 'category',
@@ -67,9 +63,8 @@ const calendarSchemas = {
         },
         {
           cascadeDelete: false,
-          collectionId: 'pbc_2912871855',
+          collectionId: 'calendar__calendars',
           hidden: false,
-          id: 'relation1856610630',
           maxSelect: 1,
           minSelect: 0,
           name: 'calendar',
@@ -81,7 +76,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1587448267',
           max: 0,
           min: 0,
           name: 'location',
@@ -94,7 +88,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'geoPoint2468307335',
           name: 'location_coords',
           presentable: false,
           required: false,
@@ -104,7 +97,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1097818449',
           max: 0,
           min: 0,
           name: 'reference_link',
@@ -118,7 +110,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text3379474102',
           max: 0,
           min: 0,
           name: 'description',
@@ -131,7 +122,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'select2363381545',
           maxSelect: 1,
           name: 'type',
           presentable: false,
@@ -142,7 +132,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate2990389176',
           name: 'created',
           onCreate: true,
           onUpdate: false,
@@ -152,7 +141,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'autodate3332085495',
           name: 'updated',
           onCreate: true,
           onUpdate: true,
@@ -172,7 +160,6 @@ const calendarSchemas = {
       icon: z.string()
     }),
     raw: {
-      id: 'lgqrpjmgz6rmsrg',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -184,7 +171,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -198,7 +184,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: '5gljytxm',
           max: 0,
           min: 0,
           name: 'name',
@@ -212,7 +197,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'p5zxtnom',
           max: 0,
           min: 0,
           name: 'color',
@@ -226,7 +210,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'tamumamt',
           max: 0,
           min: 0,
           name: 'icon',
@@ -252,7 +235,6 @@ const calendarSchemas = {
       last_synced: z.string()
     }),
     raw: {
-      id: 'pbc_2912871855',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -264,7 +246,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -278,7 +259,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1579384326',
           max: 0,
           min: 0,
           name: 'name',
@@ -292,7 +272,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1716930793',
           max: 0,
           min: 0,
           name: 'color',
@@ -306,7 +285,6 @@ const calendarSchemas = {
         {
           exceptDomains: null,
           hidden: false,
-          id: 'url917281265',
           name: 'link',
           onlyDomains: null,
           presentable: false,
@@ -316,7 +294,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'date2173440322',
           max: '',
           min: '',
           name: 'last_synced',
@@ -339,7 +316,6 @@ const calendarSchemas = {
       end: z.string()
     }),
     raw: {
-      id: 'pbc_1417836082',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -351,7 +327,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -364,9 +339,8 @@ const calendarSchemas = {
         },
         {
           cascadeDelete: true,
-          collectionId: 'aq4whvpwcarmpux',
+          collectionId: 'calendar__events',
           hidden: false,
-          id: 'relation3233087073',
           maxSelect: 1,
           minSelect: 0,
           name: 'base_event',
@@ -377,7 +351,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'date2675529103',
           max: '',
           min: '',
           name: 'start',
@@ -388,7 +361,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'date16528305',
           max: '',
           min: '',
           name: 'end',
@@ -413,7 +385,6 @@ const calendarSchemas = {
       base_event: z.string()
     }),
     raw: {
-      id: 'pbc_2966426400',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -425,7 +396,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -439,7 +409,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text581711714',
           max: 0,
           min: 0,
           name: 'recurring_rule',
@@ -452,7 +421,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'number3612257647',
           max: null,
           min: null,
           name: 'duration_amount',
@@ -464,7 +432,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'select2414572776',
           maxSelect: 1,
           name: 'duration_unit',
           presentable: false,
@@ -475,7 +442,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'json678566752',
           maxSize: 0,
           name: 'exceptions',
           presentable: false,
@@ -485,9 +451,8 @@ const calendarSchemas = {
         },
         {
           cascadeDelete: true,
-          collectionId: 'aq4whvpwcarmpux',
+          collectionId: 'calendar__events',
           hidden: false,
-          id: 'relation2256903029',
           maxSelect: 1,
           minSelect: 0,
           name: 'base_event',
@@ -515,7 +480,6 @@ const calendarSchemas = {
       recurrence_rule: z.string()
     }),
     raw: {
-      id: 'pbc_3588948690',
       listRule: '@request.auth.id != ""',
       viewRule: '@request.auth.id != ""',
       createRule: '@request.auth.id != ""',
@@ -527,7 +491,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '[a-z0-9]{15}',
           hidden: false,
-          id: 'text3208210256',
           max: 15,
           min: 15,
           name: 'id',
@@ -540,9 +503,8 @@ const calendarSchemas = {
         },
         {
           cascadeDelete: true,
-          collectionId: 'pbc_2912871855',
+          collectionId: 'calendar__calendars',
           hidden: false,
-          id: 'relation1856610630',
           maxSelect: 1,
           minSelect: 0,
           name: 'calendar',
@@ -554,7 +516,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text2675300272',
           max: 0,
           min: 0,
           name: 'external_id',
@@ -568,7 +529,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text724990059',
           max: 0,
           min: 0,
           name: 'title',
@@ -582,7 +542,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1843675174',
           max: 0,
           min: 0,
           name: 'description',
@@ -595,7 +554,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'date2675529103',
           max: '',
           min: '',
           name: 'start',
@@ -606,7 +564,6 @@ const calendarSchemas = {
         },
         {
           hidden: false,
-          id: 'date16528305',
           max: '',
           min: '',
           name: 'end',
@@ -618,7 +575,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text1587448267',
           max: 0,
           min: 0,
           name: 'location',
@@ -632,7 +588,6 @@ const calendarSchemas = {
         {
           autogeneratePattern: '',
           hidden: false,
-          id: 'text3329811012',
           max: 0,
           min: 0,
           name: 'recurrence_rule',

@@ -1,6 +1,6 @@
 @import 'tailwindcss' source ('.');
 
-@reference '../../../../packages/lifeforge-ui/dist';
+@reference '../../../packages/lifeforge-ui/dist';
 
 @import 'react-big-calendar/lib/css/react-big-calendar.css';
 @import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
@@ -42,7 +42,7 @@
 }
 
 .rbc-event {
-  @apply border-none! bg-transparent! p-0! shadow-xs text-sm transition-all;
+  @apply border-none! bg-transparent! p-0! text-sm shadow-xs transition-all;
 
   &.rbc-selected button {
     background-color: var(--category-color) !important;
@@ -95,7 +95,7 @@
 }
 
 .rbc-current-time-indicator {
-  @apply bg-custom-500 before:bg-custom-500 h-0.5 before:absolute before:-left-1 before:top-1/2 before:size-2 before:-translate-y-1/2 before:rounded-full;
+  @apply bg-custom-500 before:bg-custom-500 h-0.5 before:absolute before:top-1/2 before:-left-1 before:size-2 before:-translate-y-1/2 before:rounded-full;
 }
 
 .rbc-day-slot .rbc-time-slot {
