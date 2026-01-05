@@ -1,6 +1,12 @@
 {
-  "name": "calendar",
-  "version": "dev. 25w41",
+  "name": "@lifeforge/lifeforge--calendar",
+  "displayName": "Calendar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lifeforge-app/lifeforge-module-calendar.git"
+  },
+  "version": "0.0.1",
+  "author": "Melvin Chia <melvinchia623600@gmail.com>",
   "description": "Don't miss appointments with destiny (or the dentist).",
   "scripts": {
     "types": "cd client && bun tsc"
@@ -35,5 +41,17 @@
     "@types/react-big-calendar": "^1.16.3",
     "@types/react-dom": "^19.2.0",
     "@types/tinycolor2": "^1.4.6"
+  },
+  "exports": {
+    "./server": "./server/index.ts",
+    "./manifest": {
+      "types": "./manifest.d.ts",
+      "default": "./manifest.ts"
+    },
+    "./server/schema": "./server/schema.ts"
+  },
+  "lifeforge": {
+    "icon": "tabler:calendar",
+    "category": "Productivity"
   }
 }
