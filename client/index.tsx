@@ -1,4 +1,3 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import {
   ContentWrapperWithSidebar,
@@ -13,10 +12,13 @@ import { useModalStore } from 'lifeforge-ui'
 import { useCallback, useEffect } from 'react'
 import { parseAsString, useQueryState } from 'shared'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 import CalendarComponent from './components/Calendar'
 import Sidebar from './components/Sidebar'
 import ModifyEventModal from './components/modals/ModifyEventModal'
 import ScanImageModal from './components/modals/ScanImageModal'
+import './index.css'
 import { useCalendarStore } from './stores/useCalendarStore'
 
 function CalendarModule() {
@@ -71,7 +73,7 @@ function CalendarModule() {
         />
         <ContentWrapperWithSidebar>
           <Scrollbar>
-            <div className="size-full pb-8 pr-4">
+            <div className="size-full pr-4 pb-8">
               <CalendarComponent
                 events={rawEventsQuery.data ?? []}
                 selectedCalendar={selectedCalendar}
