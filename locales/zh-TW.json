@@ -183,10 +183,6 @@
       "year": "年"
     }
   },
-  "widgets": {
-    "todaysEvent": "今天的事件",
-    "miniCalendar": "迷你日曆"
-  },
   "empty": {
     "calendars": {
       "title": "未找到日曆",
