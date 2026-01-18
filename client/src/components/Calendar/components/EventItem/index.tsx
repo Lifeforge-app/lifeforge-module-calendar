@@ -1,20 +1,17 @@
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import { memo, useMemo } from 'react'
+
+import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import forgeAPI from '@/utils/forgeAPI'
 
 import type { CalendarCategory, CalendarEvent } from '../../index.js'
 import EventItemButton from './components/EventItemButton.js'
 import EventItemTooltip from './components/EventItemTooltip.js'
 
 function EventItem({ event }: { event: CalendarEvent }) {
-  const categoriesQuery = useQuery(
-    forgeAPI.calendar.categories.list.queryOptions()
-  )
+  const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
-  const calendarsQuery = useQuery(
-    forgeAPI.calendar.calendars.list.queryOptions()
-  )
+  const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {

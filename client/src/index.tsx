@@ -18,7 +18,6 @@ import CalendarComponent from './components/Calendar'
 import Sidebar from './components/Sidebar'
 import ModifyEventModal from './components/modals/ModifyEventModal'
 import ScanImageModal from './components/modals/ScanImageModal'
-
 import './index.css'
 import { useCalendarStore } from './stores/useCalendarStore'
 
@@ -28,7 +27,7 @@ function CalendarModule() {
   const { start, end } = useCalendarStore()
 
   const rawEventsQuery = useQuery(
-    forgeAPI.calendar.events.getByDateRange
+    forgeAPI.events.getByDateRange
       .input({
         start,
         end

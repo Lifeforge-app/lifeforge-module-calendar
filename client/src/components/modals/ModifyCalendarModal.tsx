@@ -23,14 +23,14 @@ function ModifyCalendarModal({
 
   const mutation = useMutation(
     (type === 'create'
-      ? forgeAPI.calendar.calendars.create
-      : forgeAPI.calendar.calendars.update.input({
+      ? forgeAPI.calendars.create
+      : forgeAPI.calendars.update.input({
           id: initialData?.id || ''
         })
     ).mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendar.calendars.list.key
+          queryKey: forgeAPI.calendars.list.key
         })
         queryClient.invalidateQueries({
           queryKey: ['calendar', 'events']
@@ -41,7 +41,7 @@ function ModifyCalendarModal({
   )
 
   const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.calendar.calendars)[typeof type]>['body']
+    InferInput<(typeof forgeAPI.calendars)[typeof type]>['body']
   >({
     icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
     title: `calendar.${type}`,

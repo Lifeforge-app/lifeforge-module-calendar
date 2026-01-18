@@ -27,10 +27,10 @@ function CategoryListItem({
   const { open } = useModalStore()
 
   const deleteMutation = useMutation(
-    forgeAPI.calendar.categories.remove.input({ id: item.id }).mutationOptions({
+    forgeAPI.categories.remove.input({ id: item.id }).mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendar.categories.list.key
+          queryKey: forgeAPI.categories.list.key
         })
         onCancelSelect()
       }

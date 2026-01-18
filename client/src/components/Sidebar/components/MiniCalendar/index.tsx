@@ -1,8 +1,9 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { WithQuery } from 'lifeforge-ui'
 import { useState } from 'react'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import MiniCalendarContent from './components/MiniCalendarContent'
 import MiniCalendarHeader from './components/MiniCalendarHeader'
@@ -25,7 +26,7 @@ function MiniCalendar() {
     .format('YYYY-MM-DD')
 
   const eventsQuery = useQuery(
-    forgeAPI.calendar.events.getByDateRange
+    forgeAPI.events.getByDateRange
       .input({
         start: startDate,
         end: endDate

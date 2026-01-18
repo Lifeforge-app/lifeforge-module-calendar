@@ -1,7 +1,8 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { FormModal, defineForm } from 'lifeforge-ui'
 import { toast } from 'react-toastify'
 import z from 'zod'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 function SubscribeICSModal({
   onClose,
@@ -38,7 +39,7 @@ function SubscribeICSModal({
       }
     })
     .onSubmit(async data => {
-      const isValid = await forgeAPI.calendar.calendars.validateICS.mutate({
+      const isValid = await forgeAPI.calendars.validateICS.mutate({
         icsUrl: data.icsUrl
       })
 

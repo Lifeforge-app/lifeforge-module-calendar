@@ -27,10 +27,10 @@ function CalendarListItem({
   const { open } = useModalStore()
 
   const deleteMutation = useMutation(
-    forgeAPI.calendar.calendars.remove.input({ id: item.id }).mutationOptions({
+    forgeAPI.calendars.remove.input({ id: item.id }).mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendar.calendars.list.key
+          queryKey: forgeAPI.calendars.list.key
         })
         queryClient.invalidateQueries({
           queryKey: ['calendar', 'events']

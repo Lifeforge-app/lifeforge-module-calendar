@@ -1,9 +1,10 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { FormModal, defineForm } from 'lifeforge-ui'
 import { toast } from 'react-toastify'
 import type { InferInput } from 'shared'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import type { CalendarEvent } from '../Calendar'
 
@@ -19,18 +20,14 @@ function ModifyEventModal({
 }) {
   const queryClient = useQueryClient()
 
-  const calendarsQuery = useQuery(
-    forgeAPI.calendar.calendars.list.queryOptions()
-  )
+  const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
 
-  const categoriesQuery = useQuery(
-    forgeAPI.calendar.categories.list.queryOptions()
-  )
+  const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   const mutation = useMutation(
     (type === 'create'
-      ? forgeAPI.calendar.events.create
-      : forgeAPI.calendar.events.update.input({
+      ? forgeAPI.events.create
+      : forgeAPI.events.update.input({
           id: initialData?.id?.split('-')[0] || ''
         })
     ).mutationOptions({
@@ -44,7 +41,7 @@ function ModifyEventModal({
   )
 
   const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.calendar.events)[typeof type]>['body']
+    InferInput<(typeof forgeAPI.events)[typeof type]>['body']
   >({
     icon: {
       create: 'tabler:plus',
@@ -194,7 +191,7 @@ function ModifyEventModal({
     .onSubmit(async data => {
       if (data.type === 'recurring') {
         const finalData: InferInput<
-          (typeof forgeAPI.calendar.events)[typeof type]
+          (typeof forgeAPI.events)[typeof type]
         >['body'] = {
           title: data.title,
           category: data.category,
@@ -209,7 +206,7 @@ function ModifyEventModal({
         await mutation.mutateAsync(finalData)
       } else {
         const finalData: InferInput<
-          (typeof forgeAPI.calendar.events)[typeof type]
+          (typeof forgeAPI.events)[typeof type]
         >['body'] = {
           title: data.title,
           category: data.category,

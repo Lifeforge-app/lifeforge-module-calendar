@@ -1,51 +1,37 @@
-import { forgeController, forgeRouter } from '@functions/routes'
-import { ClientError } from '@functions/routes/utils/response'
-import { SCHEMAS } from '@schema'
+import { ClientError } from '@lifeforge/server-utils'
 import z from 'zod'
 
-const list = forgeController
+import forge from '../forge'
+import calendarSchemas from '../schema'
+
+export const list = forge
   .query()
-  .description({
-    en: 'Get all event categories',
-    ms: 'Dapatkan semua kategori acara',
-    'zh-CN': '获取所有事件类别',
-    'zh-TW': '獲取所有事件類別'
-  })
+  .description('Get all event categories')
   .input({})
   .callback(({ pb }) =>
-    pb.getFullList.collection('calendar__categories').sort(['name']).execute()
+    pb.getFullList.collection('categories').sort(['name']).execute()
   )
 
-const getById = forgeController
+export const getById = forge
   .query()
-  .description({
-    en: 'Get a specific event category by ID',
-    ms: 'Dapatkan kategori acara tertentu mengikut ID',
-    'zh-CN': '根据 ID 获取特定事件类别',
-    'zh-TW': '根據 ID 獲取特定事件類別'
-  })
+  .description('Get a specific event category by ID')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'calendar__categories'
+    id: 'categories'
   })
   .callback(({ pb, query: { id } }) =>
-    pb.getOne.collection('calendar__categories').id(id).execute()
+    pb.getOne.collection('categories').id(id).execute()
   )
 
-const create = forgeController
+export const create = forge
   .mutation()
-  .description({
-    en: 'Create a new event category',
-    ms: 'Cipta kategori acara baharu',
-    'zh-CN': '创建新事件类别',
-    'zh-TW': '創建新事件類別'
-  })
+  .description('Create a new event category')
   .input({
-    body: SCHEMAS.calendar.categories.schema
+    body: calendarSchemas.categories
   })
   .statusCode(201)
   .callback(async ({ pb, body }) => {
@@ -53,66 +39,41 @@ const create = forgeController
       throw new ClientError('Category name cannot start with _')
     }
 
-    return await pb.create
-      .collection('calendar__categories')
-      .data(body)
-      .execute()
+    return await pb.create.collection('categories').data(body).execute()
   })
 
-const update = forgeController
+export const update = forge
   .mutation()
-  .description({
-    en: 'Update event category details',
-    ms: 'Kemas kini butiran kategori acara',
-    'zh-CN': '更新事件类别详情',
-    'zh-TW': '更新事件類別詳情'
-  })
+  .description('Update event category details')
   .input({
     query: z.object({
       id: z.string()
     }),
-    body: SCHEMAS.calendar.categories.schema
+    body: calendarSchemas.categories
   })
   .existenceCheck('query', {
-    id: 'calendar__categories'
+    id: 'categories'
   })
   .callback(async ({ pb, query: { id }, body }) => {
     if (body.name.startsWith('_')) {
       throw new ClientError('Category name cannot start with _')
     }
 
-    return await pb.update
-      .collection('calendar__categories')
-      .id(id)
-      .data(body)
-      .execute()
+    return await pb.update.collection('categories').id(id).data(body).execute()
   })
 
-const remove = forgeController
+export const remove = forge
   .mutation()
-  .description({
-    en: 'Delete an event category',
-    ms: 'Padam kategori acara',
-    'zh-CN': '删除事件类别',
-    'zh-TW': '刪除事件類別'
-  })
+  .description('Delete an event category')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'calendar__categories'
+    id: 'categories'
   })
   .statusCode(204)
   .callback(({ pb, query: { id } }) =>
-    pb.delete.collection('calendar__categories').id(id).execute()
+    pb.delete.collection('categories').id(id).execute()
   )
-
-export default forgeRouter({
-  list,
-  getById,
-  create,
-  update,
-  remove
-})

@@ -1,4 +1,3 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
@@ -7,12 +6,12 @@ import { useMemo } from 'react'
 import Markdown from 'react-markdown'
 import { Link } from 'shared'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 import type { CalendarEvent } from '../../..'
 
 function EventDetailsDescription({ event }: { event: CalendarEvent }) {
-  const calendarsQuery = useQuery(
-    forgeAPI.calendar.calendars.list.queryOptions()
-  )
+  const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
 
   const eventIsWholeDay = useMemo(() => {
     return (

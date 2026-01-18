@@ -23,7 +23,7 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
     }
 
     try {
-      const data = await forgeAPI.calendar.events.scanImage.mutate({
+      const data = await forgeAPI.events.scanImage.mutate({
         file
       })
 

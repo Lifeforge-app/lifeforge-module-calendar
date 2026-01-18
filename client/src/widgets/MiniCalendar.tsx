@@ -1,12 +1,13 @@
-import MiniCalendarContent from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarContent'
-import MiniCalendarHeader from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarHeader'
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { Button, Widget, WithQuery } from 'lifeforge-ui'
 import { useState } from 'react'
 import { Link } from 'shared'
 import type { WidgetConfig } from 'shared'
+
+import MiniCalendarContent from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarContent'
+import MiniCalendarHeader from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarHeader'
+import forgeAPI from '@/utils/forgeAPI'
 
 export default function MiniCalendar() {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month())
@@ -26,7 +27,7 @@ export default function MiniCalendar() {
     .format('YYYY-MM-DD')
 
   const eventsQuery = useQuery(
-    forgeAPI.calendar.events.getByDateRange
+    forgeAPI.events.getByDateRange
       .input({
         start: startDate,
         end: endDate

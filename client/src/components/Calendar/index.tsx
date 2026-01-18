@@ -19,15 +19,15 @@ import CalendarHeader from './components/Headers/CalendarHeader'
 import WeekHeader from './components/Headers/WeekHeader'
 
 export type CalendarEvent = InferOutput<
-  typeof forgeAPI.calendar.events.getByDateRange
+  typeof forgeAPI.events.getByDateRange
 >[number]
 
 export type CalendarCategory = InferOutput<
-  typeof forgeAPI.calendar.categories.list
+  typeof forgeAPI.categories.list
 >[number]
 
 export type CalendarCalendar = InferOutput<
-  typeof forgeAPI.calendar.calendars.list
+  typeof forgeAPI.calendars.list
 >[number]
 
 const localizer = dayjsLocalizer(dayjs)
@@ -129,7 +129,7 @@ function CalendarComponent({
   const updateEvent = useCallback(
     async ({ event, start, end }: EventInteractionArgs<CalendarEvent>) => {
       queryClient.setQueryData(
-        forgeAPI.calendar.events.getByDateRange.input({
+        forgeAPI.events.getByDateRange.input({
           start: start as string,
           end: end as string
         }).key,
@@ -148,7 +148,7 @@ function CalendarComponent({
         }
       )
 
-      await forgeAPI.calendar.events.update
+      await forgeAPI.events.update
         .input({
           id: event.id
         })

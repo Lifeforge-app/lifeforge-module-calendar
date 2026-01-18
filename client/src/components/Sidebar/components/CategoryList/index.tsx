@@ -17,9 +17,7 @@ function CategoryList({
   selectedCategory: string | null
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>
 }) {
-  const categoriesQuery = useQuery(
-    forgeAPI.calendar.categories.list.queryOptions()
-  )
+  const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   const { open } = useModalStore()
 

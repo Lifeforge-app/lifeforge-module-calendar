@@ -1,7 +1,3 @@
-import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
-import EventDetails from '@/components/Calendar/components/EventDetails'
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
-import forgeAPI from '@/utils/forgeAPI'
 import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
@@ -22,11 +18,16 @@ import type { InferOutput } from 'shared'
 import { useMainSidebarState } from 'shared'
 import type { WidgetConfig } from 'shared'
 
+import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
+import EventDetails from '@/components/Calendar/components/EventDetails'
+import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import forgeAPI from '@/utils/forgeAPI'
+
 function EventItem({
   categories,
   event
 }: {
-  categories: InferOutput<typeof forgeAPI.calendar.categories.list>
+  categories: InferOutput<typeof forgeAPI.categories.list>
   event: CalendarEvent
 }) {
   const { sidebarExpanded } = useMainSidebarState()
@@ -127,13 +128,9 @@ function EventItem({
 }
 
 export default function TodaysEvent() {
-  const rawEventsQuery = useQuery(
-    forgeAPI.calendar.events.getToday.queryOptions()
-  )
+  const rawEventsQuery = useQuery(forgeAPI.events.getToday.queryOptions())
 
-  const categoriesQuery = useQuery(
-    forgeAPI.calendar.categories.list.queryOptions()
-  )
+  const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   return (
     <Widget

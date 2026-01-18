@@ -1,10 +1,12 @@
 // server/src/lib/calendar/services/icalSync.ts
-import { PBService } from '@functions/database'
-import moment from 'moment'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import ical from 'node-ical'
 
+dayjs.extend(utc)
+
 export class ICalSyncService {
-  constructor(private pb: PBService) {}
+  constructor(private pb: any) {}
 
   async syncCalendar(calendarId: string, icsUrl: string) {
     // Fetch iCal data
@@ -18,15 +20,12 @@ export class ICalSyncService {
 
     // Clear existing events for this calendar
     const existed = await this.pb.getFullList
-      .collection('calendar__events_ical')
+      .collection('events_ical')
       .filter([{ field: 'calendar', operator: '=', value: calendarId }])
       .execute()
 
     for (const event of existed) {
-      await this.pb.delete
-        .collection('calendar__events_ical')
-        .id(event.id)
-        .execute()
+      await this.pb.delete.collection('events_ical').id(event.id).execute()
     }
 
     // Process and save new events
@@ -40,17 +39,17 @@ export class ICalSyncService {
           title:
             (event.summary as any).val || event.summary || 'Untitled Event',
           description: event.description || '',
-          start: moment(event.start).utc().format('YYYY-MM-DD HH:mm:ss'),
-          end: moment(event.end).utc().format('YYYY-MM-DD HH:mm:ss'),
+          start: dayjs(event.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+          end: dayjs(event.end).utc().format('YYYY-MM-DD HH:mm:ss'),
           location: event.location || '',
           recurrence_rule: event.rrule ? event.rrule.toString() : null,
           last_modified: event.lastmodified
-            ? moment(event.lastmodified).utc().format('YYYY-MM-DD HH:mm:ss')
-            : moment().utc().format('YYYY-MM-DD HH:mm:ss')
+            ? dayjs(event.lastmodified).utc().format('YYYY-MM-DD HH:mm:ss')
+            : dayjs().utc().format('YYYY-MM-DD HH:mm:ss')
         }
 
         await this.pb.create
-          .collection('calendar__events_ical')
+          .collection('events_ical')
           .data(processedEvent)
           .execute()
 
@@ -60,10 +59,10 @@ export class ICalSyncService {
 
     // Update sync status
     await this.pb.update
-      .collection('calendar__calendars')
+      .collection('calendars')
       .id(calendarId)
       .data({
-        last_synced: moment().utc().format('YYYY-MM-DD HH:mm:ss')
+        last_synced: dayjs().utc().format('YYYY-MM-DD HH:mm:ss')
       })
       .execute()
 
@@ -75,15 +74,15 @@ export class ICalSyncService {
     maxAge: number = 3600000
   ): Promise<boolean> {
     const syncStatus = await this.pb.getOne
-      .collection('calendar__calendars')
+      .collection('calendars')
       .id(calendarId)
       .execute()
 
     if (!syncStatus.last_synced) return true
 
-    const lastSync = moment(syncStatus.last_synced)
+    const lastSync = dayjs(syncStatus.last_synced)
 
-    const now = moment()
+    const now = dayjs()
 
     return now.diff(lastSync) > maxAge
   }

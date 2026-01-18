@@ -1,24 +1,25 @@
-import { PBService } from '@functions/database'
-import { LoggingService } from '@functions/logging/loggingService'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import fs from 'fs'
-import moment from 'moment'
 import path from 'path'
 
 import { ICalSyncService } from './icalSyncing'
 
-const { RRule } = await import('rrule')
+dayjs.extend(utc)
 
 export default async function getEvents({
   pb,
   start,
-  end
+  end,
+  logging
 }: {
-  pb: PBService
+  pb: any
   start: string
   end: string
+  logging: any
 }) {
   const calendarsWithIcs = await pb.getFullList
-    .collection('calendar__calendars')
+    .collection('calendars')
     .filter([{ field: 'link', operator: '!=', value: '' }])
     .execute()
 
@@ -31,9 +32,9 @@ export default async function getEvents({
     }
   }
 
-  const startMoment = moment(start).startOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const startMoment = dayjs(start).startOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-  const endMoment = moment(end).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const endMoment = dayjs(end).endOf('day').format('YYYY-MM-DD HH:mm:ss')
 
   const allEvents: Array<{
     id: string
@@ -52,8 +53,8 @@ export default async function getEvents({
   }> = []
 
   // Get single events
-  const singleCalendarEvents = await pb.getFullList
-    .collection('calendar__events_single')
+  const singleCalendarEvents = (await pb.getFullList
+    .collection('events_single')
     .filter([
       {
         combination: '||',
@@ -70,8 +71,8 @@ export default async function getEvents({
         ]
       }
     ])
-    .expand({ base_event: 'calendar__events' })
-    .execute()
+    .expand({ base_event: 'events' })
+    .execute()) as any[]
 
   singleCalendarEvents.forEach(event => {
     const baseEvent = event.expand!.base_event!
@@ -93,9 +94,11 @@ export default async function getEvents({
 
   // Get recurring events
   const recurringCalendarEvents = await pb.getFullList
-    .collection('calendar__events_recurring')
-    .expand({ base_event: 'calendar__events' })
+    .collection('events_recurring')
+    .expand({ base_event: 'events' })
     .execute()
+
+  const { RRule } = await import('rrule')
 
   for (const event of recurringCalendarEvents) {
     const baseEvent = event.expand!.base_event!
@@ -103,32 +106,32 @@ export default async function getEvents({
     const parsed = RRule.fromString(event.recurring_rule)
 
     const eventsInRange = parsed.between(
-      moment(startMoment)
+      dayjs(startMoment)
         .subtract(event.duration_amount, event.duration_unit)
         .toDate(),
-      moment(endMoment).toDate(),
+      dayjs(endMoment).toDate(),
       true
     )
 
     for (const eventDate of eventsInRange) {
-      const eventStart = moment(eventDate).utc().format('YYYY-MM-DD HH:mm:ss')
+      const eventStart = dayjs(eventDate).utc().format('YYYY-MM-DD HH:mm:ss')
 
       if (
         event.exceptions?.some(
-          (exception: string[]) =>
-            moment(exception).format('YYYY-MM-DD HH:mm:ss') === eventStart
+          (exception: string) =>
+            dayjs(exception).format('YYYY-MM-DD HH:mm:ss') === eventStart
         )
       ) {
         continue
       }
 
-      const eventEnd = moment(eventDate)
+      const eventEnd = dayjs(eventDate)
         .add(event.duration_amount, event.duration_unit)
         .utc()
         .format('YYYY-MM-DD HH:mm:ss')
 
       allEvents.push({
-        id: `${baseEvent.id}-${moment(eventDate).format('YYYYMMDD_HH:mm:ss')}`,
+        id: `${baseEvent.id}-${dayjs(eventDate).format('YYYYMMDD_HH:mm:ss')}`,
         type: 'recurring',
         start: eventStart,
         end: eventEnd,
@@ -144,8 +147,8 @@ export default async function getEvents({
     }
   }
 
-  const icalEvents = await pb.getFullList
-    .collection('calendar__events_ical')
+  const icalEvents = (await pb.getFullList
+    .collection('events_ical')
     .filter([
       {
         combination: '||',
@@ -162,8 +165,8 @@ export default async function getEvents({
         ]
       }
     ])
-    .expand({ calendar: 'calendar__calendars' })
-    .execute()
+    .expand({ calendar: 'calendars' })
+    .execute()) as any[]
 
   // Convert iCal events to your format
   const formattedIcalEvents = icalEvents.map(event => ({
@@ -184,9 +187,8 @@ export default async function getEvents({
 
   const externalEventGetterFiles = fs.globSync('../apps/*/server/events.ts')
 
-  LoggingService.debug(
-    `Found ${externalEventGetterFiles.length} external event getter files`,
-    'CALENDAR'
+  logging.debug(
+    `Found ${externalEventGetterFiles.length} external event getter files`
   )
 
   for (const file of externalEventGetterFiles) {
@@ -201,10 +203,7 @@ export default async function getEvents({
 
       allEvents.push(...entries)
     } catch {
-      LoggingService.warn(
-        'Cannot import external events from ' + file,
-        'CALENDAR'
-      )
+      logging.warn('Cannot import external events from ' + file)
     }
   }
 

@@ -1,7 +1,8 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { FormModal, defineForm } from 'lifeforge-ui'
 import type { InferInput } from 'shared'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 import type { CalendarCategory } from '../Calendar'
 
@@ -19,14 +20,14 @@ function ModifyCategoryModal({
 
   const mutation = useMutation(
     (type === 'create'
-      ? forgeAPI.calendar.categories.create
-      : forgeAPI.calendar.categories.update.input({
+      ? forgeAPI.categories.create
+      : forgeAPI.categories.update.input({
           id: initialData?.id || ''
         })
     ).mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendar.categories.list.key
+          queryKey: forgeAPI.categories.list.key
         })
         onClose()
       }
@@ -34,7 +35,7 @@ function ModifyCategoryModal({
   )
 
   const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.calendar.categories)[typeof type]>['body']
+    InferInput<(typeof forgeAPI.categories)[typeof type]>['body']
   >({
     icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
     title: `category.${type}`,

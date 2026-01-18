@@ -1,17 +1,13 @@
-import { getAPIKey } from '@functions/database'
-import { fetchAI } from '@functions/external/ai'
-import searchLocations from '@functions/external/location'
-import { forgeController, forgeRouter } from '@functions/routes'
-import { ClientError } from '@functions/routes/utils/response'
-import { Location } from '@lib/locations/typescript/location.types'
-import { SCHEMAS } from '@schema'
+import { ClientError, LocationSchema } from '@lifeforge/server-utils'
+import dayjs from 'dayjs'
 import fs from 'fs'
-import moment from 'moment'
 import z from 'zod'
 
+import forge from '../forge'
 import getEvents from '../functions/getEvents'
+import calendarSchemas from '../schema'
 
-const CreateAndUpdateEventSchema = SCHEMAS.calendar.events.schema
+const CreateAndUpdateEventSchema = calendarSchemas.events
   .omit({
     type: true,
     location: true,
@@ -22,7 +18,7 @@ const CreateAndUpdateEventSchema = SCHEMAS.calendar.events.schema
   })
   .extend({
     calendar: z.string().optional(),
-    location: Location.optional()
+    location: LocationSchema.optional()
   })
   .and(
     z.union([
@@ -31,7 +27,7 @@ const CreateAndUpdateEventSchema = SCHEMAS.calendar.events.schema
           type: z.literal('single')
         })
         .and(
-          SCHEMAS.calendar.events_single.schema.omit({
+          calendarSchemas.events_single.omit({
             base_event: true
           })
         ),
@@ -42,82 +38,64 @@ const CreateAndUpdateEventSchema = SCHEMAS.calendar.events.schema
     ])
   )
 
-const getByDateRange = forgeController
+export const getByDateRange = forge
   .query()
-  .description({
-    en: 'Get events within a date range',
-    ms: 'Dapatkan acara dalam julat tarikh',
-    'zh-CN': '获取日期范围内的事件',
-    'zh-TW': '獲取日期範圍內的事件'
-  })
+  .description('Get events within a date range')
   .input({
     query: z.object({
       start: z.string(),
       end: z.string()
     })
   })
-  .callback(({ pb, query: { start, end } }) => getEvents({ pb, start, end }))
+  .callback(({ pb, query: { start, end }, core: { logging } }) =>
+    getEvents({ pb, start, end, logging })
+  )
 
-const getToday = forgeController
+export const getToday = forge
   .query()
-  .description({
-    en: "Get today's events",
-    ms: 'Dapatkan acara hari ini',
-    'zh-CN': '获取今天的事件',
-    'zh-TW': '獲取今天的事件'
-  })
+  .description("Get today's events")
   .input({})
-  .callback(async ({ pb }) => {
-    const day = moment().format('YYYY-MM-DD')
+  .callback(async ({ pb, core: { logging } }) => {
+    const day = dayjs().format('YYYY-MM-DD')
 
-    const startMoment = moment(day).startOf('day').format('YYYY-MM-DD HH:mm:ss')
+    const startMoment = dayjs(day).startOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-    const endMoment = moment(day).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+    const endMoment = dayjs(day).endOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-    return await getEvents({ pb, start: startMoment, end: endMoment })
+    return await getEvents({ pb, start: startMoment, end: endMoment, logging })
   })
 
-const getById = forgeController
+export const getById = forge
   .query()
-  .description({
-    en: 'Get a specific event by ID',
-    ms: 'Dapatkan acara tertentu mengikut ID',
-    'zh-CN': '根据 ID 获取特定事件',
-    'zh-TW': '根據 ID 獲取特定事件'
-  })
+  .description('Get a specific event by ID')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'calendar__events'
+    id: 'events'
   })
   .callback(({ pb, query: { id } }) =>
-    pb.getOne.collection('calendar__events').id(id).execute()
+    pb.getOne.collection('events').id(id).execute()
   )
 
-const create = forgeController
+export const create = forge
   .mutation()
-  .description({
-    en: 'Create a new event',
-    ms: 'Cipta acara baharu',
-    'zh-CN': '创建新事件',
-    'zh-TW': '創建新事件'
-  })
+  .description('Create a new event')
   .input({
     body: CreateAndUpdateEventSchema
   })
   .statusCode(201)
   .existenceCheck('body', {
-    calendar: '[calendar__calendars]',
-    category: 'calendar__categories'
+    calendar: '[calendars]',
+    category: 'categories'
   })
   .callback(async ({ pb, body }) => {
     const eventData = body as z.infer<typeof CreateAndUpdateEventSchema>
 
     const baseEvent = await pb.create
-      .collection('calendar__events')
+      .collection('events')
       .data({
         title: eventData.title,
         category: eventData.category,
@@ -158,7 +136,7 @@ const create = forgeController
       }
 
       await pb.create
-        .collection('calendar__events_recurring')
+        .collection('events_recurring')
         .data({
           base_event: baseEvent.id,
           recurring_rule: eventData.rrule.split('||')[0],
@@ -173,7 +151,7 @@ const create = forgeController
       }
 
       await pb.create
-        .collection('calendar__events_single')
+        .collection('events_single')
         .data({
           base_event: baseEvent.id,
           start: eventData.start,
@@ -183,14 +161,9 @@ const create = forgeController
     }
   })
 
-const scanImage = forgeController
+export const scanImage = forge
   .mutation()
-  .description({
-    en: 'Extract event details from image using AI',
-    ms: 'Ekstrak butiran acara dari gambar menggunakan AI',
-    'zh-CN': '使用 AI 从图片中提取事件详情',
-    'zh-TW': '使用 AI 從圖片中提取事件詳情'
-  })
+  .description('Extract event details from image using AI')
   .input({})
   .media({
     file: {
@@ -198,43 +171,48 @@ const scanImage = forgeController
       multiple: false
     }
   })
-  .callback(async ({ pb, media: { file } }) => {
-    if (!file || typeof file === 'string') {
-      throw new ClientError('No file uploaded')
-    }
-
-    const gcloudKey = await getAPIKey('gcloud', pb)
-
-    const categories = await pb.getFullList
-      .collection('calendar__categories')
-      .execute()
-
-    const categoryList = categories.map(category => category.name)
-
-    const responseStructure = z.object({
-      title: z.string(),
-      start: z.string(),
-      end: z.string(),
-      location: z.string().nullable(),
-      description: z.string().nullable(),
-      category: z.string().nullable()
-    })
-
-    const base64Image = fs.readFileSync(file.path, {
-      encoding: 'base64'
-    })
-
-    const response = await fetchAI({
+  .callback(
+    async ({
       pb,
-      provider: 'openai',
-      model: 'gpt-4o',
-      structure: responseStructure,
-      messages: [
-        {
-          role: 'system',
-          content: `You are a calendar assistant. Extract the event details from the image. If no event can be extracted, respond with null. Assume that today is ${moment().format(
-            'YYYY-MM-DD'
-          )} unless specified otherwise. 
+      media: { file },
+      core: {
+        api: { fetchAI, getAPIKey, searchLocations }
+      }
+    }) => {
+      if (!file || typeof file === 'string') {
+        throw new ClientError('No file uploaded')
+      }
+
+      const gcloudKey = await getAPIKey('gcloud', pb)
+
+      const categories = await pb.getFullList.collection('categories').execute()
+
+      const categoryList = categories.map(category => category.name)
+
+      const responseStructure = z.object({
+        title: z.string(),
+        start: z.string(),
+        end: z.string(),
+        location: z.string().nullable(),
+        description: z.string().nullable(),
+        category: z.string().nullable()
+      })
+
+      const base64Image = fs.readFileSync(file.path, {
+        encoding: 'base64'
+      })
+
+      const response = await fetchAI({
+        pb,
+        provider: 'openai',
+        model: 'gpt-4o',
+        structure: responseStructure,
+        messages: [
+          {
+            role: 'system',
+            content: `You are a calendar assistant. Extract the event details from the image. If no event can be extracted, respond with null. Assume that today is ${dayjs().format(
+              'YYYY-MM-DD'
+            )} unless specified otherwise. 
 
           The title should be the name of the event.
 
@@ -251,62 +229,58 @@ const scanImage = forgeController
           The categories should be one of the following (case sensitive): ${categoryList.join(
             ', '
           )}. Try to pick the most relevant category instead of just picking the most general one, unless you're really not sure`
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'input_image',
-              image_url: `data:${file.mimetype};base64,${base64Image}`,
-              detail: 'auto'
-            }
-          ]
-        }
-      ]
-    })
+          },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_image',
+                image_url: `data:${file.mimetype};base64,${base64Image}`,
+                detail: 'auto'
+              }
+            ]
+          }
+        ]
+      })
 
-    if (!response) {
-      throw new Error('Failed to scan image')
-    }
+      if (!response) {
+        throw new Error('Failed to scan image')
+      }
 
-    const finalResponse = {
-      title: response.title,
-      start: response.start,
-      end: response.end,
-      location: response.location || '',
-      location_coords: { lat: 0, lon: 0 },
-      description: response.description || '',
-      category:
-        categories.find(category => category.name === response.category)?.id ||
-        ''
-    }
+      const finalResponse = {
+        title: response.title,
+        start: response.start,
+        end: response.end,
+        location: response.location || '',
+        location_coords: { lat: 0, lon: 0 },
+        description: response.description || '',
+        category:
+          categories.find(category => category.name === response.category)
+            ?.id || ''
+      }
 
-    if (finalResponse.location && gcloudKey) {
-      const locationInGoogleMap = await searchLocations(
-        gcloudKey,
-        finalResponse.location
-      )
+      if (finalResponse.location && gcloudKey) {
+        const locationInGoogleMap = await searchLocations(
+          gcloudKey,
+          finalResponse.location
+        )
 
-      if (locationInGoogleMap.length > 0) {
-        finalResponse.location = locationInGoogleMap[0].name
-        finalResponse.location_coords = {
-          lat: locationInGoogleMap[0].location.latitude,
-          lon: locationInGoogleMap[0].location.longitude
+        if (locationInGoogleMap.length > 0) {
+          finalResponse.location = locationInGoogleMap[0].name
+          finalResponse.location_coords = {
+            lat: locationInGoogleMap[0].location.latitude,
+            lon: locationInGoogleMap[0].location.longitude
+          }
         }
       }
+
+      return finalResponse
     }
+  )
 
-    return finalResponse
-  })
-
-const addException = forgeController
+export const addException = forge
   .mutation()
-  .description({
-    en: 'Add exception date to recurring event',
-    ms: 'Tambah tarikh pengecualian ke acara berulang',
-    'zh-CN': '为周期事件添加异常日期',
-    'zh-TW': '為周期事件添加異常日期'
-  })
+  .description('Add exception date to recurring event')
   .input({
     query: z.object({
       id: z.string(),
@@ -314,11 +288,11 @@ const addException = forgeController
     })
   })
   .existenceCheck('query', {
-    id: 'calendar__events'
+    id: 'events'
   })
   .callback(async ({ pb, query: { id, date } }) => {
     const eventList = await pb.getFullList
-      .collection('calendar__events_recurring')
+      .collection('events_recurring')
       .filter([{ field: 'base_event', operator: '=', value: id }])
       .execute()
 
@@ -333,7 +307,7 @@ const addException = forgeController
     exceptions.push(date)
 
     await pb.update
-      .collection('calendar__events_recurring')
+      .collection('events_recurring')
       .id(event.id)
       .data({ exceptions })
       .execute()
@@ -341,14 +315,9 @@ const addException = forgeController
     return true
   })
 
-const update = forgeController
+export const update = forge
   .mutation()
-  .description({
-    en: 'Update event details',
-    ms: 'Kemas kini butiran acara',
-    'zh-CN': '更新事件详情',
-    'zh-TW': '更新事件詳情'
-  })
+  .description('Update event details')
   .input({
     query: z.object({
       id: z.string()
@@ -356,11 +325,11 @@ const update = forgeController
     body: CreateAndUpdateEventSchema
   })
   .existenceCheck('query', {
-    id: 'calendar__events'
+    id: 'events'
   })
   .existenceCheck('body', {
-    calendar: '[calendar__calendars]',
-    category: 'calendar__categories'
+    calendar: '[calendars]',
+    category: 'categories'
   })
   .callback(async ({ pb, query: { id }, body }) => {
     const eventData = body as z.infer<typeof CreateAndUpdateEventSchema>
@@ -380,11 +349,7 @@ const update = forgeController
         : { location: undefined })
     }
 
-    await pb.update
-      .collection('calendar__events')
-      .id(id)
-      .data(toBeUpdatedData)
-      .execute()
+    await pb.update.collection('events').id(id).data(toBeUpdatedData).execute()
 
     if (eventData.type === 'recurring') {
       const duration = eventData.rrule.split('||').pop()
@@ -411,7 +376,7 @@ const update = forgeController
       }
 
       const subEvent = await pb.getFirstListItem
-        .collection('calendar__events_recurring')
+        .collection('events_recurring')
         .filter([
           {
             field: 'base_event',
@@ -422,7 +387,7 @@ const update = forgeController
         .execute()
 
       await pb.update
-        .collection('calendar__events_recurring')
+        .collection('events_recurring')
         .id(subEvent.id)
         .data({
           recurring_rule: eventData.rrule.split('||')[0],
@@ -432,7 +397,7 @@ const update = forgeController
         .execute()
     } else {
       const subEvent = await pb.getFirstListItem
-        .collection('calendar__events_single')
+        .collection('events_single')
         .filter([
           {
             field: 'base_event',
@@ -443,7 +408,7 @@ const update = forgeController
         .execute()
 
       await pb.update
-        .collection('calendar__events_single')
+        .collection('events_single')
         .id(subEvent.id)
         .data({
           start: eventData.start,
@@ -453,34 +418,18 @@ const update = forgeController
     }
   })
 
-const remove = forgeController
+export const remove = forge
   .mutation()
-  .description({
-    en: 'Delete an event',
-    ms: 'Padam acara',
-    'zh-CN': '删除事件',
-    'zh-TW': '刪除事件'
-  })
+  .description('Delete an event')
   .input({
     query: z.object({
       id: z.string()
     })
   })
   .existenceCheck('query', {
-    id: 'calendar__events'
+    id: 'events'
   })
   .statusCode(204)
   .callback(({ pb, query: { id } }) =>
-    pb.delete.collection('calendar__events').id(id).execute()
+    pb.delete.collection('events').id(id).execute()
   )
-
-export default forgeRouter({
-  getByDateRange,
-  getToday,
-  getById,
-  create,
-  addException,
-  update,
-  remove,
-  scanImage
-})

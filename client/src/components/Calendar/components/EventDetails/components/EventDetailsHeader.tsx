@@ -32,7 +32,7 @@ function EventDetailsHeader({
   const { start, end } = useCalendarStore()
 
   const addExceptionMutation = useMutation(
-    forgeAPI.calendar.events.addException
+    forgeAPI.events.addException
       .input({
         id: event.id.split('-')[0] ?? '',
         date: dayjs(event.start).toISOString()
@@ -40,7 +40,7 @@ function EventDetailsHeader({
       .mutationOptions({
         onSuccess: () => {
           queryClient.setQueryData(
-            forgeAPI.calendar.events.getByDateRange.input({
+            forgeAPI.events.getByDateRange.input({
               start,
               end
             }).key,
@@ -70,7 +70,7 @@ function EventDetailsHeader({
   }, [event])
 
   const deleteMutation = useMutation(
-    forgeAPI.calendar.events.remove
+    forgeAPI.events.remove
       .input({
         id: event.id.split('-')[0] ?? ''
       })

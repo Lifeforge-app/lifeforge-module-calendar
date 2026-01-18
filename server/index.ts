@@ -1,8 +1,8 @@
-import { forgeRouter } from '@functions/routes'
+import { forgeRouter } from '@lifeforge/server-utils'
 
-import calendarsRouter from './routes/calendars'
-import categoriesRouter from './routes/categories'
-import eventsRouter from './routes/events'
+import * as calendarsRouter from './routes/calendars'
+import * as categoriesRouter from './routes/categories'
+import * as eventsRouter from './routes/events'
 
 export default forgeRouter({
   events: eventsRouter,

@@ -1,16 +1,15 @@
+import { useQuery } from '@tanstack/react-query'
+import { Card } from 'lifeforge-ui'
+import { useMemo } from 'react'
+
 import EventDetails from '@/components/Calendar/components/EventDetails'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
 import forgeAPI from '@/utils/forgeAPI'
-import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
-import {Card} from "lifeforge-ui"
 
 import type { CalendarCategory, CalendarEvent } from '../..'
 
 function AgendaEventItem({ event }: { event: CalendarEvent }) {
-  const categoriesQuery = useQuery(
-    forgeAPI.calendar.categories.list.queryOptions()
-  )
+  const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {

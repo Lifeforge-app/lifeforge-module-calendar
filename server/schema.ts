@@ -1,6 +1,7 @@
+import { cleanSchemas } from '@lifeforge/server-utils'
 import z from 'zod'
 
-const calendarSchemas = {
+export const schemas = {
   events: {
     schema: z.object({
       title: z.string(),
@@ -605,4 +606,4 @@ const calendarSchemas = {
   }
 }
 
-export default calendarSchemas
+export default cleanSchemas(schemas)
