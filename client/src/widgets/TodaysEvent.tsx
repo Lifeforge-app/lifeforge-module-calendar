@@ -2,6 +2,14 @@ import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { Tooltip } from 'react-tooltip'
+
+import { Link } from '@lifeforge/shared'
+import type { InferOutput } from '@lifeforge/shared'
+import { useMainSidebarState } from '@lifeforge/shared'
+import type { WidgetConfig } from '@lifeforge/shared'
 import {
   Button,
   Card,
@@ -9,14 +17,7 @@ import {
   Scrollbar,
   Widget,
   WithQuery
-} from 'lifeforge-ui'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { Tooltip } from 'react-tooltip'
-import { Link } from 'shared'
-import type { InferOutput } from 'shared'
-import { useMainSidebarState } from 'shared'
-import type { WidgetConfig } from 'shared'
+} from '@lifeforge/ui'
 
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
 import EventDetails from '@/components/Calendar/components/EventDetails'

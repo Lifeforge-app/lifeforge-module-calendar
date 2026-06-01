@@ -1,12 +1,13 @@
 import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { useModalStore } from 'lifeforge-ui'
 import { useCallback, useMemo } from 'react'
 import { Calendar, type Components, dayjsLocalizer } from 'react-big-calendar'
 import withDragAndDrop, {
   type EventInteractionArgs
 } from 'react-big-calendar/lib/addons/dragAndDrop'
-import type { InferOutput } from 'shared'
+
+import type { InferOutput } from '@lifeforge/shared'
+import { useModalStore } from '@lifeforge/ui'
 
 import { useCalendarStore } from '@/stores/useCalendarStore'
 import forgeAPI from '@/utils/forgeAPI'

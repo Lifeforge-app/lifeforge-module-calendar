@@ -1,4 +1,4 @@
-import { ContextMenuItem } from 'lifeforge-ui'
+import { ContextMenuItem } from '@lifeforge/ui'
 
 function ActionMenu({
   onEdit,

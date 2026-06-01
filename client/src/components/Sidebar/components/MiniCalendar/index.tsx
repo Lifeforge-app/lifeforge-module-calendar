@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { WithQuery } from 'lifeforge-ui'
 import { useState } from 'react'
+
+import { WithQuery } from '@lifeforge/ui'
 
 import forgeAPI from '@/utils/forgeAPI'
 

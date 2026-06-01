@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { Card } from 'lifeforge-ui'
 import { useMemo } from 'react'
+
+import { Card } from '@lifeforge/ui'
 
 import EventDetails from '@/components/Calendar/components/EventDetails'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'

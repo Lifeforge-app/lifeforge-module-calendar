@@ -1,8 +1,10 @@
-import { useCalendarStore } from '@/stores/useCalendarStore'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { Button } from 'lifeforge-ui'
 import { memo } from 'react'
 import type { NavigateAction } from 'react-big-calendar'
+
+import { Button } from '@lifeforge/ui'
+
+import { useCalendarStore } from '@/stores/useCalendarStore'
 
 import DateRangeLabel from './components/DateRangeLabel'
 

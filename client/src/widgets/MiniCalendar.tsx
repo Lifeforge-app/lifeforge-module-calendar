@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Button, Widget, WithQuery } from 'lifeforge-ui'
 import { useState } from 'react'
-import { Link } from 'shared'
-import type { WidgetConfig } from 'shared'
+
+import { Link } from '@lifeforge/shared'
+import type { WidgetConfig } from '@lifeforge/shared'
+import { Button, Widget, WithQuery } from '@lifeforge/ui'
 
 import MiniCalendarContent from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarContent'
 import MiniCalendarHeader from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarHeader'

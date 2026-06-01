@@ -1,5 +1,6 @@
-import { FormModal, defineForm } from 'lifeforge-ui'
 import { getI18n } from 'react-i18next'
+
+import { FormModal, defineForm } from '@lifeforge/ui'
 
 function YearMonthSelector({
   onClose,

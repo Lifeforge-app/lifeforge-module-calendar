@@ -1,6 +1,8 @@
-import type { CalendarEvent } from '@/components/Calendar'
 import dayjs from 'dayjs'
-import { usePersonalization } from 'shared'
+
+import { usePersonalization } from '@lifeforge/shared'
+
+import type { CalendarEvent } from '@/components/Calendar'
 
 import MiniCalendarDateItem from './MiniCalendarDateItem'
 

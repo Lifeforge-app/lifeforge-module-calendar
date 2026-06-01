@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ConfirmationModal, SidebarItem } from 'lifeforge-ui'
-import { useModalStore } from 'lifeforge-ui'
 import { useCallback, useMemo } from 'react'
+
+import { ConfirmationModal, SidebarItem } from '@lifeforge/ui'
+import { useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'

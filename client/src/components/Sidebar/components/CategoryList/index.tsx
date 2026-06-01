@@ -1,7 +1,8 @@
 import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
-import { SidebarTitle, WithQuery } from 'lifeforge-ui'
-import { useModalStore } from 'lifeforge-ui'
+
+import { SidebarTitle, WithQuery } from '@lifeforge/ui'
+import { useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'

@@ -1,10 +1,11 @@
 import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { Button } from 'lifeforge-ui'
 import { useMemo } from 'react'
 import Markdown from 'react-markdown'
-import { Link } from 'shared'
+
+import { Link } from '@lifeforge/shared'
+import { Button } from '@lifeforge/ui'
 
 import forgeAPI from '@/utils/forgeAPI'
 

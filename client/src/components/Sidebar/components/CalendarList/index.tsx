@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
+import { useCallback } from 'react'
+
 import {
   EmptyStateScreen,
   SidebarTitle,
   WithQuery,
   useModalStore
-} from 'lifeforge-ui'
-import { useCallback } from 'react'
+} from '@lifeforge/ui'
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'

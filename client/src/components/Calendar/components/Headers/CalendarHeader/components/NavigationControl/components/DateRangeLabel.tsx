@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
-import { useModalStore } from 'lifeforge-ui'
 import { useCallback } from 'react'
 import type { NavigateAction } from 'react-big-calendar'
+
+import { useModalStore } from '@lifeforge/ui'
 
 import YearMonthSelector from '@/components/modals/YearMonthSelector'
 

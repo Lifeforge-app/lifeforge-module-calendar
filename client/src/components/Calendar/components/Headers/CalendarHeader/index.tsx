@@ -1,13 +1,14 @@
+import { memo, useCallback } from 'react'
+import { type NavigateAction, type View } from 'react-big-calendar'
+import { useTranslation } from 'react-i18next'
+
 import {
   Button,
   ContextMenu,
   ContextMenuItem,
   useModuleSidebarState
-} from 'lifeforge-ui'
-import { useModalStore } from 'lifeforge-ui'
-import { memo, useCallback } from 'react'
-import { type NavigateAction, type View } from 'react-big-calendar'
-import { useTranslation } from 'react-i18next'
+} from '@lifeforge/ui'
+import { useModalStore } from '@lifeforge/ui'
 
 import ModifyEventModal from '@/components/modals/ModifyEventModal'
 import ScanImageModal from '@/components/modals/ScanImageModal'

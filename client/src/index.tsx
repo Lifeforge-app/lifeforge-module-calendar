@@ -1,4 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { useCallback, useEffect } from 'react'
+
+import { parseAsString, useQueryState } from '@lifeforge/shared'
 import {
   ContentWrapperWithSidebar,
   ContextMenu,
@@ -6,11 +9,9 @@ import {
   FAB,
   LayoutWithSidebar,
   ModuleHeader,
-  Scrollbar
-} from 'lifeforge-ui'
-import { useModalStore } from 'lifeforge-ui'
-import { useCallback, useEffect } from 'react'
-import { parseAsString, useQueryState } from 'shared'
+  Scrollbar,
+  useModalStore
+} from '@lifeforge/ui'
 
 import forgeAPI from '@/utils/forgeAPI'
 

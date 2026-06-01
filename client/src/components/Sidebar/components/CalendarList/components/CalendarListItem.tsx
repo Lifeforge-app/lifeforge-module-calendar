@@ -1,7 +1,8 @@
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { ConfirmationModal, SidebarItem, useModalStore } from 'lifeforge-ui'
 import { useCallback, useMemo } from 'react'
+
+import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'

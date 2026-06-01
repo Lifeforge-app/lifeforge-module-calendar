@@ -2,7 +2,8 @@ import clsx from 'clsx'
 import { memo } from 'react'
 import { createPortal } from 'react-dom'
 import { Tooltip } from 'react-tooltip'
-import { useMainSidebarState } from 'shared'
+
+import { useMainSidebarState } from '@lifeforge/shared'
 
 import { type CalendarCategory, type CalendarEvent } from '../../../index.js'
 import EventDetails from '../../EventDetails/index.js'
