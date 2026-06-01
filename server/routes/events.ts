@@ -1,4 +1,4 @@
-import { ClientError, LocationSchema } from '@lifeforge/server-utils'
+import { LocationSchema } from '@lifeforge/server-utils'
 import dayjs from 'dayjs'
 import fs from 'fs'
 import z from 'zod'
@@ -39,59 +39,75 @@ const CreateAndUpdateEventSchema = calendarSchemas.events
   )
 
 export const getByDateRange = forge
-  .query()
-  .description('Get events within a date range')
-  .input({
-    query: z.object({
-      start: z.string(),
-      end: z.string()
-    })
+  .query({
+    description: 'Get events within a date range',
+    input: {
+      query: z.object({
+        start: z.string(),
+        end: z.string()
+      })
+    },
+    output: {
+      OK: z.any()
+    }
   })
-  .callback(({ pb, query: { start, end }, core: { logging } }) =>
-    getEvents({ pb, start, end, logging })
+  .callback(async ({ pb, query: { start, end }, core: { logging }, response }) =>
+    response.ok(await getEvents({ pb, start, end, logging }))
   )
 
 export const getToday = forge
-  .query()
-  .description("Get today's events")
-  .input({})
-  .callback(async ({ pb, core: { logging } }) => {
+  .query({
+    description: "Get today's events",
+    output: {
+      OK: z.any()
+    }
+  })
+  .callback(async ({ pb, core: { logging }, response }) => {
     const day = dayjs().format('YYYY-MM-DD')
 
     const startMoment = dayjs(day).startOf('day').format('YYYY-MM-DD HH:mm:ss')
 
     const endMoment = dayjs(day).endOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-    return await getEvents({ pb, start: startMoment, end: endMoment, logging })
+    return response.ok(await getEvents({ pb, start: startMoment, end: endMoment, logging }))
   })
 
 export const getById = forge
-  .query()
-  .description('Get a specific event by ID')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .query({
+    description: 'Get a specific event by ID',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'events' }
+    },
+    output: {
+      OK: z.any(),
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'events'
-  })
-  .callback(({ pb, query: { id } }) =>
-    pb.getOne.collection('events').id(id).execute()
+  .callback(async ({ pb, query: { id }, response }) =>
+    response.ok(await pb.getOne.collection('events').id(id).execute())
   )
 
 export const create = forge
-  .mutation()
-  .description('Create a new event')
-  .input({
-    body: CreateAndUpdateEventSchema
+  .mutation({
+    description: 'Create a new event',
+    input: {
+      body: CreateAndUpdateEventSchema
+    },
+    existenceCheck: {
+      body: { calendar: '[calendars]', category: 'categories' }
+    },
+    output: {
+      CREATED: z.any(),
+      BAD_REQUEST: z.string(),
+      NOT_FOUND: true
+    }
   })
-  .statusCode(201)
-  .existenceCheck('body', {
-    calendar: '[calendars]',
-    category: 'categories'
-  })
-  .callback(async ({ pb, body }) => {
+  .callback(async ({ pb, body, response }) => {
     const eventData = body as z.infer<typeof CreateAndUpdateEventSchema>
 
     const baseEvent = await pb.create
@@ -115,13 +131,13 @@ export const create = forge
       const duration = eventData.rrule.split('||').pop()
 
       if (!duration) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       const matched = /duration_amt=(\d+);duration_unit=(\w+)/.exec(duration)!
 
       if (!matched || matched.length < 3) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       const amount = matched[1]
@@ -132,7 +148,7 @@ export const create = forge
         Number.isNaN(Number(amount)) ||
         !['hour', 'day', 'week', 'month', 'year'].includes(unit)
       ) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       await pb.create
@@ -147,7 +163,7 @@ export const create = forge
         .execute()
     } else {
       if (!('start' in eventData) || !('end' in eventData)) {
-        throw new Error('Single events must have start and end times')
+        return response.badRequest('Single events must have start and end times')
       }
 
       await pb.create
@@ -159,16 +175,22 @@ export const create = forge
         })
         .execute()
     }
+
+    return response.created(baseEvent)
   })
 
 export const scanImage = forge
-  .mutation()
-  .description('Extract event details from image using AI')
-  .input({})
-  .media({
-    file: {
-      optional: false,
-      multiple: false
+  .mutation({
+    description: 'Extract event details from image using AI',
+    media: {
+      file: {
+        optional: false,
+        multiple: false
+      }
+    },
+    output: {
+      OK: z.any(),
+      BAD_REQUEST: z.string()
     }
   })
   .callback(
@@ -177,10 +199,11 @@ export const scanImage = forge
       media: { file },
       core: {
         api: { fetchAI, getAPIKey, searchLocations }
-      }
+      },
+      response
     }) => {
       if (!file || typeof file === 'string') {
-        throw new ClientError('No file uploaded')
+        return response.badRequest('No file uploaded')
       }
 
       const gcloudKey = await getAPIKey('gcloud', pb)
@@ -202,7 +225,7 @@ export const scanImage = forge
         encoding: 'base64'
       })
 
-      const response = await fetchAI({
+      const aiResponse = await fetchAI({
         pb,
         provider: 'openai',
         model: 'gpt-4o',
@@ -243,19 +266,19 @@ export const scanImage = forge
         ]
       })
 
-      if (!response) {
-        throw new Error('Failed to scan image')
+      if (!aiResponse) {
+        return response.badRequest('Failed to scan image')
       }
 
       const finalResponse = {
-        title: response.title,
-        start: response.start,
-        end: response.end,
-        location: response.location || '',
+        title: aiResponse.title,
+        start: aiResponse.start,
+        end: aiResponse.end,
+        location: aiResponse.location || '',
         location_coords: { lat: 0, lon: 0 },
-        description: response.description || '',
+        description: aiResponse.description || '',
         category:
-          categories.find(category => category.name === response.category)
+          categories.find(category => category.name === aiResponse.category)
             ?.id || ''
       }
 
@@ -274,23 +297,28 @@ export const scanImage = forge
         }
       }
 
-      return finalResponse
+      return response.ok(finalResponse)
     }
   )
 
 export const addException = forge
-  .mutation()
-  .description('Add exception date to recurring event')
-  .input({
-    query: z.object({
-      id: z.string(),
-      date: z.string()
-    })
+  .mutation({
+    description: 'Add exception date to recurring event',
+    input: {
+      query: z.object({
+        id: z.string(),
+        date: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'events' }
+    },
+    output: {
+      OK: z.boolean(),
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'events'
-  })
-  .callback(async ({ pb, query: { id, date } }) => {
+  .callback(async ({ pb, query: { id, date }, response }) => {
     const eventList = await pb.getFullList
       .collection('events_recurring')
       .filter([{ field: 'base_event', operator: '=', value: id }])
@@ -301,7 +329,7 @@ export const addException = forge
     const exceptions = event.exceptions || []
 
     if (exceptions.includes(date)) {
-      return false
+      return response.ok(false)
     }
 
     exceptions.push(date)
@@ -312,26 +340,29 @@ export const addException = forge
       .data({ exceptions })
       .execute()
 
-    return true
+    return response.ok(true)
   })
 
 export const update = forge
-  .mutation()
-  .description('Update event details')
-  .input({
-    query: z.object({
-      id: z.string()
-    }),
-    body: CreateAndUpdateEventSchema
+  .mutation({
+    description: 'Update event details',
+    input: {
+      query: z.object({
+        id: z.string()
+      }),
+      body: CreateAndUpdateEventSchema
+    },
+    existenceCheck: {
+      query: { id: 'events' },
+      body: { calendar: '[calendars]', category: 'categories' }
+    },
+    output: {
+      OK: z.any(),
+      BAD_REQUEST: z.string(),
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'events'
-  })
-  .existenceCheck('body', {
-    calendar: '[calendars]',
-    category: 'categories'
-  })
-  .callback(async ({ pb, query: { id }, body }) => {
+  .callback(async ({ pb, query: { id }, body, response }) => {
     const eventData = body as z.infer<typeof CreateAndUpdateEventSchema>
 
     const location = eventData.location
@@ -355,13 +386,13 @@ export const update = forge
       const duration = eventData.rrule.split('||').pop()
 
       if (!duration) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       const matched = /duration_amt=(\d+);duration_unit=(\w+)/.exec(duration)!
 
       if (!matched || matched.length < 3) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       const amount = matched[1]
@@ -372,7 +403,7 @@ export const update = forge
         Number.isNaN(Number(amount)) ||
         !['hour', 'day', 'week', 'month', 'year'].includes(unit)
       ) {
-        throw new ClientError('Invalid duration format')
+        return response.badRequest('Invalid duration format')
       }
 
       const subEvent = await pb.getFirstListItem
@@ -416,20 +447,28 @@ export const update = forge
         })
         .execute()
     }
+
+    return response.ok(await pb.getOne.collection('events').id(id).execute())
   })
 
 export const remove = forge
-  .mutation()
-  .description('Delete an event')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .mutation({
+    description: 'Delete an event',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'events' }
+    },
+    output: {
+      NO_CONTENT: true,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'events'
+  .callback(async ({ pb, query: { id }, response }) => {
+    await pb.delete.collection('events').id(id).execute()
+
+    return response.noContent()
   })
-  .statusCode(204)
-  .callback(({ pb, query: { id } }) =>
-    pb.delete.collection('events').id(id).execute()
-  )

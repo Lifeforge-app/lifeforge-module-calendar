@@ -6,43 +6,59 @@ import { ICalSyncService } from '../functions/icalSyncing'
 import calendarSchemas from '../schema'
 
 export const list = forge
-  .query()
-  .description('Get all calendars')
-  .input({})
-  .callback(({ pb }) =>
-    pb.getFullList.collection('calendars').sort(['link', 'name']).execute()
+  .query({
+    description: 'Get all calendars',
+    output: {
+      OK: z.array(calendarSchemas.calendars)
+    }
+  })
+  .callback(async ({ pb, response }) =>
+    response.ok(
+      await pb.getFullList
+        .collection('calendars')
+        .sort(['link', 'name'])
+        .execute()
+    )
   )
 
 export const getById = forge
-  .query()
-  .description('Get a specific calendar by ID')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .query({
+    description: 'Get a specific calendar by ID',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'calendars' }
+    },
+    output: {
+      OK: calendarSchemas.calendars,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'calendars'
-  })
-  .callback(({ pb, query: { id } }) =>
-    pb.getOne.collection('calendars').id(id).execute()
+  .callback(async ({ pb, query: { id }, response }) =>
+    response.ok(await pb.getOne.collection('calendars').id(id).execute())
   )
 
 export const create = forge
-  .mutation()
-  .description('Create a new calendar with optional ICS sync')
-  .input({
-    body: calendarSchemas.calendars
-      .pick({
-        name: true,
-        color: true
-      })
-      .extend({
-        icsUrl: z.url().optional()
-      })
+  .mutation({
+    description: 'Create a new calendar with optional ICS sync',
+    input: {
+      body: calendarSchemas.calendars
+        .pick({
+          name: true,
+          color: true
+        })
+        .extend({
+          icsUrl: z.url().optional()
+        })
+    },
+    output: {
+      CREATED: calendarSchemas.calendars
+    }
   })
-  .statusCode(201)
-  .callback(async ({ pb, body }) => {
+  .callback(async ({ pb, body, response }) => {
     const newCalendar = await pb.create
       .collection('calendars')
       .data({
@@ -60,70 +76,87 @@ export const create = forge
         .catch(console.error)
     }
 
-    return newCalendar
+    return response.created(newCalendar)
   })
 
 export const update = forge
-  .mutation()
-  .description('Update calendar name and color')
-  .input({
-    query: z.object({
-      id: z.string()
-    }),
-    body: calendarSchemas.calendars.pick({
-      name: true,
-      color: true
-    })
+  .mutation({
+    description: 'Update calendar name and color',
+    input: {
+      query: z.object({
+        id: z.string()
+      }),
+      body: calendarSchemas.calendars.pick({
+        name: true,
+        color: true
+      })
+    },
+    existenceCheck: {
+      query: { id: 'calendars' }
+    },
+    output: {
+      OK: calendarSchemas.calendars,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'calendars'
-  })
-  .callback(({ pb, query: { id }, body }) =>
-    pb.update.collection('calendars').id(id).data(body).execute()
+  .callback(async ({ pb, query: { id }, body, response }) =>
+    response.ok(
+      await pb.update.collection('calendars').id(id).data(body).execute()
+    )
   )
 
 export const remove = forge
-  .mutation()
-  .description('Delete a calendar')
-  .input({
-    query: z.object({
-      id: z.string()
-    })
+  .mutation({
+    description: 'Delete a calendar',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'calendars' }
+    },
+    output: {
+      NO_CONTENT: true,
+      NOT_FOUND: true
+    }
   })
-  .existenceCheck('query', {
-    id: 'calendars'
+  .callback(async ({ pb, query: { id }, response }) => {
+    await pb.getOne.collection('calendars').id(id).execute()
+
+    return response.noContent()
   })
-  .statusCode(204)
-  .callback(({ pb, query: { id } }) =>
-    pb.delete.collection('calendars').id(id).execute()
-  )
 
 export const validateICS = forge
-  .mutation()
-  .description('Validate if an ICS URL is accessible')
-  .input({
-    body: z.object({
-      icsUrl: z.url()
-    })
-  })
-  .callback(async ({ body: { icsUrl } }) => {
-    try {
-      const response = await fetch(icsUrl).then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch ICS URL')
-        }
-
-        return res.text()
+  .mutation({
+    description: 'Validate if an ICS URL is accessible',
+    input: {
+      body: z.object({
+        icsUrl: z.url()
       })
+    },
+    output: {
+      OK: z.boolean()
+    }
+  })
+  .callback(async ({ body: { icsUrl }, response }) => {
+    try {
+      const res = await fetch(icsUrl)
 
-      const parsed = ical.sync.parseICS(response)
-
-      if (Object.keys(parsed).length === 0) {
-        throw new Error('No events found in ICS file')
+      if (!res.ok) {
+        return response.ok(false)
       }
 
-      return true
+      const text = await res.text()
+
+      const parsed = ical.sync.parseICS(text)
+
+      if (Object.keys(parsed).length === 0) {
+        return response.ok(false)
+      }
+
+      return response.ok(true)
     } catch {
-      return false
+      return response.ok(false)
     }
   })
