@@ -360,7 +360,110 @@ export const contract = {
         }
       }
     },
-    "getById": {},
+    "getById": {
+      "method": "get",
+      "description": "Get a specific event by ID",
+      "noAuth": false,
+      "encrypted": true,
+      "isDownloadable": false,
+      "media": null,
+      "input": {
+        "query": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "output": {
+        "OK": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "calendar": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "location_coords": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "additionalProperties": false
+            },
+            "reference_link": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "single",
+                "recurring"
+              ]
+            },
+            "created": {
+              "type": "string"
+            },
+            "updated": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "collectionId": {
+              "type": "string"
+            },
+            "collectionName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "category",
+            "calendar",
+            "location",
+            "location_coords",
+            "reference_link",
+            "description",
+            "type",
+            "created",
+            "updated",
+            "id",
+            "collectionId",
+            "collectionName"
+          ],
+          "additionalProperties": false
+        },
+        "NOT_FOUND": true
+      }
+    },
     "getToday": {
       "method": "get",
       "description": "Get today's events",

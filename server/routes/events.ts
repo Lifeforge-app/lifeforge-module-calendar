@@ -90,21 +90,25 @@ export const getToday = forge
     )
   })
 
-export const getById = forge.query({
-  description: 'Get a specific event by ID',
-  input: {
-    query: z.object({
-      id: z.string()
-    })
-  },
-  existenceCheck: {
-    query: { id: 'events' }
-  },
-  output: {
-    OK: calendarSchemas.events,
-    NOT_FOUND: true
-  }
-})
+export const getById = forge
+  .query({
+    description: 'Get a specific event by ID',
+    input: {
+      query: z.object({
+        id: z.string()
+      })
+    },
+    existenceCheck: {
+      query: { id: 'events' }
+    },
+    output: {
+      OK: calendarSchemas.events,
+      NOT_FOUND: true
+    }
+  })
+  .callback(async ({ pb, query: { id }, response }) =>
+    response.ok(await pb.getOne.collection('events').id(id).execute())
+  )
 
 export const create = forge
   .mutation({
