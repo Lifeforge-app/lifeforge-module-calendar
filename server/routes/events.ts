@@ -1,7 +1,8 @@
-import { LocationSchema } from '@lifeforge/server-utils'
 import dayjs from 'dayjs'
 import fs from 'fs'
 import z from 'zod'
+
+import { LocationSchema } from '@lifeforge/server-utils'
 
 import forge from '../forge'
 import getEvents from '../functions/getEvents'
@@ -48,18 +49,33 @@ export const getByDateRange = forge
       })
     },
     output: {
-      OK: z.any()
+      OK: z.array(
+        calendarSchemas.events.omit({
+          created: true,
+          updated: true,
+          collectionId: true,
+          collectionName: true
+        })
+      )
     }
   })
-  .callback(async ({ pb, query: { start, end }, core: { logging }, response }) =>
-    response.ok(await getEvents({ pb, start, end, logging }))
+  .callback(
+    async ({ pb, query: { start, end }, core: { logging }, response }) =>
+      response.ok(await getEvents({ pb, start, end, logging }))
   )
 
 export const getToday = forge
   .query({
     description: "Get today's events",
     output: {
-      OK: z.any()
+      OK: z.array(
+        calendarSchemas.events.omit({
+          created: true,
+          updated: true,
+          collectionId: true,
+          collectionName: true
+        })
+      )
     }
   })
   .callback(async ({ pb, core: { logging }, response }) => {
@@ -69,28 +85,26 @@ export const getToday = forge
 
     const endMoment = dayjs(day).endOf('day').format('YYYY-MM-DD HH:mm:ss')
 
-    return response.ok(await getEvents({ pb, start: startMoment, end: endMoment, logging }))
+    return response.ok(
+      await getEvents({ pb, start: startMoment, end: endMoment, logging })
+    )
   })
 
-export const getById = forge
-  .query({
-    description: 'Get a specific event by ID',
-    input: {
-      query: z.object({
-        id: z.string()
-      })
-    },
-    existenceCheck: {
-      query: { id: 'events' }
-    },
-    output: {
-      OK: z.any(),
-      NOT_FOUND: true
-    }
-  })
-  .callback(async ({ pb, query: { id }, response }) =>
-    response.ok(await pb.getOne.collection('events').id(id).execute())
-  )
+export const getById = forge.query({
+  description: 'Get a specific event by ID',
+  input: {
+    query: z.object({
+      id: z.string()
+    })
+  },
+  existenceCheck: {
+    query: { id: 'events' }
+  },
+  output: {
+    OK: calendarSchemas.events,
+    NOT_FOUND: true
+  }
+})
 
 export const create = forge
   .mutation({
@@ -102,7 +116,7 @@ export const create = forge
       body: { calendar: '[calendars]', category: 'categories' }
     },
     output: {
-      CREATED: z.any(),
+      CREATED: calendarSchemas.events,
       BAD_REQUEST: z.string(),
       NOT_FOUND: true
     }
@@ -163,7 +177,9 @@ export const create = forge
         .execute()
     } else {
       if (!('start' in eventData) || !('end' in eventData)) {
-        return response.badRequest('Single events must have start and end times')
+        return response.badRequest(
+          'Single events must have start and end times'
+        )
       }
 
       await pb.create
@@ -189,7 +205,15 @@ export const scanImage = forge
       }
     },
     output: {
-      OK: z.any(),
+      OK: z.object({
+        title: z.string(),
+        start: z.string(),
+        end: z.string(),
+        location: z.string(),
+        location_coords: z.object({ lat: z.number(), lon: z.number() }),
+        description: z.string(),
+        category: z.string()
+      }),
       BAD_REQUEST: z.string()
     }
   })
@@ -357,7 +381,7 @@ export const update = forge
       body: { calendar: '[calendars]', category: 'categories' }
     },
     output: {
-      OK: z.any(),
+      OK: calendarSchemas.events,
       BAD_REQUEST: z.string(),
       NOT_FOUND: true
     }

@@ -182,7 +182,82 @@ export const contract = {
       },
       "output": {
         "CREATED": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "calendar": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "location_coords": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "additionalProperties": false
+            },
+            "reference_link": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "single",
+                "recurring"
+              ]
+            },
+            "created": {
+              "type": "string"
+            },
+            "updated": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "collectionId": {
+              "type": "string"
+            },
+            "collectionName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "category",
+            "calendar",
+            "location",
+            "location_coords",
+            "reference_link",
+            "description",
+            "type",
+            "created",
+            "updated",
+            "id",
+            "collectionId",
+            "collectionName"
+          ],
+          "additionalProperties": false
         },
         "BAD_REQUEST": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -219,39 +294,73 @@ export const contract = {
       },
       "output": {
         "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
-        }
-      }
-    },
-    "getById": {
-      "method": "get",
-      "description": "Get a specific event by ID",
-      "noAuth": false,
-      "encrypted": true,
-      "isDownloadable": false,
-      "media": null,
-      "input": {
-        "query": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id"
-          ],
-          "additionalProperties": false
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "calendar": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "location_coords": {
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lon"
+                ],
+                "additionalProperties": false
+              },
+              "reference_link": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "single",
+                  "recurring"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "category",
+              "calendar",
+              "location",
+              "location_coords",
+              "reference_link",
+              "description",
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          }
         }
-      },
-      "output": {
-        "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
-        },
-        "NOT_FOUND": true
       }
     },
+    "getById": {},
     "getToday": {
       "method": "get",
       "description": "Get today's events",
@@ -262,7 +371,69 @@ export const contract = {
       "input": {},
       "output": {
         "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "calendar": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "location_coords": {
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number"
+                  },
+                  "lon": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lon"
+                ],
+                "additionalProperties": false
+              },
+              "reference_link": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "single",
+                  "recurring"
+                ]
+              },
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "category",
+              "calendar",
+              "location",
+              "location_coords",
+              "reference_link",
+              "description",
+              "type",
+              "id"
+            ],
+            "additionalProperties": false
+          }
         }
       }
     },
@@ -308,7 +479,54 @@ export const contract = {
       "input": {},
       "output": {
         "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "location_coords": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "additionalProperties": false
+            },
+            "description": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "start",
+            "end",
+            "location",
+            "location_coords",
+            "description",
+            "category"
+          ],
+          "additionalProperties": false
         },
         "BAD_REQUEST": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -477,7 +695,82 @@ export const contract = {
       },
       "output": {
         "OK": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema"
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "calendar": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string"
+            },
+            "location_coords": {
+              "type": "object",
+              "properties": {
+                "lat": {
+                  "type": "number"
+                },
+                "lon": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "additionalProperties": false
+            },
+            "reference_link": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "single",
+                "recurring"
+              ]
+            },
+            "created": {
+              "type": "string"
+            },
+            "updated": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "collectionId": {
+              "type": "string"
+            },
+            "collectionName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "category",
+            "calendar",
+            "location",
+            "location_coords",
+            "reference_link",
+            "description",
+            "type",
+            "created",
+            "updated",
+            "id",
+            "collectionId",
+            "collectionName"
+          ],
+          "additionalProperties": false
         },
         "BAD_REQUEST": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
