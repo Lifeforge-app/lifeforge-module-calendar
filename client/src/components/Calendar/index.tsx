@@ -10,7 +10,7 @@ import type { InferOutput } from '@lifeforge/shared'
 import { useModalStore } from '@lifeforge/ui'
 
 import { useCalendarStore } from '@/stores/useCalendarStore'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import ModifyEventModal from '../modals/ModifyEventModal'
 import AgendaDate from './components/AgendaView/AgendaDate'

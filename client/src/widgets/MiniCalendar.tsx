@@ -4,11 +4,11 @@ import { useState } from 'react'
 
 import { Link } from '@lifeforge/shared'
 import type { WidgetConfig } from '@lifeforge/shared'
-import { Button, Widget, WithQuery } from '@lifeforge/ui'
+import { Button, Stack, Widget, WithQuery } from '@lifeforge/ui'
 
 import MiniCalendarContent from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarContent'
 import MiniCalendarHeader from '@/components/Sidebar/components/MiniCalendar/components/MiniCalendarHeader'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 export default function MiniCalendar() {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month())
@@ -38,29 +38,34 @@ export default function MiniCalendar() {
 
   return (
     <Widget
-      className="higher-z"
       actionComponent={
         <Button
           as={Link}
-          className="p-2!"
           icon="tabler:chevron-right"
+          p="sm"
           to="/calendar"
           variant="plain"
         />
       }
+      className="higher-z"
       icon="tabler:calendar"
       namespace="apps.calendar"
       title="Mini Calendar"
     >
-      <div className="relative z-[9999] size-full">
-        <div className="px-2">
-          <MiniCalendarHeader
-            currentMonth={currentMonth}
-            currentYear={currentYear}
-            setCurrentMonth={setCurrentMonth}
-            setCurrentYear={setCurrentYear}
-          />
-        </div>
+      <Stack
+        gap="md"
+        height="100%"
+        minHeight="0"
+        position="relative"
+        width="100%"
+        zIndex="9999"
+      >
+        <MiniCalendarHeader
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+          setCurrentMonth={setCurrentMonth}
+          setCurrentYear={setCurrentYear}
+        />
         <WithQuery query={eventsQuery}>
           {events => (
             <MiniCalendarContent
@@ -70,7 +75,7 @@ export default function MiniCalendar() {
             />
           )}
         </WithQuery>
-      </div>
+      </Stack>
     </Widget>
   )
 }

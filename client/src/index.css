@@ -1,7 +1,6 @@
-@import "tailwindcss" layer(modules);
-
 @import 'react-big-calendar/lib/css/react-big-calendar.css' layer(dependencies);
-@import 'react-big-calendar/lib/addons/dragAndDrop/styles.css' layer(dependencies);
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+  layer(dependencies);
 
 @reference 'lifeforge-ui/dist';
 
@@ -141,4 +140,3 @@
     }
   }
 }
-

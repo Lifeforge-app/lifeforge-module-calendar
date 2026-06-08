@@ -13,7 +13,7 @@ import {
   useModalStore
 } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import CalendarComponent from './components/Calendar'
 import Sidebar from './components/Sidebar'

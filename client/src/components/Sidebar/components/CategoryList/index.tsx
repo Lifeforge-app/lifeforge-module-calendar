@@ -7,7 +7,7 @@ import { useModalStore } from '@lifeforge/ui'
 import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import CategoryListItem from './components/CategoryListItem'
 

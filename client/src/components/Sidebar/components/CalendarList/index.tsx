@@ -10,7 +10,7 @@ import {
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import CalendarListItem from './components/CalendarListItem'
 

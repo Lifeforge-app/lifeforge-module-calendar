@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import type { InferInput } from '@lifeforge/shared'
 import { FormModal, defineForm } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import type { CalendarEvent } from '../Calendar'
 

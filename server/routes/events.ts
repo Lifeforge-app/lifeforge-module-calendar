@@ -50,11 +50,23 @@ export const getByDateRange = forge
     },
     output: {
       OK: z.array(
-        calendarSchemas.events.omit({
-          created: true,
-          updated: true,
-          collectionId: true,
-          collectionName: true
+        z.object({
+          id: z.string(),
+          type: z.enum(['single', 'recurring']),
+          start: z.string(),
+          end: z.string(),
+          rrule: z.string().optional(),
+          title: z.string(),
+          calendar: z.string(),
+          category: z.string(),
+          description: z.string(),
+          location: z.string(),
+          location_coords: z.object({
+            lat: z.number(),
+            lon: z.number()
+          }),
+          reference_link: z.string(),
+          is_strikethrough: z.boolean().optional()
         })
       )
     }

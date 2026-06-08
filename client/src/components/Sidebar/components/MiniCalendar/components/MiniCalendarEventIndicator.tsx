@@ -1,3 +1,5 @@
+import { Box, Flex } from '@lifeforge/ui'
+
 import type {
   CalendarCalendar,
   CalendarCategory,
@@ -20,28 +22,30 @@ function MiniCalendarEventIndicator({
   }
 
   return (
-    <div className="space-y-px">
+    <Flex direction="column" gap="xs">
       {groupedByThree.map(group => (
-        <div key={`group-${group[0].id}`} className="flex gap-px">
+        <Flex key={`group-${group[0].id}`} gap="xs">
           {group.map(event => {
             const category = getCategory(event)
 
             const calendar = getCalendar(event)
 
             return (
-              <div
+              <Box
                 key={event.id}
-                className="size-1 rounded-full"
+                r="full"
                 style={{
+                  width: '0.25rem',
+                  height: '0.25rem',
                   backgroundColor:
                     category?.color || calendar?.color || '#000000'
                 }}
               />
             )
           })}
-        </div>
+        </Flex>
       ))}
-    </div>
+    </Flex>
   )
 }
 

@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 
-import { WithQuery } from '@lifeforge/ui'
+import { Flex, WithQuery } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import MiniCalendarContent from './components/MiniCalendarContent'
 import MiniCalendarHeader from './components/MiniCalendarHeader'
@@ -36,25 +36,30 @@ function MiniCalendar() {
   )
 
   return (
-    <section className="flex w-full flex-col gap-3 px-8 py-4">
-      <div className="size-full">
-        <MiniCalendarHeader
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-          setCurrentMonth={setCurrentMonth}
-          setCurrentYear={setCurrentYear}
-        />
-        <WithQuery query={eventsQuery}>
-          {events => (
-            <MiniCalendarContent
-              currentMonth={currentMonth}
-              currentYear={currentYear}
-              events={events}
-            />
-          )}
-        </WithQuery>
-      </div>
-    </section>
+    <Flex
+      as="section"
+      direction="column"
+      gap="md"
+      px="2xl"
+      py="md"
+      width="100%"
+    >
+      <MiniCalendarHeader
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        setCurrentMonth={setCurrentMonth}
+        setCurrentYear={setCurrentYear}
+      />
+      <WithQuery query={eventsQuery}>
+        {events => (
+          <MiniCalendarContent
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            events={events}
+          />
+        )}
+      </WithQuery>
+    </Flex>
   )
 }
 

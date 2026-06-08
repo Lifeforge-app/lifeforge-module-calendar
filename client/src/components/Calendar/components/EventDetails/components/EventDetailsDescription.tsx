@@ -7,7 +7,7 @@ import Markdown from 'react-markdown'
 import { Link } from '@lifeforge/shared'
 import { Button } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import type { CalendarEvent } from '../../..'
 

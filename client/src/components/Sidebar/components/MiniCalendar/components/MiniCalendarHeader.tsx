@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 
 import { usePersonalization } from '@lifeforge/shared'
-import { Button } from '@lifeforge/ui'
+import { Button, Flex, Text } from '@lifeforge/ui'
 
 function MiniCalendarHeader({
   currentMonth,
@@ -17,18 +17,18 @@ function MiniCalendarHeader({
   const { language } = usePersonalization()
 
   return (
-    <div className="flex-between mb-4 flex gap-2">
-      <div className="text-lg font-semibold whitespace-nowrap">
+    <Flex justify="between" mb="md">
+      <Text size="lg" weight="semibold" whiteSpace="nowrap">
         {dayjs()
           .year(currentYear)
           .month(currentMonth)
           .locale(language)
           .format(language.startsWith('zh') ? 'YYYY[年] MMM' : 'MMMM YYYY')}
-      </div>
-      <div className="-mr-4 flex gap-1">
+      </Text>
+      <Flex gap="xs">
         <Button
-          className="p-2!"
           icon="tabler:chevron-left"
+          p="sm"
           variant="plain"
           onClick={() => {
             setCurrentMonth(currentMonth - 1)
@@ -40,8 +40,8 @@ function MiniCalendarHeader({
           }}
         />
         <Button
-          className="p-2!"
           icon="tabler:chevron-right"
+          p="sm"
           variant="plain"
           onClick={() => {
             setCurrentMonth(currentMonth + 1)
@@ -52,8 +52,8 @@ function MiniCalendarHeader({
             }
           }}
         />
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   )
 }
 

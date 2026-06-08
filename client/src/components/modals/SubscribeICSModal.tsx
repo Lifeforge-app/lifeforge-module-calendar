@@ -3,7 +3,7 @@ import z from 'zod'
 
 import { FormModal, defineForm } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 function SubscribeICSModal({
   onClose,

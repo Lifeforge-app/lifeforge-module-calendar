@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { useCallback, useMemo } from 'react'
 
+import { Flex, Text } from '@lifeforge/ui'
+
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
+import * as styles from './MiniCalendarDateItem.css'
 import MiniCalendarEventDetails from './MiniCalendarEventDetails'
 import MiniCalendarEventIndicator from './MiniCalendarEventIndicator'
 
@@ -89,17 +91,28 @@ function MiniCalendarDateItem({
 
   return (
     <>
-      <div
+      <Flex
         key={index}
-        className={clsx(
-          'relative isolate flex flex-col items-center gap-1 text-sm',
-          !isInThisMonth && 'text-bg-300 dark:text-bg-600',
-          isToday &&
-            "after:border-custom-500 after:bg-custom-500/10 font-semibold after:absolute after:top-1/2 after:left-1/2 after:z-[-1] after:size-10 after:-translate-x-1/2 after:-translate-y-5 after:rounded-md after:border after:content-['']"
-        )}
+        centered
+        aspectRatio="1/1"
+        className={isToday ? styles.today : undefined}
         data-tooltip-id={`calendar-tooltip-${index}`}
+        direction="column"
+        gap="xs"
+        height="100%"
+        minHeight="0"
+        position="relative"
+        style={{ isolation: 'isolate' }}
+        width="auto"
       >
-        <span>{actualIndex}</span>
+        <Text
+          color={
+            !isInThisMonth ? { base: 'bg-300', dark: 'bg-600' } : undefined
+          }
+          size="sm"
+        >
+          {actualIndex}
+        </Text>
         {isInThisMonth && eventsOnTheDay.length > 0 && (
           <MiniCalendarEventIndicator
             eventsOnTheDay={eventsOnTheDay}
@@ -107,7 +120,7 @@ function MiniCalendarDateItem({
             getCategory={getCategory}
           />
         )}
-      </div>
+      </Flex>
       {eventsOnTheDay.length > 0 && (
         <MiniCalendarEventDetails
           actualIndex={actualIndex}

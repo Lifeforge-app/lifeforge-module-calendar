@@ -6,7 +6,7 @@ import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import ActionMenu from './ActionMenu'
 

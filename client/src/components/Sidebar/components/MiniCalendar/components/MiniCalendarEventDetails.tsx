@@ -1,13 +1,14 @@
+import dayjs from 'dayjs'
+import { createPortal } from 'react-dom'
+import { Tooltip } from 'react-tooltip'
+
+import { Box, Flex, Icon, Text, vars } from '@lifeforge/ui'
+
 import type {
   CalendarCalendar,
   CalendarCategory,
   CalendarEvent
 } from '@/components/Calendar'
-import { Icon } from '@iconify/react'
-import clsx from 'clsx'
-import dayjs from 'dayjs'
-import { createPortal } from 'react-dom'
-import { Tooltip } from 'react-tooltip'
 
 function MiniCalendarEventDetails({
   index,
@@ -25,56 +26,91 @@ function MiniCalendarEventDetails({
   getCalendar: (event: CalendarEvent) => CalendarCalendar | undefined
 }) {
   return createPortal(
-    <Tooltip
-      noArrow
-      className="bg-bg-50! text-bg-800! shadow-custom border-bg-200 dark:border-bg-700 dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 z-[9999]! rounded-md! border p-4! text-base!"
-      id={`calendar-tooltip-${index}`}
-      opacity={1}
-      place="bottom"
-      positionStrategy="absolute"
+    <Box
+      asChild
+      shadow
+      bg={{ base: 'bg-50', dark: 'bg-800' }}
+      p="sm"
+      r="md"
+      style={{ zIndex: 9999 }}
     >
-      <div className="relative max-h-96 max-w-96 min-w-64 overflow-y-auto">
-        <div className="flex items-start justify-between gap-8">
-          <div>
-            <h3 className="text-bg-800 dark:text-bg-100 text-xl font-semibold">
+      <Tooltip
+        noArrow
+        id={`calendar-tooltip-${index}`}
+        opacity={1}
+        place="bottom"
+        positionStrategy="absolute"
+        style={{
+          borderRadius: vars.radii.md
+        }}
+      >
+        <Box
+          maxHeight="24rem"
+          maxWidth="24rem"
+          minWidth="16rem"
+          overflowY="auto"
+          position="relative"
+        >
+          <Flex align="start" gap="2xl" justify="between">
+            <Text
+              as="h3"
+              color={{ base: 'bg-800', dark: 'bg-100' }}
+              size="xl"
+              weight="semibold"
+            >
               {dayjs(
                 `${date.getFullYear()}-${date.getMonth() + 1}-${actualIndex}`,
                 'YYYY-M-D'
               ).format('dddd, MMMM D')}
-            </h3>
-          </div>
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          {eventsOnTheDay.map(event => {
-            const category = getCategory(event)
+            </Text>
+          </Flex>
+          <Flex direction="column" gap="sm" mt="md">
+            {eventsOnTheDay.map(event => {
+              const category = getCategory(event)
 
-            const calendar = getCalendar(event)
+              const calendar = getCalendar(event)
 
-            return (
-              <p
-                key={event.id}
-                className="text-bg-500 relative flex items-center gap-2 pl-4 before:absolute before:top-1/2 before:left-0 before:h-full before:w-1 before:-translate-y-1/2 before:rounded-full before:bg-[var(--bg-color)]"
-                style={{
-                  // @ts-expect-error - CSS variable
-                  '--bg-color': category?.color || calendar?.color || '#000000'
-                }}
-              >
-                {category && (
-                  <Icon className="size-4" icon={category.icon ?? ''} />
-                )}
-                <span
-                  className={clsx(
-                    event.is_strikethrough && 'line-through decoration-[1.5px]'
-                  )}
+              return (
+                <Flex
+                  key={event.id}
+                  align="center"
+                  gap="sm"
+                  pl="md"
+                  style={{
+                    position: 'relative'
+                  }}
                 >
-                  {event.title}
-                </span>
-              </p>
-            )
-          })}
-        </div>
-      </div>
-    </Tooltip>,
+                  <Box
+                    height="100%"
+                    left="0"
+                    position="absolute"
+                    r="full"
+                    style={{
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'var(--bg-color)',
+                      // @ts-expect-error - CSS Variables
+                      '--bg-color':
+                        category?.color || calendar?.color || '#000000'
+                    }}
+                    top="50%"
+                    width="0.25rem"
+                  />
+                  {category && <Icon icon={category.icon ?? ''} size="1em" />}
+                  <Text
+                    color="muted"
+                    decoration={
+                      event.is_strikethrough ? 'line-through' : undefined
+                    }
+                  >
+                    {event.title}
+                  </Text>
+                </Flex>
+              )
+            })}
+          </Flex>
+        </Box>
+      </Tooltip>
+    </Box>,
     document.body
   )
 }

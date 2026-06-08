@@ -22,7 +22,7 @@ import {
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
 import EventDetails from '@/components/Calendar/components/EventDetails'
 import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 function EventItem({
   categories,

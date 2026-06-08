@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 
 import { usePersonalization } from '@lifeforge/shared'
+import { Grid, Text } from '@lifeforge/ui'
 
 import type { CalendarEvent } from '@/components/Calendar'
 
@@ -18,16 +19,21 @@ function MiniCalendarContent({
   const { language } = usePersonalization()
 
   return (
-    <div className="grid grid-cols-7 gap-3">
+    <Grid minHeight="0" templateCols={7}>
       {{
         en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         'zh-CN': ['日', '一', '二', '三', '四', '五', '六'],
         'zh-TW': ['日', '一', '二', '三', '四', '五', '六'],
         ms: ['Ah', 'Is', 'Se', 'Ra', 'Kh', 'Ju', 'Sa']
-      }[language ?? 'en']?.map(day => (
-        <div key={day} className="flex-center text-bg-500 text-sm">
+      }[language ?? 'en']?.map((day, index) => (
+        <Text
+          key={day}
+          align="center"
+          color={index === 0 || index === 6 ? 'dangerous' : 'muted'}
+          size="sm"
+        >
           {day}
-        </div>
+        </Text>
       ))}
       {Array(
         Math.ceil(
@@ -86,7 +92,7 @@ function MiniCalendarContent({
             )
           })()
         )}
-    </div>
+    </Grid>
   )
 }
 

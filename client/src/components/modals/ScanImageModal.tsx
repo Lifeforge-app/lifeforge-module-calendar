@@ -5,7 +5,7 @@ import { usePromiseLoading } from '@lifeforge/shared'
 import { Button, FileInput, ModalHeader } from '@lifeforge/ui'
 import { useModalStore } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 import ModifyEventModal from './ModifyEventModal'
 
