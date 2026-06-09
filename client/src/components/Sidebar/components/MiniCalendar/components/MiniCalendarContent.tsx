@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 
-import { usePersonalization , Grid, Text } from '@lifeforge/ui'
+import { Grid, Text, usePersonalization } from '@lifeforge/ui'
 
 import type { CalendarEvent } from '@/components/Calendar'
 

@@ -6,8 +6,9 @@ import {
   Button,
   ContextMenu,
   ContextMenuItem,
+  useModalStore,
   useModuleSidebarState
-, useModalStore } from '@lifeforge/ui'
+} from '@lifeforge/ui'
 
 import ModifyEventModal from '@/components/modals/ModifyEventModal'
 import ScanImageModal from '@/components/modals/ScanImageModal'

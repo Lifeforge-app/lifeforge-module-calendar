@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import Markdown from 'react-markdown'
-
 import { Link } from 'react-router'
+
 import { Button, Icon } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'

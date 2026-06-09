@@ -1,7 +1,13 @@
 import { useState } from 'react'
 
 import { usePromiseLoading } from '@lifeforge/api'
-import { toast , Button, FileInput, ModalHeader , useModalStore } from '@lifeforge/ui'
+import {
+  Button,
+  FileInput,
+  ModalHeader,
+  toast,
+  useModalStore
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 

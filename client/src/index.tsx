@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect } from 'react'
 
-import { parseAsString, useQueryState } from 'nuqs'
 import {
   ContentWrapperWithSidebar,
   ContextMenu,
