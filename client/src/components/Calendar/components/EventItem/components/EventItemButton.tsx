@@ -1,9 +1,8 @@
-import { Icon } from '@iconify/react'
 import clsx from 'clsx'
 import { memo } from 'react'
 import tinycolor from 'tinycolor2'
 
-import { usePersonalization } from '@lifeforge/shared'
+import { Icon, usePersonalization } from '@lifeforge/ui'
 
 function EventItemButton({
   id,

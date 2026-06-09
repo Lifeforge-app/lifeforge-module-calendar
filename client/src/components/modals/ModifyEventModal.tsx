@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
-import { toast } from 'react-toastify'
 
-import type { InferInput } from '@lifeforge/shared'
-import { FormModal, defineForm } from '@lifeforge/ui'
+import type { InferInput } from '@lifeforge/api'
+import { FormModal, defineForm, toast } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 

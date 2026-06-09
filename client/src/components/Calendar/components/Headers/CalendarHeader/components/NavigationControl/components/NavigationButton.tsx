@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react'
+import { Icon } from '@lifeforge/ui'
 
 function NavigationButton({
   direction,

@@ -1,8 +1,8 @@
-import { Icon } from '@iconify/react/dist/iconify.js'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
 
 import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
+import { Icon } from '@lifeforge/ui'
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'
@@ -53,7 +53,7 @@ function CalendarListItem({
       title: 'Delete Calendar',
       description: `Are you sure you want to delete the calendar "${item.name}"?`,
       onConfirm: async () => {
-        await deleteMutation.mutateAsync({})
+        await deleteMutation.mutateAsync(undefined)
       },
       confirmationPrompt: item.name
     })

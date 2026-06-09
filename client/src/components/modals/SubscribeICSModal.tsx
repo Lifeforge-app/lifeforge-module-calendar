@@ -1,7 +1,6 @@
-import { toast } from 'react-toastify'
 import z from 'zod'
 
-import { FormModal, defineForm } from '@lifeforge/ui'
+import { toast , FormModal, defineForm } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 

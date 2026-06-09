@@ -1,17 +1,21 @@
-import { Icon } from '@iconify/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
 
-import { ConfirmationModal, ContextMenu, ContextMenuItem } from '@lifeforge/ui'
-import { useModalStore } from '@lifeforge/ui'
+import {
+  ConfirmationModal,
+  ContextMenu,
+  ContextMenuItem,
+  Icon,
+  toast,
+  useModalStore
+} from '@lifeforge/ui'
 
 import ModifyEventModal from '@/components/modals/ModifyEventModal'
-import { useCalendarStore } from '@/stores/useCalendarStore'
 import { forgeAPI } from '@/manifest'
+import { useCalendarStore } from '@/stores/useCalendarStore'
 
 import type { CalendarCategory, CalendarEvent } from '../../..'
 
@@ -58,7 +62,7 @@ function EventDetailsHeader({
       title: t('modals.confirmAddException.title'),
       description: t('modals.confirmAddException.description'),
       onConfirm: async () => {
-        await addExceptionMutation.mutateAsync({})
+        await addExceptionMutation.mutateAsync(undefined)
       }
     })
   }, [event.id])
@@ -93,7 +97,7 @@ function EventDetailsHeader({
       description: 'Are you sure you want to delete this event?',
       confirmationButton: 'delete',
       onConfirm: async () => {
-        await deleteMutation.mutateAsync({})
+        await deleteMutation.mutateAsync(undefined)
       }
     })
   }, [event])

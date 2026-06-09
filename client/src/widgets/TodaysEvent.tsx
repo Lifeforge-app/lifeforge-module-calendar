@@ -1,22 +1,22 @@
-import { Icon } from '@iconify/react'
 import { useQuery } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router'
 import { Tooltip } from 'react-tooltip'
 
-import { Link } from '@lifeforge/shared'
-import type { InferOutput } from '@lifeforge/shared'
-import { useMainSidebarState } from '@lifeforge/shared'
-import type { WidgetConfig } from '@lifeforge/shared'
+import type { InferOutput } from '@lifeforge/api'
+import type { WidgetConfig } from '@lifeforge/configs'
 import {
   Button,
   Card,
   EmptyStateScreen,
+  Icon,
   Scrollbar,
   Widget,
-  WithQuery
+  WithQuery,
+  useMainSidebarState
 } from '@lifeforge/ui'
 
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'

@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
 
-import { ConfirmationModal, SidebarItem } from '@lifeforge/ui'
-import { useModalStore } from '@lifeforge/ui'
+import { ConfirmationModal, SidebarItem , useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'
@@ -50,7 +49,7 @@ function CategoryListItem({
       title: 'Delete Category',
       description: `Are you sure you want to delete the category "${item.name}"?`,
       onConfirm: async () => {
-        await deleteMutation.mutateAsync({})
+        await deleteMutation.mutateAsync(undefined)
       },
       confirmationPrompt: item.name
     })
