@@ -24,7 +24,6 @@ import { useCalendarStore } from './stores/useCalendarStore'
 
 function CalendarModule() {
   const { open } = useModalStore()
-
   const { start, end } = useCalendarStore()
 
   const rawEventsQuery = useQuery(

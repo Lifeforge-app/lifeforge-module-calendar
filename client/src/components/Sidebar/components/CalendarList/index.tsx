@@ -22,7 +22,6 @@ function CalendarList({
   setSelectedCalendar: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
-
   const { open } = useModalStore()
 
   const handleSelect = useCallback(

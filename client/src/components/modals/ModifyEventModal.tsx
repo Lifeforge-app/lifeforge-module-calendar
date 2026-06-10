@@ -19,9 +19,7 @@ function ModifyEventModal({
   onClose: () => void
 }) {
   const queryClient = useQueryClient()
-
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
-
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   const mutation = useMutation(

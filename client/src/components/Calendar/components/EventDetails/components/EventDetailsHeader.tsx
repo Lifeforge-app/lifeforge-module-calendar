@@ -29,11 +29,8 @@ function EventDetailsHeader({
   editable?: boolean
 }) {
   const { t } = useModuleTranslation()
-
   const { open } = useModalStore()
-
   const queryClient = useQueryClient()
-
   const { start, end } = useCalendarStore()
 
   const addExceptionMutation = useMutation(

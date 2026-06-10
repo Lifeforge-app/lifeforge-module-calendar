@@ -12,7 +12,6 @@ import { forgeAPI } from '@/manifest'
 
 export default function MiniCalendar() {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month())
-
   const [currentYear, setCurrentYear] = useState(dayjs().year())
 
   const startDate = dayjs()

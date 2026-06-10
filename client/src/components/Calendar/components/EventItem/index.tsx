@@ -10,7 +10,6 @@ import EventItemTooltip from './components/EventItemTooltip.js'
 
 function EventItem({ event }: { event: CalendarEvent }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
-
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
 
   const category = useMemo(() => {

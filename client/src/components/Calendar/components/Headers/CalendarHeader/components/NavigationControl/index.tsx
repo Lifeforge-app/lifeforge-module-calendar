@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import type { NavigateAction } from 'react-big-calendar'
 
-import { Icon } from '@lifeforge/ui'
-import { Button } from '@lifeforge/ui'
+import { Icon , Button } from '@lifeforge/ui'
 
 import { useCalendarStore } from '@/stores/useCalendarStore'
 

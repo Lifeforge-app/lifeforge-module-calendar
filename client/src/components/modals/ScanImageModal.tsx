@@ -15,9 +15,7 @@ import ModifyEventModal from './ModifyEventModal'
 
 function ScanImageModal({ onClose }: { onClose: () => void }) {
   const { open } = useModalStore()
-
   const [file, setFile] = useState<File | string | null>(null)
-
   const [preview, setPreview] = useState<string | null>(null)
 
   async function handleSubmit() {

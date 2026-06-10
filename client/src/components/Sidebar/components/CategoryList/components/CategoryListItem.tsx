@@ -23,7 +23,6 @@ function CategoryListItem({
   modifiable?: boolean
 }) {
   const queryClient = useQueryClient()
-
   const { open } = useModalStore()
 
   const deleteMutation = useMutation(

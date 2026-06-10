@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback, useMemo } from 'react'
 
-import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
-import { Icon } from '@lifeforge/ui'
+import { ConfirmationModal, SidebarItem, useModalStore , Icon } from '@lifeforge/ui'
 
 import type { CalendarCalendar } from '@/components/Calendar'
 import ModifyCalendarModal from '@/components/modals/ModifyCalendarModal'
@@ -24,7 +23,6 @@ function CalendarListItem({
   modifiable?: boolean
 }) {
   const queryClient = useQueryClient()
-
   const { open } = useModalStore()
 
   const deleteMutation = useMutation(

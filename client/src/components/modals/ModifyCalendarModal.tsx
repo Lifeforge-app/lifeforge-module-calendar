@@ -19,7 +19,6 @@ function ModifyCalendarModal({
   onClose: () => void
 }) {
   const { open } = useModalStore()
-
   const queryClient = useQueryClient()
 
   const mutation = useMutation(

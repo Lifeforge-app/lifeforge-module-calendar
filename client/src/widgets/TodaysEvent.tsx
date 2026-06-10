@@ -32,9 +32,7 @@ function EventItem({
   event: CalendarEvent
 }) {
   const { sidebarExpanded } = useMainSidebarState()
-
   const [width, setWidth] = useState(0)
-
   const ref = useRef<HTMLDivElement>(null)
 
   const handleResize = () => {
@@ -130,7 +128,6 @@ function EventItem({
 
 export default function TodaysEvent() {
   const rawEventsQuery = useQuery(forgeAPI.events.getToday.queryOptions())
-
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
   return (

@@ -30,9 +30,7 @@ function CalendarHeader({
   onView
 }: CalendarHeaderProps) {
   const { open } = useModalStore()
-
   const { t } = useModuleTranslation()
-
   const { setIsSidebarOpen } = useModuleSidebarState()
 
   const handleScanImageModalOpen = useCallback(() => {

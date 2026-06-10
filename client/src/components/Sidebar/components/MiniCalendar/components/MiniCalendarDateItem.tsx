@@ -33,7 +33,6 @@ function MiniCalendarDateItem({
   events
 }: MiniCalendarDateItemProps) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
-
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
 
   const isInThisMonth = useMemo(

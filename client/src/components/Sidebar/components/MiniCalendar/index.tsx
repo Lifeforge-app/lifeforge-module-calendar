@@ -11,7 +11,6 @@ import MiniCalendarHeader from './components/MiniCalendarHeader'
 
 function MiniCalendar() {
   const [currentMonth, setCurrentMonth] = useState(dayjs().month())
-
   const [currentYear, setCurrentYear] = useState(dayjs().year())
 
   const startDate = dayjs()

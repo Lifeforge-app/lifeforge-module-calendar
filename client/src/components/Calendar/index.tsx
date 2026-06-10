@@ -59,9 +59,7 @@ function CalendarComponent({
   }, [rawEvents])
 
   const { open } = useModalStore()
-
   const queryClient = useQueryClient()
-
   const { start, end, setStart, setEnd } = useCalendarStore()
 
   const filteredEvents = useMemo(
