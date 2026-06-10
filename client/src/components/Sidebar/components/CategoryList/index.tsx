@@ -32,7 +32,6 @@ function CategoryList({
                 })
             }}
             label="Categories"
-            namespace="apps.calendar"
           />
           {[...categories, ...Object.keys(INTERNAL_CATEGORIES)].length > 0 ? (
             <ul className="-mt-2 flex h-full min-w-0 flex-col">

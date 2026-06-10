@@ -143,7 +143,6 @@ export default function TodaysEvent() {
       }
       className="pr-4"
       icon="tabler:calendar"
-      namespace="apps.calendar"
       title="Todays Event"
     >
       <Scrollbar>
@@ -178,7 +177,6 @@ export default function TodaysEvent() {
                       icon="tabler:calendar-off"
                       message={{
                         id: 'event',
-                        namespace: 'apps.calendar',
                         tKey: 'widgets.todaysEvent'
                       }}
                     />
@@ -194,7 +192,6 @@ export default function TodaysEvent() {
 }
 
 export const config: WidgetConfig = {
-  namespace: 'apps.calendar',
   id: 'todaysEvent',
   icon: 'tabler:calendar-event'
 }

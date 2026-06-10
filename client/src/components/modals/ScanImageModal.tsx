@@ -56,7 +56,6 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
         <ModalHeader
           hasAI
           icon="tabler:scan"
-          namespace="apps.calendar"
           title="scanImage"
           onClose={onClose}
         />
@@ -68,7 +67,6 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
           file={file}
           icon="tabler:photo"
           label="image"
-          namespace="apps.calendar"
           preview={preview}
           setData={({ file, preview }) => {
             setFile(file)

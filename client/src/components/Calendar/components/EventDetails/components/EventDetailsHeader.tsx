@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
-import { useModuleTranslation } from '@lifeforge/localization'
 
+import { useModuleTranslation } from '@lifeforge/localization'
 import {
   ConfirmationModal,
   ContextMenu,
@@ -139,7 +139,6 @@ function EventDetailsHeader({
               dangerous
               icon="tabler:calendar-off"
               label="Except This Time"
-              namespace="apps.calendar"
               onClick={handleAddException}
             />
           )}

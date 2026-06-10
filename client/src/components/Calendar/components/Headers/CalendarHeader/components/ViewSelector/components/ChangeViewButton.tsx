@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import _ from 'lodash'
+
 import { useModuleTranslation } from '@lifeforge/localization'
 
 function ChangeViewButton({

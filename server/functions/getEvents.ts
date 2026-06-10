@@ -185,7 +185,7 @@ export default async function getEvents({
 
   allEvents.push(...formattedIcalEvents)
 
-  const externalEventGetterFiles = fs.globSync('../apps/*/server/events.ts')
+  const externalEventGetterFiles = fs.globSync('../modules/*/server/events.ts')
 
   logging.debug(
     `Found ${externalEventGetterFiles.length} external event getter files`

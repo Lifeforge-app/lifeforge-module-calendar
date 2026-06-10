@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react'
 import { type NavigateAction, type View } from 'react-big-calendar'
-import { useModuleTranslation } from '@lifeforge/localization'
 
+import { useModuleTranslation } from '@lifeforge/localization'
 import {
   Button,
   ContextMenu,
@@ -55,7 +55,6 @@ function CalendarHeader({
           <Button
             className=""
             icon="tabler:calendar-pin"
-            namespace="apps.calendar"
             variant="plain"
             onClick={handleNavigateToday}
           >
@@ -75,13 +74,11 @@ function CalendarHeader({
             <ContextMenuItem
               icon="tabler:photo"
               label="Scan from Image"
-              namespace="apps.calendar"
               onClick={handleScanImageModalOpen}
             />
             <ContextMenuItem
               icon="tabler:plus"
               label="Input Manually"
-              namespace="apps.calendar"
               onClick={handleCreateEvent}
             />
           </ContextMenu>

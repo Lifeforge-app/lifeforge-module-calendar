@@ -51,7 +51,6 @@ function CalendarList({
               onClick: handleCreate
             }}
             label="Calendars"
-            namespace="apps.calendar"
           />
           {calendars.length > 0 ? (
             <ul className="-mt-2 flex h-full min-w-0 flex-col">
@@ -70,8 +69,7 @@ function CalendarList({
               smaller
               icon="tabler:calendar"
               message={{
-                id: 'calendars',
-                namespace: 'apps.calendar'
+                id: 'calendars'
               }}
             />
           )}

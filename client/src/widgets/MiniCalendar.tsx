@@ -48,7 +48,6 @@ export default function MiniCalendar() {
       }
       className="higher-z"
       icon="tabler:calendar"
-      namespace="apps.calendar"
       title="Mini Calendar"
     >
       <Stack
@@ -80,7 +79,6 @@ export default function MiniCalendar() {
 }
 
 export const config: WidgetConfig = {
-  namespace: 'apps.calendar',
   id: 'miniCalendar',
   icon: 'tabler:calendar',
   minW: 2,
