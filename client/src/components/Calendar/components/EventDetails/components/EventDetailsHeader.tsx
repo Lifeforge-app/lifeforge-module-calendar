@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import {
   ConfirmationModal,
@@ -28,7 +28,7 @@ function EventDetailsHeader({
   category: CalendarCategory | undefined
   editable?: boolean
 }) {
-  const { t } = useTranslation('apps.calendar')
+  const { t } = useModuleTranslation()
 
   const { open } = useModalStore()
 

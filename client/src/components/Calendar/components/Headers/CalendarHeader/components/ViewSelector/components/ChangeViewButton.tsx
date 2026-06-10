@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import _ from 'lodash'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 function ChangeViewButton({
   view,
@@ -11,7 +11,7 @@ function ChangeViewButton({
   currentView: string
   onView: (view: 'month' | 'week' | 'day' | 'agenda' | 'work_week') => void
 }) {
-  const { t } = useTranslation('apps.calendar')
+  const { t } = useModuleTranslation()
 
   return (
     <button

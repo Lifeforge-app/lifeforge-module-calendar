@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react'
 import { type NavigateAction, type View } from 'react-big-calendar'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import {
   Button,
@@ -31,7 +31,7 @@ function CalendarHeader({
 }: CalendarHeaderProps) {
   const { open } = useModalStore()
 
-  const { t } = useTranslation('apps.calendar')
+  const { t } = useModuleTranslation()
 
   const { setIsSidebarOpen } = useModuleSidebarState()
 
