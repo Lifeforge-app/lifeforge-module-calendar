@@ -1,5 +1,4 @@
 import z from 'zod'
-
 import { cleanSchemas } from '@lifeforge/server-utils'
 
 export const schemas = {
@@ -223,9 +222,7 @@ export const schemas = {
           type: 'text'
         }
       ],
-      indexes: [
-        'CREATE UNIQUE INDEX `idx_isCrOV2gEh` ON `calendar__categories` (`name`)'
-      ],
+      indexes: [],
       system: false
     }
   },
@@ -305,9 +302,7 @@ export const schemas = {
           type: 'date'
         }
       ],
-      indexes: [
-        'CREATE UNIQUE INDEX `idx_qUL2o05YBe` ON `calendar__calendars` (`name`)'
-      ],
+      indexes: [],
       system: false
     }
   },
@@ -372,9 +367,7 @@ export const schemas = {
           type: 'date'
         }
       ],
-      indexes: [
-        'CREATE UNIQUE INDEX `idx_Z0MvNxCsxl` ON `calendar__events_single` (`base_event`)'
-      ],
+      indexes: [],
       system: false
     }
   },
@@ -464,9 +457,7 @@ export const schemas = {
           type: 'relation'
         }
       ],
-      indexes: [
-        'CREATE UNIQUE INDEX `idx_dyxH0lk7ka` ON `calendar__events_recurring` (`base_event`)'
-      ],
+      indexes: [],
       system: false
     }
   },

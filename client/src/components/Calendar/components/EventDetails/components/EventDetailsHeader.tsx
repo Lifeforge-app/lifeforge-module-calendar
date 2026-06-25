@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
 
@@ -8,7 +7,9 @@ import {
   ConfirmationModal,
   ContextMenu,
   ContextMenuItem,
+  Flex,
   Icon,
+  Text,
   toast,
   useModalStore
 } from '@lifeforge/ui'
@@ -78,7 +79,7 @@ function EventDetailsHeader({
       })
       .mutationOptions({
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['calendar'] })
+          queryClient.invalidateQueries({ queryKey: forgeAPI.key })
         },
         onError: () => {
           toast.error(
@@ -100,35 +101,32 @@ function EventDetailsHeader({
   }, [event])
 
   return (
-    <header className="flex items-start justify-between gap-8">
-      <div>
-        <div className="flex items-center gap-2">
+    <Flex align="start" as="header" gap="2xl" justify="between">
+      <Flex direction="column">
+        <Flex align="center" gap="xs">
           {event.category !== '' && (
             <Icon
-              className="size-4 shrink-0"
               icon={category?.icon ?? ''}
-              style={{
-                color: category?.color
-              }}
+              style={{ color: category?.color, flexShrink: 0 }}
             />
           )}
-          <span className="text-bg-500 truncate">{category?.name}</span>
-        </div>
-        <h3
-          className={clsx(
-            'text-bg-800 dark:text-bg-100 mt-2 text-xl font-semibold',
-            event.is_strikethrough && 'line-through decoration-2'
-          )}
+          <Text truncate color="muted">
+            {category?.name}
+          </Text>
+        </Flex>
+        <Text
+          as="h3"
+          color={{ base: 'bg-800', dark: 'bg-100' }}
+          decoration={event.is_strikethrough ? 'line-through' : undefined}
+          mt="xs"
+          size="xl"
+          weight="semibold"
         >
           {event.title}
-        </h3>
-      </div>
+        </Text>
+      </Flex>
       {!event.category.startsWith('_') && editable && (
-        <ContextMenu
-          classNames={{
-            button: 'dark:hover:bg-bg-700/50! p-2!'
-          }}
-        >
+        <ContextMenu>
           <ContextMenuItem
             icon="tabler:pencil"
             label="Edit"
@@ -150,7 +148,7 @@ function EventDetailsHeader({
           />
         </ContextMenu>
       )}
-    </header>
+    </Flex>
   )
 }
 

@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 
 import {
   ConfirmationModal,
+  Flex,
   Icon,
   SidebarItem,
   useModalStore
@@ -37,7 +38,7 @@ function CalendarListItem({
           queryKey: forgeAPI.calendars.list.key
         })
         queryClient.invalidateQueries({
-          queryKey: ['calendar', 'events']
+          queryKey: forgeAPI.events.key
         })
         onCancelSelect()
       }
@@ -79,16 +80,17 @@ function CalendarListItem({
       active={isSelected}
       contextMenuItems={contextMenuItems}
       label={
-        <div className="flex items-center gap-2">
+        <Flex align="center" gap="xs">
           {item.name}
           {item.link && (
             <Icon
-              className="text-bg-400 dark:text-bg-600 size-4"
+              color={{ base: 'bg-400', dark: 'bg-600' }}
               icon="tabler:bell"
             />
           )}
-        </div>
+        </Flex>
       }
+      namespace={false}
       sideStripColor={item.color}
       onCancelButtonClick={onCancelSelect}
       onClick={handleClick}

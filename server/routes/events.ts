@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import fs from 'fs'
 import z from 'zod'
 
@@ -7,6 +8,8 @@ import { LocationSchema } from '@lifeforge/server-utils'
 import forge from '../forge'
 import getEvents from '../functions/getEvents'
 import calendarSchemas from '../schema'
+
+dayjs.extend(utc)
 
 const CreateAndUpdateEventSchema = calendarSchemas.events
   .omit({
@@ -87,12 +90,17 @@ export const getToday = forge
     description: "Get today's events",
     output: {
       OK: z.array(
-        calendarSchemas.events.omit({
-          created: true,
-          updated: true,
-          collectionId: true,
-          collectionName: true
-        })
+        calendarSchemas.events
+          .omit({
+            created: true,
+            updated: true,
+            collectionId: true,
+            collectionName: true
+          })
+          .extend({
+            start: z.string(),
+            end: z.string()
+          })
       )
     }
   })
@@ -208,8 +216,8 @@ export const create = forge
         .collection('events_single')
         .data({
           base_event: baseEvent.id,
-          start: eventData.start,
-          end: eventData.end
+          start: dayjs(eventData.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+          end: dayjs(eventData.end).utc().format('YYYY-MM-DD HH:mm:ss')
         })
         .execute()
     }
@@ -274,7 +282,7 @@ export const scanImage = forge
       const aiResponse = await fetchAI({
         pb,
         provider: 'openai',
-        model: 'gpt-4o',
+        model: 'gpt-5.4-mini',
         structure: responseStructure,
         messages: [
           {
@@ -488,8 +496,8 @@ export const update = forge
         .collection('events_single')
         .id(subEvent.id)
         .data({
-          start: eventData.start,
-          end: eventData.end
+          start: dayjs(eventData.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+          end: dayjs(eventData.end).utc().format('YYYY-MM-DD HH:mm:ss')
         })
         .execute()
     }

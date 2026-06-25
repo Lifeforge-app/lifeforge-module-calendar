@@ -1,6 +1,8 @@
 import { memo } from 'react'
 import type { View } from 'react-big-calendar'
 
+import { Flex, surface } from '@lifeforge/ui'
+
 import ChangeViewButton from './components/ChangeViewButton'
 
 function ViewSelector({
@@ -11,7 +13,15 @@ function ViewSelector({
   onView: (view: View) => void
 }) {
   return (
-    <div className="shadow-custom in-[.bordered]:border-2 border-bg-500/20 component-bg mb-4 flex w-full gap-1 rounded-md p-2">
+    <Flex
+      shadow
+      bg={surface.default}
+      gap="xs"
+      mb="md"
+      p="sm"
+      r="md"
+      width="100%"
+    >
       {['Month', 'Week', 'Day', 'Agenda'].map(view => (
         <ChangeViewButton
           key={view}
@@ -20,7 +30,7 @@ function ViewSelector({
           onView={onView}
         />
       ))}
-    </div>
+    </Flex>
   )
 }
 

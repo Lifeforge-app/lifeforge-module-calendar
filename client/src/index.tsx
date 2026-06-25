@@ -85,9 +85,13 @@ function CalendarModule() {
         </ContentWrapperWithSidebar>
       </LayoutWithSidebar>
       <ContextMenu
-        buttonComponent={<FAB className="static!" visibilityBreakpoint="md" />}
-        classNames={{
-          wrapper: 'fixed right-6 bottom-6'
+        buttonComponent={<FAB position="static" visibilityBreakpoint="md" />}
+        styles={{
+          wrapper: {
+            position: 'fixed',
+            bottom: '1.5em',
+            right: '1.5em'
+          }
         }}
       >
         <ContextMenuItem

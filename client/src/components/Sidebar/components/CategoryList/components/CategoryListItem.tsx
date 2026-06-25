@@ -72,6 +72,7 @@ function CategoryListItem({
       contextMenuItems={contextMenuItems}
       icon={item.icon}
       label={item.name}
+      namespace={false}
       sideStripColor={item.color}
       onCancelButtonClick={onCancelSelect}
       onClick={handleClick}

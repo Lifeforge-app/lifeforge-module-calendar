@@ -2,14 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 
 import {
   EmptyStateScreen,
-  Icon,
   SidebarTitle,
   Stack,
   WithQuery,
   useModalStore
 } from '@lifeforge/ui'
 
-import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'
 import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'

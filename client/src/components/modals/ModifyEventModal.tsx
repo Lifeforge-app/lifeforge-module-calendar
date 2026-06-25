@@ -64,7 +64,7 @@ function ModifyEventModal({
         })
     ).mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['calendar'] })
+        queryClient.invalidateQueries({ queryKey: forgeAPI.key })
       },
       onError: error => {
         toast.error(`Error modifying event: ${error.message}`)

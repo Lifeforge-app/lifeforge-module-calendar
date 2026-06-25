@@ -26,7 +26,17 @@
   },
   "lifeforge": {
     "icon": "tabler:calendar",
-    "category": "Productivity"
+    "category": "Productivity",
+    "APIKeyAccess": {
+      "openai": {
+        "usage": "Create event from natural language and images using llm",
+        "required": false
+      },
+      "gcloud": {
+        "usage": "Retrieve location during natural language processing for event creation",
+        "required": false
+      }
+    }
   },
   "peerDependencies": {
     "@lifeforge/api": "workspace:*",

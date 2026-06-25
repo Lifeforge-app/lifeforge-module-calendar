@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import Markdown from 'react-markdown'
 import { Link } from 'react-router'
 
-import { Button, Icon } from '@lifeforge/ui'
+import { Box, Button, Flex, Icon, Prose, Stack, Text } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
@@ -37,55 +37,51 @@ function EventDetailsDescription({ event }: { event: CalendarEvent }) {
 
   return (
     <>
-      <div className="mt-4 space-y-2">
-        <div className="flex items-center gap-3">
-          <Icon
-            className="text-bg-500 size-4 shrink-0"
-            icon="tabler:clock-hour-3"
-          />
-          <span className="text-bg-500">{eventTime}</span>
-        </div>
+      <Stack gap="xs" mt="md">
+        <Flex align="center" gap="sm">
+          <Icon color="muted" icon="tabler:clock-hour-3" />
+          <Text color="muted">{eventTime}</Text>
+        </Flex>
         {event.location && (
-          <div className="flex items-center gap-3">
-            <Icon
-              className="text-bg-500 size-4 shrink-0"
-              icon="tabler:map-pin"
-            />
-            <span className="text-bg-500">{event.location}</span>
-          </div>
+          <Flex align="center" gap="sm">
+            <Icon color="muted" icon="tabler:map-pin" />
+            <Text color="muted">{event.location}</Text>
+          </Flex>
         )}
         {eventCalendar && (
-          <div className="flex items-center gap-3">
-            <Icon
-              className="text-bg-500 size-4 shrink-0"
-              icon="tabler:calendar"
-            />
-            <div className="flex items-center gap-2">
-              <span
-                className="block h-4 w-1 rounded-md"
-                style={{ backgroundColor: eventCalendar.color }}
+          <Flex align="center" gap="sm">
+            <Icon color="muted" icon="tabler:calendar" />
+            <Flex align="center" gap="sm">
+              <Box
+                height="0.4rem"
+                r="md"
+                style={{
+                  backgroundColor: eventCalendar.color
+                }}
+                width="0.4rem"
               />
-              <span className="text-bg-500">{eventCalendar.name}</span>
-            </div>
-          </div>
+              <Text color="muted">{eventCalendar.name}</Text>
+            </Flex>
+          </Flex>
         )}
         {event.description && (
-          <div className="prose calendar-prose max-w-auto! mt-8 w-full">
+          <Prose className="calendar-prose" mt="lg" width="100%">
             <Markdown>{event.description}</Markdown>
-          </div>
+          </Prose>
         )}
-      </div>
+      </Stack>
       {event.reference_link && (
         <Button
           as={Link}
-          className="mt-6 w-full"
           icon="tabler:link"
+          mt="lg"
           rel="noopener noreferrer"
           target={
             event.reference_link.startsWith('http') ? '_blank' : undefined
           }
           to={event.reference_link}
           variant="secondary"
+          width="100%"
         >
           View Reference
         </Button>

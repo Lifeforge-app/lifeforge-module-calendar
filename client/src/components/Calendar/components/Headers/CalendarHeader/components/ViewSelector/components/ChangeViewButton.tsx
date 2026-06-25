@@ -1,7 +1,7 @@
-import clsx from 'clsx'
 import _ from 'lodash'
 
 import { useModuleTranslation } from '@lifeforge/localization'
+import { Box, Text } from '@lifeforge/ui'
 
 function ChangeViewButton({
   view,
@@ -14,21 +14,28 @@ function ChangeViewButton({
 }) {
   const { t } = useModuleTranslation()
 
+  const isActive = view.toLowerCase() === currentView
+
   return (
-    <button
-      key={view}
-      className={clsx(
-        'hover:bg-bg-100 dark:hover:bg-bg-800 w-full truncate rounded-md p-3 px-4 font-medium whitespace-nowrap transition-all',
-        view.toLowerCase() === currentView
-          ? 'bg-bg-200/50 border-bg-500/20 text-bg-800 dark:bg-bg-800 dark:text-bg-200 font-medium shadow-xs in-[.bordered]:border-2'
-          : 'text-bg-500'
-      )}
-      onClick={() => {
-        onView(view.toLowerCase() as 'month' | 'week' | 'day' | 'agenda')
-      }}
-    >
-      {t(`view.${_.camelCase(view)}`)}
-    </button>
+    <Box asChild r="md" shadow={isActive} width="100%">
+      <Text
+        truncate
+        as="button"
+        bg={isActive ? { base: 'bg-200', dark: 'bg-800' } : undefined}
+        color={isActive ? { base: 'bg-800', dark: 'bg-200' } : 'muted'}
+        p="sm"
+        style={{
+          transition: 'all 150ms',
+          whiteSpace: 'nowrap'
+        }}
+        weight="medium"
+        onClick={() => {
+          onView(view.toLowerCase() as 'month' | 'week' | 'day' | 'agenda')
+        }}
+      >
+        {t(`view.${_.camelCase(view)}`)}
+      </Text>
+    </Box>
   )
 }
 

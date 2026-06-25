@@ -512,6 +512,12 @@ export const contract = {
               },
               "id": {
                 "type": "string"
+              },
+              "start": {
+                "type": "string"
+              },
+              "end": {
+                "type": "string"
               }
             },
             "required": [
@@ -523,7 +529,9 @@ export const contract = {
               "reference_link",
               "description",
               "type",
-              "id"
+              "id",
+              "start",
+              "end"
             ],
             "additionalProperties": false
           }

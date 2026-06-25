@@ -1,8 +1,6 @@
-import clsx from 'clsx'
 import { memo } from 'react'
-import tinycolor from 'tinycolor2'
 
-import { Icon, usePersonalization } from '@lifeforge/ui'
+import { Flex, Icon, Text } from '@lifeforge/ui'
 
 function EventItemButton({
   id,
@@ -17,46 +15,33 @@ function EventItemButton({
   icon: string
   isStrikethrough?: boolean
 }) {
-  const { bgTempPalette } = usePersonalization()
-
-  const finalColor = color || bgTempPalette[500]
-
   return (
-    <button
-      className={clsx(
-        'bg-bg-300 dark:bg-bg-800 text-bg-600 dark:text-bg-400 flex w-full flex-row! flex-nowrap! items-start justify-between rounded-md px-[5px] py-[2px]',
-        tinycolor(finalColor).isDark() && 'dark-category'
-      )}
+    <Flex
+      align="start"
+      as="button"
+      bg={{ base: 'bg-300', dark: 'bg-800' }}
       data-tooltip-id={`calendar-event-${id}`}
+      r="md"
       style={{
-        backgroundColor: finalColor + '33',
+        backgroundColor: `${color}33`,
         // @ts-expect-error - CSS variable not recognized
-        '--category-color': finalColor
+        '--category-color': color,
+        padding: '2px 5px'
       }}
+      width="100%"
     >
-      <div className="flex w-full min-w-0 items-center gap-2">
-        {icon && (
-          <Icon
-            className="size-4 shrink-0"
-            icon={icon ?? ''}
-            style={{
-              color: finalColor
-            }}
-          />
-        )}
-        <span
-          className={clsx(
-            'w-full min-w-0 truncate text-left',
-            isStrikethrough && 'line-through decoration-[1.5px]'
-          )}
-          style={{
-            color: finalColor
-          }}
+      <Flex align="center" gap="xs" minWidth="0" width="100%">
+        {icon && <Icon icon={icon} style={{ color, flexShrink: 0 }} />}
+        <Text
+          truncate
+          align="left"
+          decoration={isStrikethrough ? 'line-through' : undefined}
+          style={{ color }}
         >
           {title}
-        </span>
-      </div>
-    </button>
+        </Text>
+      </Flex>
+    </Flex>
   )
 }
 

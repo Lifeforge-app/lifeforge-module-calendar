@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import clsx from 'clsx'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -9,13 +8,17 @@ import { Tooltip } from 'react-tooltip'
 import type { InferOutput } from '@lifeforge/api'
 import type { WidgetConfig } from '@lifeforge/configs'
 import {
+  Box,
   Button,
   Card,
   EmptyStateScreen,
+  Flex,
   Icon,
   Scrollbar,
+  Text,
   Widget,
   WithQuery,
+  surface,
   useMainSidebarState
 } from '@lifeforge/ui'
 
@@ -66,58 +69,68 @@ function EventItem({
       <Card
         key={event.id}
         ref={ref}
-        className={clsx(
-          'flex-between component-bg-lighter flex cursor-pointer gap-3'
-        )}
+        bg={surface.light}
         data-tooltip-id={`calendar-event-${event.id}`}
       >
-        <div
-          className="h-full w-1 rounded-full"
-          style={{
-            backgroundColor: targetCategory?.color
-          }}
-        />
-        <div className="flex w-full flex-col gap-1">
-          <div className="text-bg-500 flex items-center gap-1 text-sm">
-            <Icon
-              icon={targetCategory?.icon ?? ''}
-              style={{
-                color: targetCategory?.color
-              }}
-            />
-            {targetCategory?.name}
-          </div>
-          <div className="font-semibold">{event.title}</div>
-        </div>
+        <Flex align="center" gap="sm">
+          <Box
+            height="2.5rem"
+            r="full"
+            style={{
+              backgroundColor: targetCategory?.color
+            }}
+            width="0.25rem"
+          />
+          <Flex direction="column" gap="xs" width="100%">
+            <Flex align="center" gap="xs">
+              <Icon
+                icon={targetCategory?.icon ?? ''}
+                size="0.875em"
+                style={{ color: targetCategory?.color }}
+              />
+              <Text color="muted" size="sm">
+                {targetCategory?.name}
+              </Text>
+            </Flex>
+            <Text weight="semibold">{event.title}</Text>
+          </Flex>
+        </Flex>
       </Card>
       {
         createPortal(
-          <Tooltip
-            clickable
-            noArrow
-            openOnClick
-            className={clsx(
-              'bg-bg-50! text-bg-800! border-bg-200 dark:border-bg-700 shadow-custom dark:bg-bg-800! bg-opacity-0! dark:text-bg-50 rounded-md! border p-4! text-base!',
-              sidebarExpanded ? 'z-[-1] lg:z-0' : 'z-0'
-            )}
-            id={`calendar-event-${event.id}`}
-            opacity={1}
-            place="bottom-start"
-            positionStrategy="fixed"
+          <Box
+            asChild
+            shadow
+            bg={{ base: 'bg-50', dark: 'bg-800' }}
+            r="md"
+            zIndex={{ base: sidebarExpanded ? '-1' : '0', lg: '0' }}
           >
-            <div
-              className="relative max-h-96 overflow-y-auto whitespace-normal"
-              style={{
-                width: `${width - 32}px`
-              }}
+            <Tooltip
+              clickable
+              noArrow
+              openOnClick
+              id={`calendar-event-${event.id}`}
+              opacity={1}
+              place="bottom-start"
+              positionStrategy="fixed"
             >
-              <EventDetails
-                category={targetCategory}
-                editable={false}
-                event={event}
-              />
-            </div>
-          </Tooltip>,
+              <Box
+                maxHeight="24rem"
+                overflowY="auto"
+                position="relative"
+                style={{
+                  whiteSpace: 'normal',
+                  width: `${width - 32}px`
+                }}
+              >
+                <EventDetails
+                  category={targetCategory}
+                  editable={false}
+                  event={event}
+                />
+              </Box>
+            </Tooltip>
+          </Box>,
           document.getElementById('app') ?? document.body
         ) as React.ReactPortal
       }
@@ -134,14 +147,15 @@ export default function TodaysEvent() {
       actionComponent={
         <Button
           as={Link}
-          className="mr-2 p-2!"
           icon="tabler:chevron-right"
+          mr="sm"
+          p="sm"
           to="/calendar"
           variant="plain"
         />
       }
-      className="pr-4"
       icon="tabler:calendar"
+      pr="md"
       title="Todays Event"
     >
       <Scrollbar>
@@ -160,7 +174,7 @@ export default function TodaysEvent() {
                 )
 
                 return targetEvents.length > 0 ? (
-                  <ul className="flex flex-1 flex-col gap-2 pr-3">
+                  <Flex as="ul" direction="column" gap="xs" pr="sm">
                     {targetEvents.map(event => (
                       <EventItem
                         key={event.id}
@@ -168,9 +182,9 @@ export default function TodaysEvent() {
                         event={event}
                       />
                     ))}
-                  </ul>
+                  </Flex>
                 ) : (
-                  <div className="flex-center flex-1">
+                  <Flex centered flex="1">
                     <EmptyStateScreen
                       smaller
                       icon="tabler:calendar-off"
@@ -179,7 +193,7 @@ export default function TodaysEvent() {
                         tKey: 'widgets.todaysEvent'
                       }}
                     />
-                  </div>
+                  </Flex>
                 )
               }}
             </WithQuery>

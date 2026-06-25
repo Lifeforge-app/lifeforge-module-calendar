@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { usePromiseLoading } from '@lifeforge/api'
 import {
+  Box,
   Button,
   FileInput,
   ModalHeader,
@@ -15,11 +16,10 @@ import ModifyEventModal from './ModifyEventModal'
 
 function ScanImageModal({ onClose }: { onClose: () => void }) {
   const { open } = useModalStore()
-  const [file, setFile] = useState<File | string | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [fileValue, setFileValue] = useState<{ type: 'empty' } | { type: 'upload'; file: File; preview?: string }>({ type: 'empty' })
 
   async function handleSubmit() {
-    if (file === null) {
+    if (fileValue.type === 'empty') {
       toast.error('Please select a file')
 
       return
@@ -27,7 +27,7 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
 
     try {
       const data = await forgeAPI.events.scanImage.mutate({
-        file
+        file: fileValue.file
       })
 
       onClose()
@@ -39,8 +39,7 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
           type: 'single'
         }
       })
-      setFile(null)
-      setPreview(null)
+      setFileValue({ type: 'empty' })
       toast.success('Image scanned successfully')
     } catch (error) {
       console.error(error)
@@ -51,45 +50,41 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
   const [loading, onSubmit] = usePromiseLoading(handleSubmit)
 
   return (
-    <>
-      <div className="min-w-[50vw]">
-        <ModalHeader
-          hasAI
-          icon="tabler:scan"
-          title="scanImage"
-          onClose={onClose}
-        />
-        <FileInput
-          file={file}
-          icon="tabler:photo"
-          label="image"
-          mimeTypes={{
-            image: ['jpeg', 'png', 'jpg'],
-            application: ['pdf']
-          }}
-          preview={preview}
-          setData={({ file, preview }) => {
-            setFile(file)
-            setPreview(preview)
-          }}
-          onImageRemoved={() => {
-            setFile(null)
-            setPreview(null)
-          }}
-        />
-        <Button
-          className="mt-6 w-full"
-          icon="tabler:arrow-right"
-          iconPosition="end"
-          loading={loading}
-          onClick={() => {
-            onSubmit().catch(console.error)
-          }}
-        >
-          proceed
-        </Button>
-      </div>
-    </>
+    <Box minWidth="50vw">
+      <ModalHeader
+        hasAI
+        icon="tabler:scan"
+        title="scanImage"
+        onClose={onClose}
+      />
+      <FileInput
+        icon="tabler:photo"
+        label="image"
+        mimeTypes={{
+          image: ['jpeg', 'png', 'jpg'],
+          application: ['pdf']
+        }}
+        value={fileValue}
+        onChange={(value) => {
+          setFileValue(value as { type: 'empty' } | { type: 'upload'; file: File; preview?: string })
+        }}
+        onImageRemoved={() => {
+          setFileValue({ type: 'empty' })
+        }}
+      />
+      <Button
+        icon="tabler:arrow-right"
+        iconPosition="end"
+        loading={loading}
+        mt="lg"
+        width="100%"
+        onClick={() => {
+          onSubmit().catch(console.error)
+        }}
+      >
+        proceed
+      </Button>
+    </Box>
   )
 }
 
