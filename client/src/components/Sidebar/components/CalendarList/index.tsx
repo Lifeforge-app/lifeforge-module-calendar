@@ -4,6 +4,7 @@ import { useCallback } from 'react'
 import {
   EmptyStateScreen,
   SidebarTitle,
+  Stack,
   WithQuery,
   useModalStore
 } from '@lifeforge/ui'
@@ -44,7 +45,7 @@ function CalendarList({
   return (
     <WithQuery query={calendarsQuery}>
       {calendars => (
-        <section className="flex w-full min-w-0 flex-1 flex-col">
+        <Stack as="section">
           <SidebarTitle
             actionButton={{
               icon: 'tabler:plus',
@@ -53,7 +54,7 @@ function CalendarList({
             label="Calendars"
           />
           {calendars.length > 0 ? (
-            <ul className="-mt-2 flex h-full min-w-0 flex-col">
+            <>
               {calendars.map(item => (
                 <CalendarListItem
                   key={item.id}
@@ -63,7 +64,7 @@ function CalendarList({
                   onSelect={handleSelect}
                 />
               ))}
-            </ul>
+            </>
           ) : (
             <EmptyStateScreen
               smaller
@@ -73,7 +74,7 @@ function CalendarList({
               }}
             />
           )}
-        </section>
+        </Stack>
       )}
     </WithQuery>
   )

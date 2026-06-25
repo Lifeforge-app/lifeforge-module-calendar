@@ -187,6 +187,10 @@
     "calendars": {
       "title": "Tiada Kalendar Dijumpai",
       "description": "Anda boleh mencipta kalendar dengan mengklik butang tambah di atas."
+    },
+    "categories": {
+      "title": "Tiada Kategori Dijumpai",
+      "description": "Anda boleh mencipta kategori dengan mengklik butang tambah di atas."
     }
   }
 }

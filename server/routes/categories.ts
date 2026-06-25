@@ -40,7 +40,11 @@ export const create = forge
   .mutation({
     description: 'Create a new event category',
     input: {
-      body: calendarSchemas.categories
+      body: calendarSchemas.categories.omit({
+        id: true,
+        collectionId: true,
+        collectionName: true
+      })
     },
     output: {
       CREATED: calendarSchemas.categories,
@@ -64,7 +68,11 @@ export const update = forge
       query: z.object({
         id: z.string()
       }),
-      body: calendarSchemas.categories
+      body: calendarSchemas.categories.omit({
+        id: true,
+        collectionId: true,
+        collectionName: true
+      })
     },
     existenceCheck: {
       query: { id: 'categories' }

@@ -3,6 +3,7 @@ import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect } from 'react'
 
 import {
+  Box,
   ContentWrapperWithSidebar,
   ContextMenu,
   ContextMenuItem,
@@ -19,8 +20,8 @@ import CalendarComponent from './components/Calendar'
 import Sidebar from './components/Sidebar'
 import ModifyEventModal from './components/modals/ModifyEventModal'
 import ScanImageModal from './components/modals/ScanImageModal'
+import { useCalendarStore } from './hooks/useCalendarStore'
 import './index.css'
-import { useCalendarStore } from './stores/useCalendarStore'
 
 function CalendarModule() {
   const { open } = useModalStore()
@@ -73,13 +74,13 @@ function CalendarModule() {
         />
         <ContentWrapperWithSidebar>
           <Scrollbar>
-            <div className="size-full pr-4 pb-8">
+            <Box height="100%" pb="xl" pr="md" width="100%">
               <CalendarComponent
                 events={rawEventsQuery.data ?? []}
                 selectedCalendar={selectedCalendar}
                 selectedCategory={selectedCategory}
               />
-            </div>
+            </Box>
           </Scrollbar>
         </ContentWrapperWithSidebar>
       </LayoutWithSidebar>

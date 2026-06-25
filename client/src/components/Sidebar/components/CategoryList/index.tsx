@@ -1,10 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { Icon, SidebarTitle, WithQuery, useModalStore } from '@lifeforge/ui'
+import {
+  EmptyStateScreen,
+  Icon,
+  SidebarTitle,
+  Stack,
+  WithQuery,
+  useModalStore
+} from '@lifeforge/ui'
 
 import type { CalendarCategory } from '@/components/Calendar'
 import ModifyCategoryModal from '@/components/modals/ModifyCategoryModal'
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
 import CategoryListItem from './components/CategoryListItem'
@@ -17,12 +24,13 @@ function CategoryList({
   setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>
 }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
+  const { values: internalCategories } = useInternalCategories()
   const { open } = useModalStore()
 
   return (
     <WithQuery query={categoriesQuery}>
       {categories => (
-        <section className="flex w-full min-w-0 flex-1 flex-col">
+        <Stack as="section">
           <SidebarTitle
             actionButton={{
               icon: 'tabler:plus',
@@ -33,18 +41,16 @@ function CategoryList({
             }}
             label="Categories"
           />
-          {[...categories, ...Object.keys(INTERNAL_CATEGORIES)].length > 0 ? (
-            <ul className="-mt-2 flex h-full min-w-0 flex-col">
-              {Object.entries(
-                INTERNAL_CATEGORIES as unknown as CalendarCategory[]
-              ).map(([key, value]) => (
+          {[...categories, ...internalCategories].length > 0 ? (
+            <>
+              {internalCategories.map(item => (
                 <CategoryListItem
-                  key={key}
-                  isSelected={selectedCategory === key}
-                  item={value}
+                  key={item.id}
+                  isSelected={selectedCategory === item.id}
+                  item={item}
                   modifiable={false}
                   onCancelSelect={() => setSelectedCategory(null)}
-                  onSelect={() => setSelectedCategory(value.id)}
+                  onSelect={() => setSelectedCategory(item.id)}
                 />
               ))}
               {categories.map(item => (
@@ -56,17 +62,17 @@ function CategoryList({
                   onSelect={() => setSelectedCategory(item.id)}
                 />
               ))}
-            </ul>
+            </>
           ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-3 px-2">
-              <Icon className="size-12" icon="tabler:article-off" />
-              <p className="text-lg font-medium">Oops, no categories found.</p>
-              <p className="text-bg-500 text-center text-sm">
-                You can create categories by clicking the plus button above.
-              </p>
-            </div>
+            <EmptyStateScreen
+              smaller
+              icon="tabler:article-off"
+              message={{
+                id: 'categories'
+              }}
+            />
           )}
-        </section>
+        </Stack>
       )}
     </WithQuery>
   )

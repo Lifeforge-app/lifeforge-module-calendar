@@ -1,12 +1,32 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
 
-import type { InferInput } from '@lifeforge/api'
-import { FormModal, defineForm, useModalStore } from '@lifeforge/ui'
+import {
+  Button,
+  ColorField,
+  FormModal,
+  TextField,
+  createDefaultValues,
+  useModalStore
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarCalendar } from '../Calendar'
 import SubscribeICSModal from './SubscribeICSModal'
+
+const schema = z.object({
+  name: z.string().min(1, 'Calendar name is required'),
+  color: z
+    .string()
+    .regex(
+      /^#[0-9A-Fa-f]{6}$/,
+      'Color must be a valid hex color (e.g. #FF0000)'
+    ),
+  icsUrl: z.string().optional()
+})
 
 function ModifyCalendarModal({
   data: { type, initialData },
@@ -33,72 +53,78 @@ function ModifyCalendarModal({
           queryKey: forgeAPI.calendars.list.key
         })
         queryClient.invalidateQueries({
-          queryKey: ['calendar', 'events']
+          queryKey: forgeAPI.events.key
         })
         onClose()
       }
     })
   )
 
-  const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.calendars)[typeof type]>['body']
-  >({
-    icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
-    title: `calendar.${type}`,
-    onClose,
-    namespace: 'apps.calendar',
-    submitButton: type,
-    actionButton:
-      type !== 'update'
-        ? {
-            type: 'plain',
-            icon: 'tabler:calendar-code',
-            onClick: (_, setData) =>
-              open(SubscribeICSModal, {
-                onSubmit: icsUrl => {
-                  setData(state => ({
-                    ...state,
-                    icsUrl
-                  }))
-                }
-              })
-          }
-        : undefined
+  const form = useForm({
+    defaultValues: {
+      ...createDefaultValues(schema),
+      ...initialData
+    },
+    mode: 'all',
+    resolver: zodResolver(schema)
   })
-    .typesMap({
-      name: 'text',
-      color: 'color',
-      icsUrl: 'text'
-    })
-    .setupFields({
-      name: {
-        required: true,
-        label: 'Calendar name',
-        icon: 'tabler:calendar',
-        placeholder: 'Calendar name'
-      },
-      color: {
-        required: true,
-        label: 'Calendar color'
-      },
-      icsUrl: {
-        required: false,
-        label: 'ICS URL',
-        icon: 'tabler:link',
-        placeholder: 'https://example.com/calendar.ics',
-        disabled: true
-      }
-    })
-    .conditionalFields({
-      icsUrl: formState => !!formState.icsUrl
-    })
-    .initialData(initialData)
-    .onSubmit(async data => {
-      await mutation.mutateAsync(data)
-    })
-    .build()
 
-  return <FormModal {...formProps} />
+  const icsUrl = form.watch('icsUrl')
+
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        handler: mutation.mutateAsync,
+        template: type
+      }}
+      uiConfig={{
+        icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
+        title: `calendar.${type}`,
+        headerActions:
+          type !== 'update' ? (
+            <Button
+              key="subscribe-ics"
+              icon="tabler:calendar-code"
+              variant="plain"
+              onClick={() =>
+                open(SubscribeICSModal, {
+                  onSubmit: icsUrl => {
+                    form.setValue('icsUrl', icsUrl)
+                  }
+                })
+              }
+            />
+          ) : undefined,
+        onClose
+      }}
+    >
+      <TextField
+        required
+        control={form.control}
+        icon="tabler:calendar"
+        label="Calendar name"
+        name="name"
+        placeholder="Calendar name"
+      />
+      <ColorField
+        required
+        control={form.control}
+        label="Calendar color"
+        name="color"
+      />
+      {icsUrl && (
+        <TextField
+          disabled
+          control={form.control}
+          icon="tabler:link"
+          label="ICS URL"
+          name="icsUrl"
+          placeholder="https://example.com/calendar.ics"
+        />
+      )}
+    </FormModal>
+  )
 }
 
 export default ModifyCalendarModal

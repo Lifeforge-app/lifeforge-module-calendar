@@ -35,14 +35,7 @@ function MiniCalendar() {
   )
 
   return (
-    <Flex
-      as="section"
-      direction="column"
-      gap="md"
-      px="2xl"
-      py="md"
-      width="100%"
-    >
+    <Flex as="section" direction="column" gap="md" px="lg" py="md" width="100%">
       <MiniCalendarHeader
         currentMonth={currentMonth}
         currentYear={currentYear}

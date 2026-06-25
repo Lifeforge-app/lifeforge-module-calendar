@@ -4,25 +4,26 @@ import { useMemo } from 'react'
 import { Card } from '@lifeforge/ui'
 
 import EventDetails from '@/components/Calendar/components/EventDetails'
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarCategory, CalendarEvent } from '../..'
 
 function AgendaEventItem({ event }: { event: CalendarEvent }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
+  const { map: internalCategoryMap } = useInternalCategories()
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {
-      return (INTERNAL_CATEGORIES[
-        event.category as keyof typeof INTERNAL_CATEGORIES
-      ] ?? {}) as CalendarCategory | undefined
+      return (internalCategoryMap[event.category] ?? {}) as
+        | CalendarCategory
+        | undefined
     }
 
     return categoriesQuery.data?.find(
       category => category.id === event.category
     )
-  }, [categoriesQuery, event.category])
+  }, [categoriesQuery, event.category, internalCategoryMap])
 
   return (
     <Card

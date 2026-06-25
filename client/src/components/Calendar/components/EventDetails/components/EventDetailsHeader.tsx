@@ -14,8 +14,8 @@ import {
 } from '@lifeforge/ui'
 
 import ModifyEventModal from '@/components/modals/ModifyEventModal'
+import { useCalendarStore } from '@/hooks/useCalendarStore'
 import { forgeAPI } from '@/manifest'
-import { useCalendarStore } from '@/stores/useCalendarStore'
 
 import type { CalendarCategory, CalendarEvent } from '../../..'
 

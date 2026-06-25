@@ -187,6 +187,10 @@
     "calendars": {
       "title": "未找到日曆",
       "description": "您可以透過點擊上面的加號按鈕來創建日曆。"
+    },
+    "categories": {
+      "title": "未找到分類",
+      "description": "您可以透過點擊上面的加號按鈕來創建分類。"
     }
   }
 }

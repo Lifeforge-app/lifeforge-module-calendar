@@ -9,8 +9,8 @@ import withDragAndDrop, {
 import type { InferOutput } from '@lifeforge/api'
 import { useModalStore } from '@lifeforge/ui'
 
+import { useCalendarStore } from '@/hooks/useCalendarStore'
 import { forgeAPI } from '@/manifest'
-import { useCalendarStore } from '@/stores/useCalendarStore'
 
 import ModifyEventModal from '../modals/ModifyEventModal'
 import AgendaDate from './components/AgendaView/AgendaDate'

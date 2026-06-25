@@ -1,8 +1,14 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import z from 'zod'
 
-import { FormModal, defineForm, toast } from '@lifeforge/ui'
+import { FormModal, TextField, createDefaultValues, toast } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
+
+const schema = z.object({
+  icsUrl: z.url('Must be a valid URL')
+})
 
 function SubscribeICSModal({
   onClose,
@@ -13,47 +19,51 @@ function SubscribeICSModal({
     onSubmit: (icsUrl: string) => void
   }
 }) {
-  const { formProps } = defineForm<{
-    icsUrl: string
-  }>({
-    icon: 'tabler:calendar-code',
-    title: 'Subscribe to ICS calendar',
-    onClose,
-    namespace: 'apps.calendar',
-    submitButton: {
-      children: 'proceed',
-      iconPosition: 'end',
-      icon: 'tabler:arrow-right'
-    }
+  const form = useForm({
+    defaultValues: createDefaultValues(schema),
+    mode: 'all',
+    resolver: zodResolver(schema)
   })
-    .typesMap({
-      icsUrl: 'text'
+
+  async function handleSubmit(data: z.infer<typeof schema>) {
+    const isValid = await forgeAPI.calendars.validateICS.mutate({
+      icsUrl: data.icsUrl
     })
-    .setupFields({
-      icsUrl: {
-        required: true,
-        label: 'ICS URL',
-        icon: 'tabler:link',
-        placeholder: 'https://example.com/calendar.ics',
-        validator: z.url('Invalid URL')
-      }
-    })
-    .onSubmit(async data => {
-      const isValid = await forgeAPI.calendars.validateICS.mutate({
-        icsUrl: data.icsUrl
-      })
 
-      if (!isValid) {
-        toast.error('The provided ICS URL is invalid or unreachable.')
+    if (!isValid) {
+      toast.error('The provided ICS URL is invalid or unreachable.')
 
-        throw new Error('Invalid ICS URL')
-      }
+      throw new Error('Invalid ICS URL')
+    }
 
-      onSubmit(data.icsUrl)
-    })
-    .build()
+    onSubmit(data.icsUrl)
+  }
 
-  return <FormModal {...formProps} />
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        handler: handleSubmit,
+        icon: 'tabler:arrow-right',
+        label: 'proceed'
+      }}
+      uiConfig={{
+        icon: 'tabler:calendar-code',
+
+        title: 'Subscribe to ICS calendar',
+        onClose
+      }}
+    >
+      <TextField
+        required
+        control={form.control}
+        icon="tabler:link"
+        label="ICS URL"
+        name="icsUrl"
+        placeholder="https://example.com/calendar.ics"
+      />
+    </FormModal>
+  )
 }
 
 export default SubscribeICSModal

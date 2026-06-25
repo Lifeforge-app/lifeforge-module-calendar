@@ -1,11 +1,30 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import z from 'zod'
 
-import type { InferInput } from '@lifeforge/api'
-import { FormModal, defineForm } from '@lifeforge/ui'
+import {
+  ColorField,
+  FormModal,
+  IconField,
+  TextField,
+  createDefaultValues
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarCategory } from '../Calendar'
+
+const schema = z.object({
+  name: z.string().min(1, 'Category name is required'),
+  icon: z.string().min(1, 'Category icon is required'),
+  color: z
+    .string()
+    .regex(
+      /^#[0-9A-Fa-f]{6}$/,
+      'Color must be a valid hex color (e.g. #FF0000)'
+    )
+})
 
 function ModifyCategoryModal({
   data: { type, initialData },
@@ -35,43 +54,51 @@ function ModifyCategoryModal({
     })
   )
 
-  const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.categories)[typeof type]>['body']
-  >({
-    icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
-    title: `category.${type}`,
-    onClose,
-    namespace: 'apps.calendar',
-    submitButton: type
+  const form = useForm({
+    defaultValues: {
+      ...createDefaultValues(schema),
+      ...initialData
+    },
+    mode: 'all',
+    resolver: zodResolver(schema)
   })
-    .typesMap({
-      name: 'text',
-      icon: 'icon',
-      color: 'color'
-    })
-    .setupFields({
-      name: {
-        required: true,
-        label: 'Category name',
-        icon: 'tabler:category',
-        placeholder: 'Category name'
-      },
-      icon: {
-        required: true,
-        label: 'Category icon'
-      },
-      color: {
-        required: true,
-        label: 'Category color'
-      }
-    })
-    .initialData(initialData)
-    .onSubmit(async data => {
-      await mutation.mutateAsync(data)
-    })
-    .build()
 
-  return <FormModal {...formProps} />
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        handler: mutation.mutateAsync,
+        template: type
+      }}
+      uiConfig={{
+        icon: type === 'create' ? 'tabler:plus' : 'tabler:pencil',
+
+        title: `category.${type}`,
+        onClose
+      }}
+    >
+      <TextField
+        required
+        control={form.control}
+        icon="tabler:category"
+        label="Category name"
+        name="name"
+        placeholder="Category name"
+      />
+      <IconField
+        required
+        control={form.control}
+        label="Category icon"
+        name="icon"
+      />
+      <ColorField
+        required
+        control={form.control}
+        label="Category color"
+        name="color"
+      />
+    </FormModal>
+  )
 }
 
 export default ModifyCategoryModal

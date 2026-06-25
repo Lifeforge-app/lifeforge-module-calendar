@@ -1,11 +1,15 @@
+import { Flex, Text } from '@lifeforge/ui'
+
 function WeekHeader({ label }: { label: string }) {
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="text-bg-500 text-sm font-semibold">
+    <Flex align="center" direction="column" justify="center">
+      <Text color="muted" size="sm" weight="semibold">
         {label.split(' ').pop()}
-      </div>
-      <div className="text-xl font-semibold">{label.split(' ')[0]}</div>
-    </div>
+      </Text>
+      <Text size="xl" weight="semibold">
+        {label.split(' ')[0]}
+      </Text>
+    </Flex>
   )
 }
 

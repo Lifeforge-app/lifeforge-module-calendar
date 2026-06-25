@@ -60,13 +60,13 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
           onClose={onClose}
         />
         <FileInput
-          acceptedMimeTypes={{
-            image: ['jpeg', 'png', 'jpg'],
-            application: ['pdf']
-          }}
           file={file}
           icon="tabler:photo"
           label="image"
+          mimeTypes={{
+            image: ['jpeg', 'png', 'jpg'],
+            application: ['pdf']
+          }}
           preview={preview}
           setData={({ file, preview }) => {
             setFile(file)

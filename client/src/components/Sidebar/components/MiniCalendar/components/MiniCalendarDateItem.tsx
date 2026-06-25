@@ -6,7 +6,7 @@ import { useCallback, useMemo } from 'react'
 import { Flex, Text } from '@lifeforge/ui'
 
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
 import * as styles from './MiniCalendarDateItem.css'
@@ -34,6 +34,7 @@ function MiniCalendarDateItem({
 }: MiniCalendarDateItemProps) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
+  const { map: internalCategoryMap } = useInternalCategories()
 
   const isInThisMonth = useMemo(
     () => !(firstDay > index || index - firstDay + 1 > lastDate),
@@ -71,12 +72,10 @@ function MiniCalendarDateItem({
   const getCategory = useCallback(
     (event: CalendarEvent) => {
       return event.category.startsWith('_')
-        ? (INTERNAL_CATEGORIES[
-            event.category as keyof typeof INTERNAL_CATEGORIES
-          ] as CalendarCategory)
+        ? (internalCategoryMap[event.category] as CalendarCategory)
         : categoriesQuery.data?.find(category => category.id === event.category)
     },
-    [categoriesQuery.data]
+    [categoriesQuery.data, internalCategoryMap]
   )
 
   const getCalendar = useCallback(

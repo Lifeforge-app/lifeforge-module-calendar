@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { memo, useMemo } from 'react'
 
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarCategory, CalendarEvent } from '../../index.js'
@@ -11,20 +11,17 @@ import EventItemTooltip from './components/EventItemTooltip.js'
 function EventItem({ event }: { event: CalendarEvent }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
+  const { map: internalCategoryMap } = useInternalCategories()
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {
-      return {
-        ...INTERNAL_CATEGORIES[
-          event.category as keyof typeof INTERNAL_CATEGORIES
-        ]
-      } as CalendarCategory | undefined
+      return internalCategoryMap[event.category] as CalendarCategory | undefined
     }
 
     return categoriesQuery.data?.find(
       category => category.id === event.category
     )
-  }, [categoriesQuery, event.category])
+  }, [categoriesQuery, event.category, internalCategoryMap])
 
   const calendar = useMemo(() => {
     return calendarsQuery.data?.find(calendar => calendar.id === event.calendar)

@@ -1,9 +1,9 @@
 import { memo } from 'react'
 import type { NavigateAction } from 'react-big-calendar'
 
-import { Button, Icon } from '@lifeforge/ui'
+import { Button, Flex, Icon, Text } from '@lifeforge/ui'
 
-import { useCalendarStore } from '@/stores/useCalendarStore'
+import { useCalendarStore } from '@/hooks/useCalendarStore'
 
 import DateRangeLabel from './components/DateRangeLabel'
 
@@ -17,8 +17,8 @@ function NavigationControl({
   const { isEventLoading } = useCalendarStore()
 
   return (
-    <div className="flex w-full min-w-0 items-center">
-      <div className="flex-between flex justify-start gap-0">
+    <Flex align="center" minWidth="0" width="100%">
+      <Flex gap="none" justify="start">
         <Button
           icon="tabler:chevron-left"
           variant="plain"
@@ -33,17 +33,16 @@ function NavigationControl({
             onNavigate('NEXT')
           }}
         />
-      </div>
-      <div className="flex min-w-0 items-center gap-2 text-center text-2xl font-medium">
-        <DateRangeLabel label={label} onNavigate={onNavigate} />
+      </Flex>
+      <Flex align="center" gap="sm" minWidth="0">
+        <Text as="div" size="2xl" weight="medium">
+          <DateRangeLabel label={label} onNavigate={onNavigate} />
+        </Text>
         {isEventLoading && (
-          <Icon
-            className="text-bg-500 h-5 w-5"
-            icon="svg-spinners:ring-resize"
-          />
+          <Icon color="muted" icon="svg-spinners:ring-resize" size="1.25rem" />
         )}
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   )
 }
 

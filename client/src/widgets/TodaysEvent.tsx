@@ -21,7 +21,7 @@ import {
 
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
 import EventDetails from '@/components/Calendar/components/EventDetails'
-import { INTERNAL_CATEGORIES } from '@/constants/internalCategories'
+import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
 function EventItem({
@@ -34,6 +34,7 @@ function EventItem({
   const { sidebarExpanded } = useMainSidebarState()
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
+  const { map: internalCategoryMap } = useInternalCategories()
 
   const handleResize = () => {
     if (ref.current) {
@@ -53,13 +54,11 @@ function EventItem({
   const targetCategory = useMemo(
     () =>
       (event.category.startsWith('_')
-        ? INTERNAL_CATEGORIES[
-            event.category as keyof typeof INTERNAL_CATEGORIES
-          ]
+        ? internalCategoryMap[event.category]
         : categories.find(category => category.id === event.category)) as
         | CalendarCategory
         | undefined,
-    [event.category, categories]
+    [event.category, categories, internalCategoryMap]
   )
 
   return (

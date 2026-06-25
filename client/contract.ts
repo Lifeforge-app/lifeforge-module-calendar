@@ -60,15 +60,6 @@ export const contract = {
                 "description": {
                   "type": "string"
                 },
-                "id": {
-                  "type": "string"
-                },
-                "collectionId": {
-                  "type": "string"
-                },
-                "collectionName": {
-                  "type": "string"
-                },
                 "calendar": {
                   "type": "string"
                 },
@@ -108,10 +99,7 @@ export const contract = {
                 "title",
                 "category",
                 "reference_link",
-                "description",
-                "id",
-                "collectionId",
-                "collectionName"
+                "description"
               ]
             },
             {
@@ -138,23 +126,11 @@ export const contract = {
                         },
                         "end": {
                           "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        },
-                        "collectionId": {
-                          "type": "string"
-                        },
-                        "collectionName": {
-                          "type": "string"
                         }
                       },
                       "required": [
                         "start",
-                        "end",
-                        "id",
-                        "collectionId",
-                        "collectionName"
+                        "end"
                       ]
                     }
                   ]
@@ -690,15 +666,6 @@ export const contract = {
                 "description": {
                   "type": "string"
                 },
-                "id": {
-                  "type": "string"
-                },
-                "collectionId": {
-                  "type": "string"
-                },
-                "collectionName": {
-                  "type": "string"
-                },
                 "calendar": {
                   "type": "string"
                 },
@@ -738,10 +705,7 @@ export const contract = {
                 "title",
                 "category",
                 "reference_link",
-                "description",
-                "id",
-                "collectionId",
-                "collectionName"
+                "description"
               ]
             },
             {
@@ -768,23 +732,11 @@ export const contract = {
                         },
                         "end": {
                           "type": "string"
-                        },
-                        "id": {
-                          "type": "string"
-                        },
-                        "collectionId": {
-                          "type": "string"
-                        },
-                        "collectionName": {
-                          "type": "string"
                         }
                       },
                       "required": [
                         "start",
-                        "end",
-                        "id",
-                        "collectionId",
-                        "collectionName"
+                        "end"
                       ]
                     }
                   ]
@@ -1245,24 +1197,12 @@ export const contract = {
             },
             "icon": {
               "type": "string"
-            },
-            "id": {
-              "type": "string"
-            },
-            "collectionId": {
-              "type": "string"
-            },
-            "collectionName": {
-              "type": "string"
             }
           },
           "required": [
             "name",
             "color",
-            "icon",
-            "id",
-            "collectionId",
-            "collectionName"
+            "icon"
           ],
           "additionalProperties": false
         }
@@ -1473,24 +1413,12 @@ export const contract = {
             },
             "icon": {
               "type": "string"
-            },
-            "id": {
-              "type": "string"
-            },
-            "collectionId": {
-              "type": "string"
-            },
-            "collectionName": {
-              "type": "string"
             }
           },
           "required": [
             "name",
             "color",
-            "icon",
-            "id",
-            "collectionId",
-            "collectionName"
+            "icon"
           ],
           "additionalProperties": false
         }

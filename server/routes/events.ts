@@ -15,7 +15,10 @@ const CreateAndUpdateEventSchema = calendarSchemas.events
     location_coords: true,
     created: true,
     updated: true,
-    calendar: true
+    calendar: true,
+    id: true,
+    collectionId: true,
+    collectionName: true
   })
   .extend({
     calendar: z.string().optional(),
@@ -29,7 +32,10 @@ const CreateAndUpdateEventSchema = calendarSchemas.events
         })
         .and(
           calendarSchemas.events_single.omit({
-            base_event: true
+            base_event: true,
+            id: true,
+            collectionId: true,
+            collectionName: true
           })
         ),
       z.object({

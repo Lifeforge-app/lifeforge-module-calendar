@@ -1,6 +1,23 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { getI18n } from 'react-i18next'
+import z from 'zod'
 
-import { FormModal, defineForm } from '@lifeforge/ui'
+import { FormModal, ListboxField, createDefaultValues } from '@lifeforge/ui'
+
+const schema = z.object({
+  year: z.number().int(),
+  month: z.number().int().gte(1).lte(12)
+})
+
+const yearOptions = Array.from({ length: 100 }).map((_, index, arr) => {
+  const year = new Date().getFullYear() - arr.length / 2 + index
+
+  return {
+    text: year.toString(),
+    value: year
+  }
+})
 
 function YearMonthSelector({
   onClose,
@@ -11,66 +28,59 @@ function YearMonthSelector({
     onSelect: (year: number, month: number) => void
   }
 }) {
-  const { formProps } = defineForm<{
-    year: number
-    month: number
-  }>({
-    icon: 'tabler:calendar',
-    title: 'Select Year and Month',
-    onClose,
-    submitButton: {
-      children: 'Select',
-      icon: 'tabler:check'
+  const form = useForm({
+    defaultValues: {
+      ...createDefaultValues(schema),
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1
     },
-    namespace: 'apps.calendar'
+    mode: 'all',
+    resolver: zodResolver(schema)
   })
-    .typesMap({
-      year: 'listbox',
-      month: 'listbox'
-    })
-    .setupFields({
-      year: {
-        icon: 'tabler:calendar',
-        label: 'Year',
-        options: Array.from({ length: 100 }).map((_, index, arr) => {
-          const year = new Date().getFullYear() - arr.length / 2 + index
 
-          return {
-            text: year.toString(),
-            value: year
-          }
-        }),
-        required: true,
-        multiple: false
-      },
-      month: {
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        handler: async values => {
+          onSelect(values.year, values.month)
+        },
+        icon: 'tabler:check',
+        label: 'Select'
+      }}
+      uiConfig={{
         icon: 'tabler:calendar',
-        label: 'Month',
-        required: true,
-        multiple: false,
-        options: Array.from({ length: 12 }).map((_, index) => {
+
+        title: 'Select Year and Month',
+        onClose
+      }}
+    >
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:calendar"
+        label="Year"
+        name="year"
+        options={yearOptions}
+      />
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:calendar"
+        label="Month"
+        name="month"
+        options={Array.from({ length: 12 }).map((_, index) => {
           const t = getI18n().t.bind(getI18n())
-
           const month = index + 1
 
           return {
             text: t('common.misc:dates.months.' + (month - 1).toString()),
             value: month
           }
-        }),
-        defaultValue: new Date().getMonth() + 1
-      }
-    })
-    .initialData({
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1
-    })
-    .onSubmit(async values => {
-      onSelect(values.year, values.month)
-    })
-    .build()
-
-  return <FormModal {...formProps} />
+        })}
+      />
+    </FormModal>
+  )
 }
 
 export default YearMonthSelector

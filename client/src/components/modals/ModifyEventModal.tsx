@@ -1,12 +1,46 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
+import { useForm, useWatch } from 'react-hook-form'
+import z from 'zod'
 
-import type { InferInput } from '@lifeforge/api'
-import { FormModal, defineForm, toast } from '@lifeforge/ui'
+import {
+  DateField,
+  FormModal,
+  ListboxField,
+  LocationField,
+  RRuleField,
+  TextAreaField,
+  TextField,
+  createDefaultValues,
+  toast
+} from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarEvent } from '../Calendar'
+
+const schema = z.object({
+  title: z.string().min(1, 'Event title is required'),
+  category: z.string().min(1, 'Category is required'),
+  calendar: z.string().min(1, 'Calendar is required'),
+  location: z
+    .object({
+      name: z.string(),
+      formattedAddress: z.string(),
+      location: z.object({
+        latitude: z.number(),
+        longitude: z.number()
+      })
+    })
+    .optional(),
+  reference_link: z.string().optional(),
+  description: z.string().optional(),
+  type: z.enum(['single', 'recurring']),
+  start: z.date().optional(),
+  end: z.date().optional(),
+  rrule: z.string().optional()
+})
 
 function ModifyEventModal({
   data: { type, initialData },
@@ -38,87 +72,155 @@ function ModifyEventModal({
     })
   )
 
-  const { formProps } = defineForm<
-    InferInput<(typeof forgeAPI.events)[typeof type]>['body']
-  >({
-    icon: {
-      create: 'tabler:plus',
-      update: 'tabler:pencil'
-    }[type!],
-    title: `event.${type}`,
-    namespace: 'apps.calendar',
-    onClose,
-    loading: categoriesQuery.isLoading || calendarsQuery.isLoading,
-    submitButton: type
+  const form = useForm({
+    defaultValues: (() => {
+      if (!initialData) return createDefaultValues(schema)
+
+      const base: Record<string, unknown> = {
+        title: initialData.title,
+        category: initialData.category,
+        calendar: initialData.calendar,
+        location: initialData.location
+          ? {
+              name: initialData.location || '',
+              location: {
+                longitude: initialData.location_coords?.lon || 0,
+                latitude: initialData.location_coords?.lat || 0
+              },
+              formattedAddress: initialData.location || ''
+            }
+          : undefined,
+        reference_link: initialData.reference_link,
+        description: initialData.description,
+        type: initialData.type
+      }
+
+      if (initialData.type === 'recurring') {
+        base.rrule = initialData.rrule
+      } else {
+        base.start = initialData.start
+          ? dayjs(initialData.start).toDate()
+          : undefined
+        base.end = initialData.end ? dayjs(initialData.end).toDate() : undefined
+      }
+
+      return { ...createDefaultValues(schema), ...base }
+    })(),
+    mode: 'all',
+    resolver: zodResolver(schema)
   })
-    .typesMap({
-      title: 'text',
-      category: 'listbox',
-      calendar: 'listbox',
-      location: 'location',
-      reference_link: 'text',
-      description: 'textarea',
-      type: 'listbox',
-      start: 'datetime',
-      end: 'datetime',
-      rrule: 'rrule'
-    })
-    .setupFields({
-      title: {
-        required: true,
-        label: 'Event title',
-        icon: 'tabler:calendar',
-        placeholder: 'My event'
-      },
-      category: {
-        multiple: false,
-        required: true,
-        label: 'Event Category',
-        icon: 'tabler:list',
-        options: categoriesQuery.isSuccess
-          ? categoriesQuery.data?.map(({ name, color, icon, id }) => ({
-              value: id,
-              text: name,
-              icon,
-              color
-            }))
-          : [],
-        nullOption: 'tabler:apps-off'
-      },
-      calendar: {
-        multiple: false,
-        label: 'Calendar',
-        icon: 'tabler:calendar',
-        options: calendarsQuery.isSuccess
-          ? calendarsQuery.data?.map(({ name, color, id }) => ({
-              value: id,
-              text: name,
-              color
-            }))
-          : [],
-        nullOption: ''
-      },
-      location: {
-        label: 'Location'
-      },
-      reference_link: {
-        required: false,
-        label: 'Reference link',
-        icon: 'tabler:link',
-        placeholder: 'https://example.com'
-      },
-      description: {
-        required: false,
-        label: 'Description',
-        icon: 'tabler:file-text',
-        placeholder: 'Event description'
-      },
-      type: {
-        multiple: false,
-        label: 'Event Type',
-        required: true,
-        icon: 'tabler:calendar',
-        options: [
+
+  const eventType = useWatch({ control: form.control, name: 'type' })
+
+  const isRecurring = eventType === 'recurring'
+
+  return (
+    <FormModal
+      form={form}
+      submissionConfig={{
+        handler: async data => {
+          if (data.type === 'recurring') {
+            await mutation.mutateAsync({
+              title: data.title!,
+              category: data.category!,
+              calendar: data.calendar!,
+              location: data.location ?? undefined,
+              reference_link: data.reference_link ?? '',
+              description: data.description ?? '',
+              type: 'recurring' as const,
+              rrule: data.rrule ?? ''
+            })
+          } else {
+            await mutation.mutateAsync({
+              title: data.title!,
+              category: data.category!,
+              calendar: data.calendar!,
+              location: data.location ?? undefined,
+              reference_link: data.reference_link ?? '',
+              description: data.description ?? '',
+              type: 'single' as const,
+              start: dayjs(data.start).format('YYYY-MM-DDTHH:mm:ss'),
+              end: dayjs(data.end).format('YYYY-MM-DDTHH:mm:ss')
+            })
+          }
+        },
+        template: type
+      }}
+      uiConfig={{
+        icon: {
+          create: 'tabler:plus',
+          update: 'tabler:pencil'
+        }[type!],
+        loading: categoriesQuery.isLoading || calendarsQuery.isLoading,
+
+        title: `event.${type}`,
+        onClose
+      }}
+    >
+      <TextField
+        required
+        control={form.control}
+        icon="tabler:calendar"
+        label="Event title"
+        name="title"
+        placeholder="My event"
+      />
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:list"
+        label="Event Category"
+        name="category"
+        options={
+          categoriesQuery.isSuccess
+            ? categoriesQuery.data?.map(({ name, color, icon, id }) => ({
+                value: id,
+                text: name,
+                icon,
+                color
+              }))
+            : []
+        }
+      />
+      <ListboxField
+        required
+        control={form.control}
+        icon="tabler:calendar"
+        label="Calendar"
+        name="calendar"
+        options={
+          calendarsQuery.isSuccess
+            ? calendarsQuery.data?.map(({ name, color, id }) => ({
+                value: id,
+                text: name,
+                color
+              }))
+            : []
+        }
+      />
+      <LocationField control={form.control} label="Location" name="location" />
+      <TextField
+        control={form.control}
+        icon="tabler:link"
+        label="Reference link"
+        name="reference_link"
+        placeholder="https://example.com"
+      />
+      <TextAreaField
+        control={form.control}
+        icon="tabler:file-text"
+        label="Description"
+        name="description"
+        placeholder="Event description"
+      />
+      <ListboxField
+        required
+        control={form.control}
+        disabled={type === 'update'}
+        icon="tabler:calendar"
+        label="Event Type"
+        name="type"
+        options={[
           {
             value: 'single',
             text: 'Single Event',
@@ -129,100 +231,30 @@ function ModifyEventModal({
             text: 'Recurring Event',
             icon: 'tabler:repeat'
           }
-        ],
-        disabled: type === 'update'
-      },
-      rrule: {
-        required: true,
-        hasDuration: true,
-        label: 'Recurring Rule'
-      },
-      start: {
-        hasTime: true,
-        label: 'Start Time',
-        icon: 'tabler:clock'
-      },
-      end: {
-        hasTime: true,
-        label: 'End Time',
-        icon: 'tabler:clock'
-      }
-    })
-    .initialData(
-      (() => {
-        if (!initialData) return {}
-
-        const base: Record<string, any> = {
-          title: initialData.title,
-          category: initialData.category,
-          calendar: initialData.calendar,
-          location: {
-            name: initialData.location || '',
-            location: {
-              longitude: initialData.location_coords?.lon || 0,
-              latitude: initialData.location_coords?.lat || 0
-            },
-            formattedAddress: initialData.location || ''
-          },
-          reference_link: initialData.reference_link,
-          description: initialData.description,
-          type: initialData.type
-        }
-
-        if (initialData.type === 'recurring') {
-          base.rrule = initialData.rrule
-        } else {
-          base.start = initialData.start
-            ? dayjs(initialData.start).toDate()
-            : null
-          base.end = initialData.end ? dayjs(initialData.end).toDate() : null
-        }
-
-        return base
-      })()
-    )
-    .conditionalFields({
-      rrule: data => data.type === 'recurring',
-      start: data => data.type === 'single',
-      end: data => data.type === 'single'
-    })
-    .onSubmit(async data => {
-      if (data.type === 'recurring') {
-        const finalData: InferInput<
-          (typeof forgeAPI.events)[typeof type]
-        >['body'] = {
-          title: data.title,
-          category: data.category,
-          calendar: data.calendar,
-          location: data.location,
-          reference_link: data.reference_link,
-          description: data.description,
-          type: data.type,
-          rrule: data.rrule
-        }
-
-        await mutation.mutateAsync(finalData)
-      } else {
-        const finalData: InferInput<
-          (typeof forgeAPI.events)[typeof type]
-        >['body'] = {
-          title: data.title,
-          category: data.category,
-          calendar: data.calendar,
-          location: data.location,
-          reference_link: data.reference_link,
-          description: data.description,
-          type: data.type,
-          start: data.start,
-          end: data.end
-        }
-
-        await mutation.mutateAsync(finalData)
-      }
-    })
-    .build()
-
-  return <FormModal {...formProps} />
+        ]}
+      />
+      {isRecurring ? (
+        <RRuleField hasDuration control={form.control} name="rrule" />
+      ) : (
+        <>
+          <DateField
+            hasTime
+            control={form.control}
+            icon="tabler:clock"
+            label="Start Time"
+            name="start"
+          />
+          <DateField
+            hasTime
+            control={form.control}
+            icon="tabler:clock"
+            label="End Time"
+            name="end"
+          />
+        </>
+      )}
+    </FormModal>
+  )
 }
 
 export default ModifyEventModal

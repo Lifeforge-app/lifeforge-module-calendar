@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { useCallback } from 'react'
 import type { NavigateAction } from 'react-big-calendar'
 
-import { useModalStore } from '@lifeforge/ui'
+import { Flex, Text, colorWithOpacity, useModalStore } from '@lifeforge/ui'
 
 import YearMonthSelector from '@/components/modals/YearMonthSelector'
 
@@ -26,19 +26,29 @@ function DateRangeLabel({
   }, [onNavigate])
 
   if (label.match(/^(\w+)\s(\w+)$/)) {
+    const shortLabel = label.split(' ')[0].split('').slice(0, 3).join('')
+
     return (
-      <button
-        className="hover:bg-bg-900 flex min-w-0 cursor-pointer items-end gap-2 rounded-md p-2 px-3 transition-all"
+      <Flex
+        align="end"
+        as="button"
+        bg={{ hover: 'bg-200', darkHover: colorWithOpacity('bg-800', '50%') }}
+        gap="sm"
+        minWidth="0"
+        px="sm"
+        py="sm"
+        r="md"
+        style={{ transition: 'all 150ms ease' }}
         onClick={handleOpenYearMonthSelector}
       >
-        <span className="hidden w-full min-w-0 truncate sm:inline">
+        <Text truncate display={{ base: 'none', sm: 'inline' }}>
           {label.split(' ')[0]}
-        </span>
-        <span className="w-full min-w-0 truncate sm:hidden">
-          {label.split(' ')[0].split('').slice(0, 3).join('')}
-        </span>
-        <span className="text-bg-500">{label.split(' ')[1]}</span>
-      </button>
+        </Text>
+        <Text truncate display={{ base: 'inline', sm: 'none' }}>
+          {shortLabel}
+        </Text>
+        <Text color="muted">{label.split(' ')[1]}</Text>
+      </Flex>
     )
   }
 
@@ -62,10 +72,13 @@ function DateRangeLabel({
     const end = endDate.format('MMM D')
 
     return (
-      <>
-        <span>{start}</span>
-        <span className="text-bg-500"> - {end}</span>
-      </>
+      <Text as="span">
+        {start}
+        <Text as="span" color="muted">
+          {' '}
+          - {end}
+        </Text>
+      </Text>
     )
   }
 

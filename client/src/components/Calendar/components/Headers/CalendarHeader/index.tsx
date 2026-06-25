@@ -6,6 +6,7 @@ import {
   Button,
   ContextMenu,
   ContextMenuItem,
+  Flex,
   useModalStore,
   useModuleSidebarState
 } from '@lifeforge/ui'
@@ -49,11 +50,10 @@ function CalendarHeader({
 
   return (
     <>
-      <div className="mb-4 flex w-full min-w-0 items-end justify-between gap-3">
+      <Flex align="end" gap="sm" justify="between" mb="md" minWidth="0" width="100%">
         <NavigationControl label={label} onNavigate={onNavigate} />
-        <div className="hidden gap-2 md:flex">
+        <Flex display={{ base: 'none', md: 'flex' }} gap="sm">
           <Button
-            className=""
             icon="tabler:calendar-pin"
             variant="plain"
             onClick={handleNavigateToday}
@@ -82,16 +82,16 @@ function CalendarHeader({
               onClick={handleCreateEvent}
             />
           </ContextMenu>
-        </div>
-        <Button
-          className="xl:hidden"
-          icon="tabler:menu"
-          variant="plain"
-          onClick={() => {
-            setIsSidebarOpen(true)
-          }}
-        />
-      </div>
+        </Flex>
+      </Flex>
+      <Button
+        display={{ base: 'flex', xl: 'none' }}
+        icon="tabler:menu"
+        variant="plain"
+        onClick={() => {
+          setIsSidebarOpen(true)
+        }}
+      />
       <ViewSelector currentView={currentView} onView={onView} />
     </>
   )

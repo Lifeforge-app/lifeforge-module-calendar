@@ -1,0 +1,196 @@
+{
+  "title": "캘린더",
+  "description": "운명(또는 치과)과의 약속을 놓치지 마세요.",
+  "widgets": {
+    "miniCalendar": {
+      "title": "미니 캘린더",
+      "description": "작은 캘린더에서 다가오는 이벤트를 확인하세요."
+    },
+    "todaysEvent": {
+      "title": "오늘의 이벤트",
+      "description": "오늘의 일정을 알려드립니다.",
+      "empty": {
+        "event": {
+          "title": "이벤트 없음",
+          "description": "오늘은 일정이 없습니다."
+        }
+      }
+    }
+  },
+  "view": {
+    "day": "일",
+    "month": "월",
+    "week": "주",
+    "agenda": "일정표"
+  },
+  "sidebar": {
+    "categories": "카테고리",
+    "calendars": "캘린더"
+  },
+  "modals": {
+    "event": {
+      "create": "이벤트 생성",
+      "update": "이벤트 업데이트"
+    },
+    "category": {
+      "create": "카테고리 생성",
+      "update": "카테고리 업데이트"
+    },
+    "scanImage": {
+      "title": "이미지 스캔"
+    },
+    "calendar": {
+      "create": "캘린더 생성",
+      "update": "캘린더 업데이트"
+    },
+    "confirmAddException": {
+      "title": "예외 추가 확인",
+      "description": "이 이벤트에 대한 예외를 추가하시겠습니까?"
+    },
+    "subscribeToIcsCalendar": "ICS 캘린더 구독",
+    "selectYearAndMonth": "연도 및 월 선택"
+  },
+  "inputs": {
+    "startTime": "시작 시간",
+    "endTime": "종료 시간",
+    "eventCategory": "이벤트 카테고리",
+    "eventTitle": "이벤트 제목",
+    "categoryName": "카테고리 이름",
+    "categoryColor": "카테고리 색상",
+    "categoryIcon": "카테고리 아이콘",
+    "location": "위치",
+    "referenceLink": "참조 링크",
+    "description": "설명",
+    "image": "이미지",
+    "eventType": "이벤트 유형",
+    "eventTime": "이벤트 시간",
+    "frequency": "빈도",
+    "yearly": {
+      "exactDate": {
+        "title": "특정 날짜",
+        "inputs": {
+          "month": "월",
+          "date": "일"
+        }
+      },
+      "relativeDay": {
+        "title": "상대적 요일",
+        "inputs": {
+          "onThe": "번째",
+          "onTheDay": "요일",
+          "ofTheMonth": "째 주"
+        }
+      }
+    },
+    "monthly": {
+      "inputs": {
+        "every": "매",
+        "months": "개월"
+      },
+      "exactDate": {
+        "title": "특정 날짜",
+        "inputs": {
+          "date": "일"
+        }
+      },
+      "relativeDay": {
+        "title": "상대적 요일",
+        "inputs": {
+          "onThe": "번째",
+          "onTheDay": "요일"
+        }
+      }
+    },
+    "weekly": {
+      "inputs": {
+        "every": "매",
+        "weeks": "주",
+        "onDays": "요일"
+      }
+    },
+    "daily": {
+      "inputs": {
+        "every": "매",
+        "days": "일"
+      }
+    },
+    "hourly": {
+      "inputs": {
+        "every": "매",
+        "hours": "시간"
+      }
+    },
+    "endType": "종료",
+    "useGoogleMap": "Google Maps 사용",
+    "calendar": "캘린더",
+    "calendarName": "캘린더 이름",
+    "calendarColor": "캘린더 색상",
+    "icsUrl": "ICS 링크"
+  },
+  "items": {
+    "event": "이벤트",
+    "category": "카테고리"
+  },
+  "buttons": {
+    "inputManually": "직접 입력",
+    "scanFromImage": "이미지에서 스캔",
+    "today": "오늘",
+    "exceptThisTime": "이번만 예외",
+    "viewReference": "참조 보기"
+  },
+  "eventTypes": {
+    "single": "단일 이벤트",
+    "recurring": "반복 이벤트"
+  },
+  "recurring": {
+    "freqs": {
+      "yearly": "매년",
+      "monthly": "매월",
+      "weekly": "매주",
+      "daily": "매일",
+      "hourly": "매시간"
+    },
+    "onThe": {
+      "first": "첫째",
+      "second": "둘째",
+      "third": "셋째",
+      "fourth": "넷째",
+      "last": "마지막"
+    },
+    "onTheDay": {
+      "weekday": "평일",
+      "day": "일",
+      "weekendDay": "주말"
+    },
+    "endTypes": {
+      "never": "없음",
+      "after": "횟수 이후",
+      "on": "날짜 지정"
+    },
+    "inputs": {
+      "on": "날짜",
+      "after": "횟수",
+      "executions": "회",
+      "durationUnit": "기간 단위",
+      "durationAmount": "기간 길이"
+    },
+    "durationUnits": {
+      "minute": "분",
+      "hour": "시간",
+      "day": "일",
+      "week": "주",
+      "month": "개월",
+      "year": "년"
+    }
+  },
+  "empty": {
+    "calendars": {
+      "title": "캘린더를 찾을 수 없음",
+      "description": "위의 더하기 버튼을 클릭하여 캘린더를 생성할 수 있습니다."
+    },
+    "categories": {
+      "title": "카테고리를 찾을 수 없음",
+      "description": "위의 더하기 버튼을 클릭하여 카테고리를 생성할 수 있습니다."
+    }
+  }
+}
