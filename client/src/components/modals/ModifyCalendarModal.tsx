@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
+
+import { useForgeMutation } from '@lifeforge/api'
 
 import {
   Button,
@@ -39,25 +40,22 @@ function ModifyCalendarModal({
   onClose: () => void
 }) {
   const { open } = useModalStore()
-  const queryClient = useQueryClient()
+  const createMutation = useForgeMutation(
+    forgeAPI.calendars.create,
+    {
+      action: 'create',
+      queryKey: [forgeAPI.calendars.list.key, forgeAPI.events.key],
+      onSuccess: () => onClose()
+    }
+  )
 
-  const mutation = useMutation(
-    (type === 'create'
-      ? forgeAPI.calendars.create
-      : forgeAPI.calendars.update.input({
-          id: initialData?.id || ''
-        })
-    ).mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendars.list.key
-        })
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.events.key
-        })
-        onClose()
-      }
-    })
+  const updateMutation = useForgeMutation(
+    forgeAPI.calendars.update.input({ id: initialData?.id || '' }),
+    {
+      action: 'update',
+      queryKey: [forgeAPI.calendars.list.key, forgeAPI.events.key],
+      onSuccess: () => onClose()
+    }
   )
 
   const form = useForm({
@@ -75,7 +73,9 @@ function ModifyCalendarModal({
     <FormModal
       form={form}
       submissionConfig={{
-        handler: mutation.mutateAsync,
+        handler: data => {
+          (type === 'create' ? createMutation : updateMutation).mutateAsync(data)
+        },
         template: type
       }}
       uiConfig={{

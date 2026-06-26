@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
+
+import { useForgeMutation } from '@lifeforge/api'
 
 import {
   ColorField,
@@ -36,22 +37,14 @@ function ModifyCategoryModal({
   }
   onClose: () => void
 }) {
-  const queryClient = useQueryClient()
+  const createMutation = useForgeMutation(
+    forgeAPI.categories.create,
+    { action: 'create', queryKey: forgeAPI.categories.list.key, onSuccess: () => onClose() }
+  )
 
-  const mutation = useMutation(
-    (type === 'create'
-      ? forgeAPI.categories.create
-      : forgeAPI.categories.update.input({
-          id: initialData?.id || ''
-        })
-    ).mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.categories.list.key
-        })
-        onClose()
-      }
-    })
+  const updateMutation = useForgeMutation(
+    forgeAPI.categories.update.input({ id: initialData?.id || '' }),
+    { action: 'update', queryKey: forgeAPI.categories.list.key, onSuccess: () => onClose() }
   )
 
   const form = useForm({
@@ -67,7 +60,9 @@ function ModifyCategoryModal({
     <FormModal
       form={form}
       submissionConfig={{
-        handler: mutation.mutateAsync,
+        handler: data => {
+          (type === 'create' ? createMutation : updateMutation).mutateAsync(data)
+        },
         template: type
       }}
       uiConfig={{

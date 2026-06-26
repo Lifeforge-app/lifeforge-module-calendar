@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForgeMutation } from '@lifeforge/api'
 import { useCallback, useMemo } from 'react'
 
 import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
@@ -22,18 +22,11 @@ function CategoryListItem({
   onCancelSelect: () => void
   modifiable?: boolean
 }) {
-  const queryClient = useQueryClient()
   const { open } = useModalStore()
 
-  const deleteMutation = useMutation(
-    forgeAPI.categories.remove.input({ id: item.id }).mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.categories.list.key
-        })
-        onCancelSelect()
-      }
-    })
+  const deleteMutation = useForgeMutation(
+    forgeAPI.categories.remove.input({ id: item.id }),
+    { action: 'delete', queryKey: forgeAPI.categories.list.key, onSuccess: () => onCancelSelect() }
   )
 
   const handleEdit = useCallback(() => {

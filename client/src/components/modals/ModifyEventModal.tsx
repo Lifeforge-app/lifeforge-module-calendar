@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useForm, useWatch } from 'react-hook-form'
 import z from 'zod'
+
+import { useForgeMutation } from '@lifeforge/api'
 
 import {
   DateField,
@@ -12,8 +14,7 @@ import {
   RRuleField,
   TextAreaField,
   TextField,
-  createDefaultValues,
-  toast
+  createDefaultValues
 } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
@@ -52,24 +53,17 @@ function ModifyEventModal({
   }
   onClose: () => void
 }) {
-  const queryClient = useQueryClient()
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
-  const mutation = useMutation(
-    (type === 'create'
-      ? forgeAPI.events.create
-      : forgeAPI.events.update.input({
-          id: initialData?.id?.split('-')[0] || ''
-        })
-    ).mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: forgeAPI.key })
-      },
-      onError: error => {
-        toast.error(`Error modifying event: ${error.message}`)
-      }
-    })
+  const createMutation = useForgeMutation(
+    forgeAPI.events.create,
+    { action: 'create', queryKey: forgeAPI.key }
+  )
+
+  const updateMutation = useForgeMutation(
+    forgeAPI.events.update.input({ id: initialData?.id?.split('-')[0] || '' }),
+    { action: 'update', queryKey: forgeAPI.key }
   )
 
   const form = useForm({
@@ -120,7 +114,10 @@ function ModifyEventModal({
       submissionConfig={{
         handler: async data => {
           if (data.type === 'recurring') {
-            await mutation.mutateAsync({
+            await (type === 'create'
+              ? createMutation
+              : updateMutation
+            ).mutateAsync({
               title: data.title!,
               category: data.category!,
               calendar: data.calendar!,
@@ -131,7 +128,10 @@ function ModifyEventModal({
               rrule: data.rrule ?? ''
             })
           } else {
-            await mutation.mutateAsync({
+            await (type === 'create'
+              ? createMutation
+              : updateMutation
+            ).mutateAsync({
               title: data.title!,
               category: data.category!,
               calendar: data.calendar!,

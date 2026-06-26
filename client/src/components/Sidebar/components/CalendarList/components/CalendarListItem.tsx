@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForgeMutation } from '@lifeforge/api'
 import { useCallback, useMemo } from 'react'
 
 import {
@@ -28,21 +28,15 @@ function CalendarListItem({
   onCancelSelect: () => void
   modifiable?: boolean
 }) {
-  const queryClient = useQueryClient()
   const { open } = useModalStore()
 
-  const deleteMutation = useMutation(
-    forgeAPI.calendars.remove.input({ id: item.id }).mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.calendars.list.key
-        })
-        queryClient.invalidateQueries({
-          queryKey: forgeAPI.events.key
-        })
-        onCancelSelect()
-      }
-    })
+  const deleteMutation = useForgeMutation(
+    forgeAPI.calendars.remove.input({ id: item.id }),
+    {
+      action: 'delete',
+      queryKey: [forgeAPI.calendars.list.key, forgeAPI.events.key],
+      onSuccess: () => onCancelSelect()
+    }
   )
 
   const handleEdit = useCallback(() => {

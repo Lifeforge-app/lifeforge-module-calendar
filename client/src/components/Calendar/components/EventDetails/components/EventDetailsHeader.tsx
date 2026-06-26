@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useCallback } from 'react'
 
+import { useForgeMutation } from '@lifeforge/api'
 import { useModuleTranslation } from '@lifeforge/localization'
 import {
   ConfirmationModal,
@@ -10,7 +11,6 @@ import {
   Flex,
   Icon,
   Text,
-  toast,
   useModalStore
 } from '@lifeforge/ui'
 
@@ -72,21 +72,11 @@ function EventDetailsHeader({
     })
   }, [event])
 
-  const deleteMutation = useMutation(
-    forgeAPI.events.remove
-      .input({
-        id: event.id.split('-')[0] ?? ''
-      })
-      .mutationOptions({
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: forgeAPI.key })
-        },
-        onError: () => {
-          toast.error(
-            'An error occurred while deleting the event. Please try again later.'
-          )
-        }
-      })
+  const deleteMutation = useForgeMutation(
+    forgeAPI.events.remove.input({
+      id: event.id.split('-')[0] ?? ''
+    }),
+    { action: 'delete', queryKey: forgeAPI.key }
   )
 
   const handleDelete = useCallback(() => {
