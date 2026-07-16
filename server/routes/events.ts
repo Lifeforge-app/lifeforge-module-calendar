@@ -317,7 +317,7 @@ export const scanImage = forge
               }
             ]
           }
-        ]
+        ] as any
       })
 
       if (!aiResponse) {
