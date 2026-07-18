@@ -14,7 +14,11 @@
 }
 
 .rbc-today {
-  background-color: color-mix(in srgb, var(--color-custom-500) 10%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-custom-500) 10%,
+    transparent
+  ) !important;
 }
 
 .rbc-now {
@@ -74,11 +78,19 @@
 }
 
 .rbc-selected-cell {
-  background-color: color-mix(in srgb, var(--color-bg-500) 20%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-500) 20%,
+    transparent
+  ) !important;
 }
 
 .rbc-selected-cell.rbc-today {
-  background-color: color-mix(in srgb, var(--color-custom-700) 20%, transparent) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--color-custom-700) 20%,
+    transparent
+  ) !important;
 }
 
 .rbc-event-label {

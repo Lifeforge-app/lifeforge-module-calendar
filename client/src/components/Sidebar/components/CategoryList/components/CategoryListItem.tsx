@@ -1,6 +1,6 @@
-import { useForgeMutation } from '@lifeforge/api'
 import { useCallback, useMemo } from 'react'
 
+import { useForgeMutation } from '@lifeforge/api'
 import { ConfirmationModal, SidebarItem, useModalStore } from '@lifeforge/ui'
 
 import type { CalendarCategory } from '@/components/Calendar'
@@ -26,7 +26,11 @@ function CategoryListItem({
 
   const deleteMutation = useForgeMutation(
     forgeAPI.categories.remove.input({ id: item.id }),
-    { action: 'delete', queryKey: forgeAPI.categories.list.key, onSuccess: () => onCancelSelect() }
+    {
+      action: 'delete',
+      queryKey: forgeAPI.categories.list.key,
+      onSuccess: () => onCancelSelect()
+    }
   )
 
   const handleEdit = useCallback(() => {

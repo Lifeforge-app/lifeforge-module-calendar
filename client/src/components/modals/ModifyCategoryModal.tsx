@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 
 import { useForgeMutation } from '@lifeforge/api'
-
 import {
   ColorField,
   FormModal,
@@ -37,14 +36,19 @@ function ModifyCategoryModal({
   }
   onClose: () => void
 }) {
-  const createMutation = useForgeMutation(
-    forgeAPI.categories.create,
-    { action: 'create', queryKey: forgeAPI.categories.list.key, onSuccess: () => onClose() }
-  )
+  const createMutation = useForgeMutation(forgeAPI.categories.create, {
+    action: 'create',
+    queryKey: forgeAPI.categories.list.key,
+    onSuccess: () => onClose()
+  })
 
   const updateMutation = useForgeMutation(
     forgeAPI.categories.update.input({ id: initialData?.id || '' }),
-    { action: 'update', queryKey: forgeAPI.categories.list.key, onSuccess: () => onClose() }
+    {
+      action: 'update',
+      queryKey: forgeAPI.categories.list.key,
+      onSuccess: () => onClose()
+    }
   )
 
   const form = useForm({
@@ -61,7 +65,9 @@ function ModifyCategoryModal({
       form={form}
       submissionConfig={{
         handler: data => {
-          (type === 'create' ? createMutation : updateMutation).mutateAsync(data)
+          ;(type === 'create' ? createMutation : updateMutation).mutateAsync(
+            data
+          )
         },
         template: type
       }}

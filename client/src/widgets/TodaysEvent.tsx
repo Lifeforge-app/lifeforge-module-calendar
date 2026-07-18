@@ -59,8 +59,7 @@ function EventItem({
       (event.category.startsWith('_')
         ? internalCategoryMap[event.category]
         : categories.find(category => category.id === event.category)) as
-        | CalendarCategory
-        | undefined,
+        CalendarCategory | undefined,
     [event.category, categories, internalCategoryMap]
   )
 

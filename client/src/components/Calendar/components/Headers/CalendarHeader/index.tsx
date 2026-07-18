@@ -50,7 +50,14 @@ function CalendarHeader({
 
   return (
     <>
-      <Flex align="end" gap="sm" justify="between" mb="md" minWidth="0" width="100%">
+      <Flex
+        align="end"
+        gap="sm"
+        justify="between"
+        mb="md"
+        minWidth="0"
+        width="100%"
+      >
         <NavigationControl label={label} onNavigate={onNavigate} />
         <Flex display={{ base: 'none', md: 'flex' }} gap="sm">
           <Button

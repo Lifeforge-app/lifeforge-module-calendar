@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 
 import { useForgeMutation } from '@lifeforge/api'
-
 import {
   Button,
   ColorField,
@@ -40,14 +39,12 @@ function ModifyCalendarModal({
   onClose: () => void
 }) {
   const { open } = useModalStore()
-  const createMutation = useForgeMutation(
-    forgeAPI.calendars.create,
-    {
-      action: 'create',
-      queryKey: [forgeAPI.calendars.list.key, forgeAPI.events.key],
-      onSuccess: () => onClose()
-    }
-  )
+
+  const createMutation = useForgeMutation(forgeAPI.calendars.create, {
+    action: 'create',
+    queryKey: [forgeAPI.calendars.list.key, forgeAPI.events.key],
+    onSuccess: () => onClose()
+  })
 
   const updateMutation = useForgeMutation(
     forgeAPI.calendars.update.input({ id: initialData?.id || '' }),
@@ -74,7 +71,9 @@ function ModifyCalendarModal({
       form={form}
       submissionConfig={{
         handler: data => {
-          (type === 'create' ? createMutation : updateMutation).mutateAsync(data)
+          ;(type === 'create' ? createMutation : updateMutation).mutateAsync(
+            data
+          )
         },
         template: type
       }}

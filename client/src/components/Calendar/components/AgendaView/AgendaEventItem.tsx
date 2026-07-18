@@ -16,8 +16,7 @@ function AgendaEventItem({ event }: { event: CalendarEvent }) {
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {
       return (internalCategoryMap[event.category] ?? {}) as
-        | CalendarCategory
-        | undefined
+        CalendarCategory | undefined
     }
 
     return categoriesQuery.data?.find(

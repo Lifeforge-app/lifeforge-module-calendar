@@ -5,7 +5,6 @@ import { useForm, useWatch } from 'react-hook-form'
 import z from 'zod'
 
 import { useForgeMutation } from '@lifeforge/api'
-
 import {
   DateField,
   FormModal,
@@ -56,10 +55,10 @@ function ModifyEventModal({
   const calendarsQuery = useQuery(forgeAPI.calendars.list.queryOptions())
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
 
-  const createMutation = useForgeMutation(
-    forgeAPI.events.create,
-    { action: 'create', queryKey: forgeAPI.key }
-  )
+  const createMutation = useForgeMutation(forgeAPI.events.create, {
+    action: 'create',
+    queryKey: forgeAPI.key
+  })
 
   const updateMutation = useForgeMutation(
     forgeAPI.events.update.input({ id: initialData?.id?.split('-')[0] || '' }),
@@ -114,9 +113,8 @@ function ModifyEventModal({
       submissionConfig={{
         handler: async data => {
           if (data.type === 'recurring') {
-            await (type === 'create'
-              ? createMutation
-              : updateMutation
+            await (
+              type === 'create' ? createMutation : updateMutation
             ).mutateAsync({
               title: data.title!,
               category: data.category!,
@@ -128,9 +126,8 @@ function ModifyEventModal({
               rrule: data.rrule ?? ''
             })
           } else {
-            await (type === 'create'
-              ? createMutation
-              : updateMutation
+            await (
+              type === 'create' ? createMutation : updateMutation
             ).mutateAsync({
               title: data.title!,
               category: data.category!,

@@ -16,7 +16,9 @@ import ModifyEventModal from './ModifyEventModal'
 
 function ScanImageModal({ onClose }: { onClose: () => void }) {
   const { open } = useModalStore()
-  const [fileValue, setFileValue] = useState<{ type: 'empty' } | { type: 'upload'; file: File; preview?: string }>({ type: 'empty' })
+  const [fileValue, setFileValue] = useState<
+    { type: 'empty' } | { type: 'upload'; file: File; preview?: string }
+  >({ type: 'empty' })
 
   async function handleSubmit() {
     if (fileValue.type === 'empty') {
@@ -65,8 +67,12 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
           application: ['pdf']
         }}
         value={fileValue}
-        onChange={(value) => {
-          setFileValue(value as { type: 'empty' } | { type: 'upload'; file: File; preview?: string })
+        onChange={value => {
+          setFileValue(
+            value as
+              | { type: 'empty' }
+              | { type: 'upload'; file: File; preview?: string }
+          )
         }}
         onImageRemoved={() => {
           setFileValue({ type: 'empty' })
