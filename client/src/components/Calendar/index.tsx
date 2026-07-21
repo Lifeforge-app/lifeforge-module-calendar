@@ -2,7 +2,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { Calendar, type Components, dayjsLocalizer } from 'react-big-calendar'
-import withDragAndDrop, {
+import type withDragAndDropType from 'react-big-calendar/lib/addons/dragAndDrop'
+import dragAndDropModule, {
   type EventInteractionArgs
 } from 'react-big-calendar/lib/addons/dragAndDrop'
 
@@ -32,6 +33,16 @@ export type CalendarCalendar = InferOutput<
 >[number]
 
 const localizer = dayjsLocalizer(dayjs)
+
+const dragAndDropModuleUnknown = dragAndDropModule as unknown as {
+  default?: {
+    default?: unknown
+  }
+}
+
+const withDragAndDrop = (dragAndDropModuleUnknown.default?.default ||
+  dragAndDropModuleUnknown.default ||
+  dragAndDropModule) as typeof withDragAndDropType
 
 const DnDCalendar = withDragAndDrop(Calendar)
 
