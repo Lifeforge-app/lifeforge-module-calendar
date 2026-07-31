@@ -16,6 +16,7 @@ import ModifyEventModal from './ModifyEventModal'
 
 function ScanImageModal({ onClose }: { onClose: () => void }) {
   const { open } = useModalStore()
+
   const [fileValue, setFileValue] = useState<
     { type: 'empty' } | { type: 'upload'; file: File; preview?: string }
   >({ type: 'empty' })
@@ -73,9 +74,6 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
               | { type: 'empty' }
               | { type: 'upload'; file: File; preview?: string }
           )
-        }}
-        onImageRemoved={() => {
-          setFileValue({ type: 'empty' })
         }}
       />
       <Button
