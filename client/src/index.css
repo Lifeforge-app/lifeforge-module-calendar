@@ -109,20 +109,13 @@
 .rbc-day-slot .rbc-time-slot,
 .rbc-agenda-view table.rbc-agenda-table thead > tr > th,
 .rbc-agenda-view table.rbc-agenda-table,
-.rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {
+.rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td,
+.rbc-agenda-table tr {
   border-color: var(--color-bg-200);
-}
 
-:is(.dark) .rbc-calendar *:not(button, a),
-:is(.dark) .rbc-day-bg + .rbc-day-bg,
-:is(.dark) .rbc-month-row + .rbc-month-row,
-:is(.dark) .rbc-time-content > * + * > *,
-:is(.dark) .rbc-timeslot-group,
-:is(.dark) .rbc-day-slot .rbc-time-slot,
-:is(.dark) .rbc-agenda-view table.rbc-agenda-table thead > tr > th,
-:is(.dark) .rbc-agenda-view table.rbc-agenda-table,
-:is(.dark) .rbc-agenda-view table.rbc-agenda-table tbody > tr > td + td {
-  border-color: var(--color-bg-800);
+  :is(.dark) & {
+    border-color: var(--color-bg-800);
+  }
 }
 
 .rbc-current-time-indicator {

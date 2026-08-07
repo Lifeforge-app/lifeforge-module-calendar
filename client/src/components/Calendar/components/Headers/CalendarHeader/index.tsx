@@ -90,15 +90,15 @@ function CalendarHeader({
             />
           </ContextMenu>
         </Flex>
+        <Button
+          display={{ base: 'flex', xl: 'none' }}
+          icon="tabler:menu"
+          variant="plain"
+          onClick={() => {
+            setIsSidebarOpen(true)
+          }}
+        />
       </Flex>
-      <Button
-        display={{ base: 'flex', xl: 'none' }}
-        icon="tabler:menu"
-        variant="plain"
-        onClick={() => {
-          setIsSidebarOpen(true)
-        }}
-      />
       <ViewSelector currentView={currentView} onView={onView} />
     </>
   )

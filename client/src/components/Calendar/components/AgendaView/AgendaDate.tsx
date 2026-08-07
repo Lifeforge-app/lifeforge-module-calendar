@@ -1,13 +1,15 @@
+import { Flex, Text } from '@lifeforge/ui'
+
 function AgendaDate({ label }: { label: string }) {
   return (
-    <div className="p-2">
-      <div className="text-lg font-semibold">
+    <Flex direction="column" p="sm">
+      <Text size="lg" weight="semibold">
         {label.split(' ').slice(1).join(' ')}
-      </div>
-      <div className="text-bg-500 text-sm font-semibold">
+      </Text>
+      <Text color="muted" size="sm" weight="semibold">
         {label.split(' ')[0]}
-      </div>
-    </div>
+      </Text>
+    </Flex>
   )
 }
 

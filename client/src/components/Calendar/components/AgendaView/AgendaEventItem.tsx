@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-import { Card } from '@lifeforge/ui'
+import { Box, Card } from '@lifeforge/ui'
 
 import EventDetails from '@/components/Calendar/components/EventDetails'
 import { useInternalCategories } from '@/hooks/useInternalCategories'
@@ -26,13 +26,26 @@ function AgendaEventItem({ event }: { event: CalendarEvent }) {
 
   return (
     <Card
-      className="relative min-w-96 pl-9 before:absolute before:top-4 before:left-4 before:h-[calc(100%-2rem)] before:w-1 before:rounded-full before:bg-(--bg-color)"
-      style={{
-        // @ts-expect-error - CSS variable
-        '--bg-color': category?.color ?? ''
-      }}
+      align="center"
+      direction="row"
+      gap="md"
+      minWidth="24rem"
+      position="relative"
     >
-      <EventDetails category={category} event={event} />
+      <Box
+        height="calc(100% - 2rem)"
+        left="1rem"
+        position="absolute"
+        r="full"
+        style={{
+          backgroundColor: category?.color
+        }}
+        top="1rem"
+        width="0.25rem"
+      />
+      <Box flex="1" ml="xl">
+        <EventDetails category={category} event={event} />
+      </Box>
     </Card>
   )
 }
