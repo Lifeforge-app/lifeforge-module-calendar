@@ -185,7 +185,9 @@ export default async function getEvents({
 
   allEvents.push(...formattedIcalEvents)
 
-  const externalEventGetterFiles = fs.globSync('../modules/*/server/events.ts')
+  const externalEventGetterFiles = fs.globSync(
+    '../../modules/*/server/events.ts'
+  )
 
   logging.debug(
     `Found ${externalEventGetterFiles.length} external event getter files`
@@ -202,8 +204,8 @@ export default async function getEvents({
       })
 
       allEvents.push(...entries)
-    } catch {
-      logging.warn('Cannot import external events from ' + file)
+    } catch (err) {
+      logging.warn(`Cannot import external events from ${file}: ${err}`)
     }
   }
 
