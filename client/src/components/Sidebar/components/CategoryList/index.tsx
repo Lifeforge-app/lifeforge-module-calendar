@@ -19,7 +19,7 @@ function CategoryList({
   setSelectedCategory
 }: {
   selectedCategory: string | null
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>
+  setSelectedCategory: (value: string | null) => void
 }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
   const { values: internalCategories } = useInternalCategories()

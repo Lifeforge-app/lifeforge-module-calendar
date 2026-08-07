@@ -15,7 +15,7 @@ import {
 } from '@lifeforge/ui'
 
 import ModifyEventModal from '@/components/modals/ModifyEventModal'
-import { useCalendarStore } from '@/hooks/useCalendarStore'
+import useFilter from '@/hooks/useFilter'
 import { forgeAPI } from '@/manifest'
 
 import type { CalendarCategory, CalendarEvent } from '../../..'
@@ -32,7 +32,7 @@ function EventDetailsHeader({
   const { t } = useModuleTranslation()
   const { open } = useModalStore()
   const queryClient = useQueryClient()
-  const { start, end } = useCalendarStore()
+  const { start, end } = useFilter()
 
   const addExceptionMutation = useMutation(
     forgeAPI.events.addException

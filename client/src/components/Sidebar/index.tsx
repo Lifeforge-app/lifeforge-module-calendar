@@ -11,9 +11,9 @@ function Sidebar({
   setSelectedCategory
 }: {
   selectedCalendar: string | null
-  setSelectedCalendar: React.Dispatch<React.SetStateAction<string | null>>
+  setSelectedCalendar: (value: string | null) => void
   selectedCategory: string | null
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>
+  setSelectedCategory: (value: string | null) => void
 }) {
   return (
     <SidebarWrapper>

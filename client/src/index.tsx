@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { parseAsString, useQueryState } from 'nuqs'
 import { useCallback, useEffect } from 'react'
 
 import {
@@ -21,11 +20,12 @@ import Sidebar from './components/Sidebar'
 import ModifyEventModal from './components/modals/ModifyEventModal'
 import ScanImageModal from './components/modals/ScanImageModal'
 import { useCalendarStore } from './hooks/useCalendarStore'
+import useFilter from './hooks/useFilter'
 import './index.css'
 
 function CalendarModule() {
   const { open } = useModalStore()
-  const { start, end } = useCalendarStore()
+  const { start, end, category, calendar, updateFilter } = useFilter()
 
   const rawEventsQuery = useQuery(
     forgeAPI.events.getByDateRange
@@ -34,16 +34,6 @@ function CalendarModule() {
         end
       })
       .queryOptions()
-  )
-
-  const [selectedCategory, setSelectedCategory] = useQueryState(
-    'category',
-    parseAsString.withDefault('')
-  )
-
-  const [selectedCalendar, setSelectedCalendar] = useQueryState(
-    'calendar',
-    parseAsString.withDefault('')
   )
 
   const handleScanImageModalOpen = useCallback(() => {
@@ -67,18 +57,18 @@ function CalendarModule() {
       <ModuleHeader />
       <LayoutWithSidebar>
         <Sidebar
-          selectedCalendar={selectedCalendar}
-          selectedCategory={selectedCategory}
-          setSelectedCalendar={setSelectedCalendar}
-          setSelectedCategory={setSelectedCategory}
+          selectedCalendar={calendar || null}
+          selectedCategory={category || null}
+          setSelectedCalendar={value => updateFilter('calendar', value ?? '')}
+          setSelectedCategory={value => updateFilter('category', value ?? '')}
         />
         <ContentWrapperWithSidebar>
           <Scrollbar>
             <Box height="100%" pb="xl" pr="md" width="100%">
               <CalendarComponent
                 events={rawEventsQuery.data ?? []}
-                selectedCalendar={selectedCalendar}
-                selectedCategory={selectedCategory}
+                selectedCalendar={calendar}
+                selectedCategory={category}
               />
             </Box>
           </Scrollbar>

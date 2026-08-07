@@ -1,7 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
-import { Calendar, type Components, dayjsLocalizer } from 'react-big-calendar'
+import {
+  Calendar,
+  type Components,
+  type View,
+  dayjsLocalizer
+} from 'react-big-calendar'
 import type withDragAndDropType from 'react-big-calendar/lib/addons/dragAndDrop'
 import dragAndDropModule, {
   type EventInteractionArgs
@@ -10,7 +15,7 @@ import dragAndDropModule, {
 import type { InferOutput } from '@lifeforge/api'
 import { useModalStore } from '@lifeforge/ui'
 
-import { useCalendarStore } from '@/hooks/useCalendarStore'
+import useFilter from '@/hooks/useFilter'
 import { forgeAPI } from '@/manifest'
 
 import ModifyEventModal from '../modals/ModifyEventModal'
@@ -71,7 +76,21 @@ function CalendarComponent({
 
   const { open } = useModalStore()
   const queryClient = useQueryClient()
-  const { start, end, setStart, setEnd } = useCalendarStore()
+  const { start, end, view, date, updateFilter } = useFilter()
+  const calendarDate = useMemo(() => dayjs(date).toDate(), [date])
+
+  const handleNavigate = useCallback(
+    (newDate: Date) => {
+      updateFilter('date', dayjs(newDate).format('YYYY-MM-DD'))
+    },
+    [updateFilter]
+  )
+  const handleView = useCallback(
+    (newView: View) => {
+      updateFilter('view', newView)
+    },
+    [updateFilter]
+  )
 
   const filteredEvents = useMemo(
     () =>
@@ -93,26 +112,20 @@ function CalendarComponent({
           }
     ) => {
       if (Array.isArray(range)) {
-        const start = dayjs(range[0]).format('YYYY-MM-DD')
-
-        const end = dayjs(range[range.length - 1]).format('YYYY-MM-DD')
-
-        setStart(start)
-        setEnd(end)
+        const startVal = dayjs(range[0]).format('YYYY-MM-DD')
+        const endVal = dayjs(range[range.length - 1]).format('YYYY-MM-DD')
+        updateFilter({ start: startVal, end: endVal })
 
         return
       }
 
       if (range.start && range.end) {
-        const start = dayjs(range.start).format('YYYY-MM-DD')
-
-        const end = dayjs(range.end).format('YYYY-MM-DD')
-
-        setStart(start)
-        setEnd(end)
+        const startVal = dayjs(range.start).format('YYYY-MM-DD')
+        const endVal = dayjs(range.end).format('YYYY-MM-DD')
+        updateFilter({ start: startVal, end: endVal })
       }
     },
-    []
+    [updateFilter]
   )
 
   const calendarComponents = useMemo(
@@ -197,13 +210,17 @@ function CalendarComponent({
     <DnDCalendar
       selectable
       components={calendarComponents}
+      date={calendarDate}
       draggableAccessor={draggableAccessor as (event: object) => boolean}
       events={filteredEvents}
       localizer={localizer}
+      view={view}
       onEventDrop={handleEventChange}
       onEventResize={handleEventChange}
+      onNavigate={handleNavigate}
       onRangeChange={handleDateRangeChange}
       onSelectSlot={handleSelectSlot}
+      onView={handleView}
     />
   )
 }
