@@ -18,7 +18,6 @@ function EventItemTooltip({
 
   return createPortal(
     <Box
-      asChild
       shadow
       bg={{ base: 'bg-50', dark: 'bg-800' }}
       r="md"

@@ -116,7 +116,13 @@ function EventDetailsHeader({
         </Text>
       </Flex>
       {!event.category.startsWith('_') && editable && (
-        <ContextMenu>
+        <ContextMenu
+          componentProps={{
+            button: {
+              p: 'sm'
+            }
+          }}
+        >
           <ContextMenuItem
             icon="tabler:pencil"
             label="Edit"
