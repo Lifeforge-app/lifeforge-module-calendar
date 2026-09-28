@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router'
-import { Tooltip } from 'react-tooltip'
 
 import type { InferOutput } from '@lifeforge/api'
 import type { WidgetConfig } from '@lifeforge/configs'
@@ -14,6 +13,7 @@ import {
   EmptyStateScreen,
   Flex,
   Icon,
+  ReactTooltip,
   Scrollbar,
   Text,
   Widget,
@@ -104,7 +104,7 @@ function EventItem({
             r="md"
             zIndex={{ base: sidebarExpanded ? '-1' : '0', lg: '0' }}
           >
-            <Tooltip
+            <ReactTooltip
               clickable
               noArrow
               openOnClick
@@ -128,7 +128,7 @@ function EventItem({
                   event={event}
                 />
               </Box>
-            </Tooltip>
+            </ReactTooltip>
           </Box>,
           document.getElementById('app') ?? document.body
         ) as React.ReactPortal

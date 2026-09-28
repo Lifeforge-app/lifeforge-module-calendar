@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import { createPortal } from 'react-dom'
-import { Tooltip } from 'react-tooltip'
 
-import { Box, useMainSidebarState } from '@lifeforge/ui'
+import { Box, ReactTooltip, useMainSidebarState } from '@lifeforge/ui'
 
 import { type CalendarCategory, type CalendarEvent } from '../../../index.js'
 import EventDetails from '../../EventDetails/index.js'
@@ -23,7 +22,7 @@ function EventItemTooltip({
       r="md"
       zIndex={{ base: sidebarExpanded ? '-1' : '0', lg: '0' }}
     >
-      <Tooltip
+      <ReactTooltip
         clickable
         noArrow
         openOnClick
@@ -42,7 +41,7 @@ function EventItemTooltip({
         >
           <EventDetails category={category} event={event} />
         </Box>
-      </Tooltip>
+      </ReactTooltip>
     </Box>,
     document.getElementById('app') ?? document.body
   ) as React.ReactPortal

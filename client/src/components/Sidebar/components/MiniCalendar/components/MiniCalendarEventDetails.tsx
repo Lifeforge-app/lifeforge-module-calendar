@@ -1,8 +1,7 @@
 import dayjs from 'dayjs'
 import { createPortal } from 'react-dom'
-import { Tooltip } from 'react-tooltip'
 
-import { Box, Flex, Icon, Text, vars } from '@lifeforge/ui'
+import { Box, Flex, Icon, ReactTooltip, Text, vars } from '@lifeforge/ui'
 
 import type {
   CalendarCalendar,
@@ -34,7 +33,7 @@ function MiniCalendarEventDetails({
       r="md"
       style={{ zIndex: 9999 }}
     >
-      <Tooltip
+      <ReactTooltip
         noArrow
         id={`calendar-tooltip-${index}`}
         opacity={1}
@@ -109,7 +108,7 @@ function MiniCalendarEventDetails({
             })}
           </Flex>
         </Box>
-      </Tooltip>
+      </ReactTooltip>
     </Box>,
     document.body
   )
