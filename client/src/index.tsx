@@ -4,7 +4,6 @@ import { useCallback, useEffect } from 'react'
 import {
   Box,
   ContentWrapperWithSidebar,
-  ContextMenu,
   ContextMenuItem,
   FAB,
   LayoutWithSidebar,
@@ -74,16 +73,7 @@ function CalendarModule() {
           </Scrollbar>
         </ContentWrapperWithSidebar>
       </LayoutWithSidebar>
-      <ContextMenu
-        buttonComponent={<FAB position="static" visibilityBreakpoint="md" />}
-        styles={{
-          wrapper: {
-            position: 'fixed',
-            bottom: '1.5em',
-            right: '1.5em'
-          }
-        }}
-      >
+      <FAB visibilityBreakpoint="md">
         <ContextMenuItem
           icon="tabler:photo"
           label="Scan from Image"
@@ -94,7 +84,7 @@ function CalendarModule() {
           label="Input Manually"
           onClick={handleCreateEvent}
         />
-      </ContextMenu>
+      </FAB>
     </>
   )
 }
