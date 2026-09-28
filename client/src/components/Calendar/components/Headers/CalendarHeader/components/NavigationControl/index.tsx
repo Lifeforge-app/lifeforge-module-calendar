@@ -39,7 +39,7 @@ function NavigationControl({
           <DateRangeLabel label={label} onNavigate={onNavigate} />
         </Text>
         {isEventLoading && (
-          <Icon color="muted" icon="svg-spinners:ring-resize" size="1.25rem" />
+          <Icon color="muted" icon="svg-spinners:ring-resize" />
         )}
       </Flex>
     </Flex>

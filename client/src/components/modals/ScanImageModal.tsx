@@ -55,7 +55,6 @@ function ScanImageModal({ onClose }: { onClose: () => void }) {
   return (
     <Box minWidth="50vw">
       <ModalHeader
-        hasAI
         icon="tabler:scan"
         title="scanImage"
         onClose={onClose}
