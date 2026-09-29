@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { Link } from 'react-router'
 
 import type { InferOutput } from '@lifeforge/api'
@@ -13,13 +12,12 @@ import {
   EmptyStateScreen,
   Flex,
   Icon,
-  ReactTooltip,
   Scrollbar,
   Text,
+  Tooltip,
   Widget,
   WithQuery,
-  surface,
-  useMainSidebarState
+  surface
 } from '@lifeforge/ui'
 
 import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
@@ -34,7 +32,6 @@ function EventItem({
   categories: InferOutput<typeof forgeAPI.categories.list>
   event: CalendarEvent
 }) {
-  const { sidebarExpanded } = useMainSidebarState()
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   const { map: internalCategoryMap } = useInternalCategories()
@@ -95,44 +92,23 @@ function EventItem({
           </Flex>
         </Flex>
       </Card>
-      {
-        createPortal(
-          <Box
-            asChild
-            shadow
-            bg={{ base: 'bg-50', dark: 'bg-800' }}
-            r="md"
-            zIndex={{ base: sidebarExpanded ? '-1' : '0', lg: '0' }}
-          >
-            <ReactTooltip
-              clickable
-              noArrow
-              openOnClick
-              id={`calendar-event-${event.id}`}
-              opacity={1}
-              place="bottom-start"
-              positionStrategy="fixed"
-            >
-              <Box
-                maxHeight="24rem"
-                overflowY="auto"
-                position="relative"
-                style={{
-                  whiteSpace: 'normal',
-                  width: `${width - 32}px`
-                }}
-              >
-                <EventDetails
-                  category={targetCategory}
-                  editable={false}
-                  event={event}
-                />
-              </Box>
-            </ReactTooltip>
-          </Box>,
-          document.getElementById('app') ?? document.body
-        ) as React.ReactPortal
-      }
+      <Tooltip
+        clickable
+        openOnClick
+        contentProps={{
+          maxWidth: undefined,
+          minWidth: undefined,
+          width: `${width - 32}px`
+        }}
+        id={`calendar-event-${event.id}`}
+        place="bottom-start"
+      >
+        <EventDetails
+          category={targetCategory}
+          editable={false}
+          event={event}
+        />
+      </Tooltip>
     </>
   )
 }
