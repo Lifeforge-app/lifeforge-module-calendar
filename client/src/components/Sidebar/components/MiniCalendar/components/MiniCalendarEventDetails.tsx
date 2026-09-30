@@ -72,9 +72,8 @@ function MiniCalendarEventDetails({
                 top="50%"
                 width="0.25rem"
               />
-              {category && <Icon color="muted" icon={category.icon ?? ''} />}
+              {category && <Icon icon={category.icon ?? ''} />}
               <Text
-                color="muted"
                 decoration={event.is_strikethrough ? 'line-through' : undefined}
               >
                 {event.title}
