@@ -1,7 +1,10 @@
+import { useEffect } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { useForm, useWatch } from 'react-hook-form'
+import { RRule, datetime } from 'rrule'
 import z from 'zod'
 
 import { useForgeMutation } from '@lifeforge/api'
@@ -41,6 +44,45 @@ const schema = z.object({
   end: z.date().optional(),
   rrule: z.string().optional()
 })
+
+function getRRuleStart(rrule: string) {
+  const match = /DTSTART:(\d{8}T\d{6}Z)/.exec(rrule)
+
+  if (!match) return null
+
+  return dayjs(
+    match[1].replace('T', ' ').replace('Z', ''),
+    'YYYYMMDD HHmmss'
+  ).toDate()
+}
+
+function setRRuleStart(rrule: string, start: Date) {
+  const [rule, duration] = rrule.split('||')
+
+  const startDate = dayjs(start)
+
+  const startString = `DTSTART:${startDate.format('YYYYMMDD[T]HHmmss')}Z`
+
+  const rruleLine = /RRULE:.*/.exec(rule)?.[0]
+
+  const ruleBody = rruleLine
+    ? `${startString}\n${rruleLine}`
+    : new RRule({
+        dtstart: datetime(
+          startDate.year(),
+          startDate.month() + 1,
+          startDate.date(),
+          startDate.hour(),
+          startDate.minute(),
+          startDate.second()
+        ),
+        freq: RRule.YEARLY,
+        bymonth: 1,
+        bymonthday: 1
+      }).toString()
+
+  return duration ? `${ruleBody}||${duration}` : ruleBody
+}
 
 function ModifyEventModal({
   data: { type, initialData },
@@ -106,6 +148,35 @@ function ModifyEventModal({
   const eventType = useWatch({ control: form.control, name: 'type' })
 
   const isRecurring = eventType === 'recurring'
+
+  useEffect(() => {
+    const { unsubscribe } = form.watch((_, { name }) => {
+      if (name !== 'type') return
+
+      if (form.getValues('type') === 'recurring') {
+        const start = form.getValues('start')
+
+        if (start) {
+          form.setValue(
+            'rrule',
+            setRRuleStart(form.getValues('rrule') ?? '', start)
+          )
+        }
+      } else {
+        const rrule = form.getValues('rrule')
+
+        if (rrule) {
+          const start = getRRuleStart(rrule)
+
+          if (start) {
+            form.setValue('start', start)
+          }
+        }
+      }
+    })
+
+    return unsubscribe
+  }, [form])
 
   return (
     <FormModal
