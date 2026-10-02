@@ -46,7 +46,6 @@
     "@lifeforge/configs": "workspace:*",
     "@lifeforge/federation": "workspace:*",
     "@lifeforge/localization": "workspace:*",
-    "@lifeforge/pocketbase": "workspace:*",
     "@lifeforge/server-utils": "workspace:*",
     "@lifeforge/ui": "workspace:*"
   }
