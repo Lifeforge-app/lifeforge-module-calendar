@@ -44,6 +44,7 @@
   "peerDependencies": {
     "@lifeforge/api": "workspace:*",
     "@lifeforge/configs": "workspace:*",
+    "@lifeforge/drizzle": "workspace:*",
     "@lifeforge/federation": "workspace:*",
     "@lifeforge/localization": "workspace:*",
     "@lifeforge/server-utils": "workspace:*",

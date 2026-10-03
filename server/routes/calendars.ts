@@ -1,51 +1,57 @@
+import { asc, eq } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-orm/zod'
 import ical from 'node-ical'
 import z from 'zod'
 
 import forge from '../forge'
 import { ICalSyncService } from '../functions/icalSyncing'
-import calendarSchemas from '../schema'
+import { calendars } from '../schema.drizzle'
+
+const calendarDto = createSelectSchema(calendars)
 
 export const list = forge
   .query({
     description: 'Get all calendars',
     output: {
-      OK: z.array(calendarSchemas.calendars)
+      OK: z.array(calendarDto)
     }
   })
-  .callback(async ({ pb, response }) =>
-    response.ok(
-      await pb.getFullList
-        .collection('calendars')
-        .sort(['link', 'name'])
-        .execute()
-    )
-  )
+  .callback(async ({ db, response }) => {
+    const rows = await db
+      .select()
+      .from(calendars)
+      .orderBy(asc(calendars.link), asc(calendars.name))
+
+    return response.ok(rows)
+  })
 
 export const getById = forge
   .query({
     description: 'Get a specific calendar by ID',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), calendars)
       })
     },
-    existenceCheck: {
-      query: { id: 'calendars' }
-    },
     output: {
-      OK: calendarSchemas.calendars,
-      NOT_FOUND: true
+      OK: calendarDto
     }
   })
-  .callback(async ({ pb, query: { id }, response }) =>
-    response.ok(await pb.getOne.collection('calendars').id(id).execute())
-  )
+  .callback(async ({ db, query: { id }, response }) => {
+    const row = await db.query.calendars.findFirst({ where: { id } })
+
+    if (!row) {
+      return response.notFound()
+    }
+
+    return response.ok(row)
+  })
 
 export const create = forge
   .mutation({
     description: 'Create a new calendar with optional ICS sync',
     input: {
-      body: calendarSchemas.calendars
+      body: calendarDto
         .pick({
           name: true,
           color: true
@@ -55,21 +61,21 @@ export const create = forge
         })
     },
     output: {
-      CREATED: calendarSchemas.calendars
+      CREATED: calendarDto
     }
   })
-  .callback(async ({ pb, body, response }) => {
-    const newCalendar = await pb.create
-      .collection('calendars')
-      .data({
+  .callback(async ({ db, body, response }) => {
+    const [newCalendar] = await db
+      .insert(calendars)
+      .values({
         name: body.name,
         color: body.color,
-        link: body.icsUrl ? body.icsUrl : null
+        link: body.icsUrl ?? ''
       })
-      .execute()
+      .returning()
 
     if (body.icsUrl) {
-      const icalService = new ICalSyncService(pb)
+      const icalService = new ICalSyncService(db)
 
       await icalService
         .syncCalendar(newCalendar.id, body.icsUrl)
@@ -84,45 +90,41 @@ export const update = forge
     description: 'Update calendar name and color',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), calendars)
       }),
-      body: calendarSchemas.calendars.pick({
+      body: calendarDto.pick({
         name: true,
         color: true
       })
     },
-    existenceCheck: {
-      query: { id: 'calendars' }
-    },
     output: {
-      OK: calendarSchemas.calendars,
-      NOT_FOUND: true
+      OK: calendarDto
     }
   })
-  .callback(async ({ pb, query: { id }, body, response }) =>
-    response.ok(
-      await pb.update.collection('calendars').id(id).data(body).execute()
-    )
-  )
+  .callback(async ({ db, query: { id }, body, response }) => {
+    const [updated] = await db
+      .update(calendars)
+      .set(body)
+      .where(eq(calendars.id, id))
+      .returning()
+
+    return response.ok(updated)
+  })
 
 export const remove = forge
   .mutation({
     description: 'Delete a calendar',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), calendars)
       })
     },
-    existenceCheck: {
-      query: { id: 'calendars' }
-    },
     output: {
-      NO_CONTENT: true,
-      NOT_FOUND: true
+      NO_CONTENT: true
     }
   })
-  .callback(async ({ pb, query: { id }, response }) => {
-    await pb.getOne.collection('calendars').id(id).execute()
+  .callback(async ({ db, query: { id }, response }) => {
+    await db.delete(calendars).where(eq(calendars.id, id))
 
     return response.noContent()
   })

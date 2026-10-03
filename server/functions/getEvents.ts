@@ -1,29 +1,56 @@
+import { ne } from 'drizzle-orm'
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js'
+import { type BuiltModuleSchema, scopeDbForModule } from '@lifeforge/drizzle'
+import {
+  ModuleRegistry,
+  type CoreContext
+} from '@lifeforge/server-utils'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import fs from 'fs'
 import path from 'path'
 
+import type { CalendarSchema } from '../forge'
+import { calendars } from '../schema.drizzle'
 import { ICalSyncService } from './icalSyncing'
 
 dayjs.extend(utc)
 
+type CalendarDb = PostgresJsDatabase<BuiltModuleSchema<CalendarSchema>>
+
+export interface AggregatedEvent {
+  id: string
+  type: 'single' | 'recurring'
+  start: string
+  end: string
+  rrule?: string
+  title: string
+  calendar: string
+  category: string
+  description: string
+  location: string
+  location_coords: { lat: number; lon: number }
+  reference_link: string
+  is_strikethrough?: boolean
+}
+
 export default async function getEvents({
-  pb,
+  db,
   start,
   end,
   logging
 }: {
-  pb: any
+  db: CalendarDb
   start: string
   end: string
-  logging: any
-}) {
-  const calendarsWithIcs = await pb.getFullList
-    .collection('calendars')
-    .filter([{ field: 'link', operator: '!=', value: '' }])
-    .execute()
+  logging: CoreContext['logging']
+}): Promise<AggregatedEvent[]> {
+  const calendarsWithIcs = await db
+    .select()
+    .from(calendars)
+    .where(ne(calendars.link, ''))
 
-  const syncService = new ICalSyncService(pb)
+  const syncService = new ICalSyncService(db)
 
   for (const calendar of calendarsWithIcs) {
     if (await syncService.shouldSync(calendar.id)) {
@@ -32,76 +59,56 @@ export default async function getEvents({
     }
   }
 
-  const startMoment = dayjs(start).startOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const startMoment = dayjs(start).startOf('day').toDate()
 
-  const endMoment = dayjs(end).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+  const endMoment = dayjs(end).endOf('day').toDate()
 
-  const allEvents: Array<{
-    id: string
-    type: 'single' | 'recurring'
-    start: string
-    end: string
-    rrule?: string
-    title: string
-    calendar: string
-    category: string
-    description: string
-    location: string
-    location_coords: { lat: number; lon: number }
-    reference_link: string
-    is_strikethrough?: boolean
-  }> = []
+  const allEvents: AggregatedEvent[] = []
 
   // Get single events
-  const singleCalendarEvents = (await pb.getFullList
-    .collection('events_single')
-    .filter([
-      {
-        combination: '||',
-        filters: [
-          { field: 'start', operator: '>=', value: startMoment },
-          { field: 'end', operator: '>=', value: startMoment }
-        ]
-      },
-      {
-        combination: '||',
-        filters: [
-          { field: 'start', operator: '<=', value: endMoment },
-          { field: 'end', operator: '<=', value: endMoment }
-        ]
-      }
-    ])
-    .expand({ base_event: 'events' })
-    .execute()) as any[]
+  const singleCalendarEvents = await db.query.eventsSingle.findMany({
+    where: {
+      AND: [
+        { OR: [{ start: { gte: startMoment } }, { end: { gte: startMoment } }] },
+        { OR: [{ start: { lte: endMoment } }, { end: { lte: endMoment } }] }
+      ]
+    },
+    with: { base: true }
+  })
 
-  singleCalendarEvents.forEach(event => {
-    const baseEvent = event.expand!.base_event!
+  for (const event of singleCalendarEvents) {
+    const baseEvent = event.base
+
+    if (!baseEvent) continue
 
     allEvents.push({
       id: baseEvent.id,
       type: 'single',
-      start: event.start,
-      end: event.end,
+      start: event.start ? event.start.toISOString() : '',
+      end: event.end ? event.end.toISOString() : '',
       title: baseEvent.title,
-      calendar: baseEvent.calendar,
-      category: baseEvent.category,
+      calendar: baseEvent.calendar ?? '',
+      category: baseEvent.category ?? '',
       description: baseEvent.description,
       location: baseEvent.location,
-      location_coords: baseEvent.location_coords,
+      location_coords: baseEvent.location_coords ?? { lat: 0, lon: 0 },
       reference_link: baseEvent.reference_link
     })
-  })
+  }
 
   // Get recurring events
-  const recurringCalendarEvents = await pb.getFullList
-    .collection('events_recurring')
-    .expand({ base_event: 'events' })
-    .execute()
+  const recurringCalendarEvents = await db.query.eventsRecurring.findMany(
+    {
+      with: { base: true }
+    }
+  )
 
   const { RRule } = await import('rrule')
 
   for (const event of recurringCalendarEvents) {
-    const baseEvent = event.expand!.base_event!
+    const baseEvent = event.base
+
+    if (!baseEvent) continue
 
     const parsed = RRule.fromString(event.recurring_rule)
 
@@ -137,53 +144,42 @@ export default async function getEvents({
         end: eventEnd,
         rrule: `${event.recurring_rule}||duration_amt=${event.duration_amount};duration_unit=${event.duration_unit}`,
         title: baseEvent.title,
-        calendar: baseEvent.calendar,
-        category: baseEvent.category,
+        calendar: baseEvent.calendar ?? '',
+        category: baseEvent.category ?? '',
         description: baseEvent.description,
         location: baseEvent.location,
-        location_coords: baseEvent.location_coords,
+        location_coords: baseEvent.location_coords ?? { lat: 0, lon: 0 },
         reference_link: baseEvent.reference_link
       })
     }
   }
 
-  const icalEvents = (await pb.getFullList
-    .collection('events_ical')
-    .filter([
-      {
-        combination: '||',
-        filters: [
-          { field: 'start', operator: '>=', value: startMoment },
-          { field: 'end', operator: '>=', value: startMoment }
-        ]
-      },
-      {
-        combination: '||',
-        filters: [
-          { field: 'start', operator: '<=', value: endMoment },
-          { field: 'end', operator: '<=', value: endMoment }
-        ]
-      }
-    ])
-    .expand({ calendar: 'calendars' })
-    .execute()) as any[]
+  // Get iCal events
+  const icalEvents = await db.query.eventsIcal.findMany({
+    where: {
+      AND: [
+        { OR: [{ start: { gte: startMoment } }, { end: { gte: startMoment } }] },
+        { OR: [{ start: { lte: endMoment } }, { end: { lte: endMoment } }] }
+      ]
+    },
+    with: { calendar_info: true }
+  })
 
-  // Convert iCal events to your format
-  const formattedIcalEvents = icalEvents.map(event => ({
-    id: `ical-${event.id}`,
-    type: 'single' as const,
-    start: event.start,
-    end: event.end,
-    title: event.title,
-    calendar: event.expand!.calendar!.id,
-    category: '_external',
-    description: event.description,
-    location: event.location,
-    location_coords: { lat: 0, lon: 0 },
-    reference_link: ''
-  }))
-
-  allEvents.push(...formattedIcalEvents)
+  for (const event of icalEvents) {
+    allEvents.push({
+      id: `ical-${event.id}`,
+      type: 'single',
+      start: event.start ? event.start.toISOString() : '',
+      end: event.end ? event.end.toISOString() : '',
+      title: event.title,
+      calendar: event.calendar_info?.id ?? '',
+      category: '_external',
+      description: event.description,
+      location: event.location,
+      location_coords: { lat: 0, lon: 0 },
+      reference_link: ''
+    })
+  }
 
   const externalEventGetterFiles = fs.globSync(
     '../../modules/*/server/events.ts'
@@ -195,12 +191,21 @@ export default async function getEvents({
 
   for (const file of externalEventGetterFiles) {
     try {
-      const { default: getEvents } = await import(path.resolve(file))
+      const { default: getExternalEvents } = await import(path.resolve(file))
 
-      const entries = await getEvents({
-        pb,
-        start: startMoment,
-        end: endMoment
+      const getterModuleId = file
+        .replace(/\\/g, '/')
+        .match(/\/modules\/([^/]+)\//)?.[1]
+
+      const entries = await getExternalEvents({
+        db: scopeDbForModule(
+          db,
+          getterModuleId
+            ? ModuleRegistry.getModuleKeyMap(getterModuleId)
+            : undefined
+        ),
+        start: dayjs(startMoment).format('YYYY-MM-DD HH:mm:ss'),
+        end: dayjs(endMoment).format('YYYY-MM-DD HH:mm:ss')
       })
 
       allEvents.push(...entries)

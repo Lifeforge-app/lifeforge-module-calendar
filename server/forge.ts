@@ -1,5 +1,9 @@
-import { createForge } from '@lifeforge/server-utils'
+import { createForgeContractBuilder } from '@lifeforge/server-utils'
 
-const forge = createForge({})
+import * as schema from './schema.drizzle'
+
+export type CalendarSchema = typeof schema
+
+const forge = createForgeContractBuilder({ schema })
 
 export default forge

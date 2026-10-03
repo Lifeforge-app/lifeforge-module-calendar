@@ -1,64 +1,68 @@
+import { asc, eq } from 'drizzle-orm'
+import { createSelectSchema } from 'drizzle-orm/zod'
 import z from 'zod'
 
 import forge from '../forge'
-import calendarSchemas from '../schema'
+import { categories } from '../schema.drizzle'
+
+const categoryDto = createSelectSchema(categories)
 
 export const list = forge
   .query({
     description: 'Get all event categories',
     output: {
-      OK: z.array(calendarSchemas.categories)
+      OK: z.array(categoryDto)
     }
   })
-  .callback(async ({ pb, response }) =>
-    response.ok(
-      await pb.getFullList.collection('categories').sort(['name']).execute()
-    )
-  )
+  .callback(async ({ db, response }) => {
+    const rows = await db
+      .select()
+      .from(categories)
+      .orderBy(asc(categories.name))
+
+    return response.ok(rows)
+  })
 
 export const getById = forge
   .query({
     description: 'Get a specific event category by ID',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), categories)
       })
     },
-    existenceCheck: {
-      query: { id: 'categories' }
-    },
     output: {
-      OK: calendarSchemas.categories,
-      NOT_FOUND: true
+      OK: categoryDto
     }
   })
-  .callback(async ({ pb, query: { id }, response }) =>
-    response.ok(await pb.getOne.collection('categories').id(id).execute())
-  )
+  .callback(async ({ db, query: { id }, response }) => {
+    const row = await db.query.categories.findFirst({ where: { id } })
+
+    if (!row) {
+      return response.notFound()
+    }
+
+    return response.ok(row)
+  })
 
 export const create = forge
   .mutation({
     description: 'Create a new event category',
     input: {
-      body: calendarSchemas.categories.omit({
-        id: true,
-        collectionId: true,
-        collectionName: true
-      })
+      body: categoryDto.omit({ id: true })
     },
     output: {
-      CREATED: calendarSchemas.categories,
-      BAD_REQUEST: z.string()
+      CREATED: categoryDto
     }
   })
-  .callback(async ({ pb, body, response }) => {
+  .callback(async ({ db, body, response }) => {
     if (body.name.startsWith('_')) {
       return response.badRequest('Category name cannot start with _')
     }
 
-    return response.created(
-      await pb.create.collection('categories').data(body).execute()
-    )
+    const [created] = await db.insert(categories).values(body).returning()
+
+    return response.created(created)
   })
 
 export const update = forge
@@ -66,31 +70,26 @@ export const update = forge
     description: 'Update event category details',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), categories)
       }),
-      body: calendarSchemas.categories.omit({
-        id: true,
-        collectionId: true,
-        collectionName: true
-      })
-    },
-    existenceCheck: {
-      query: { id: 'categories' }
+      body: categoryDto.omit({ id: true })
     },
     output: {
-      OK: calendarSchemas.categories,
-      BAD_REQUEST: z.string(),
-      NOT_FOUND: true
+      OK: categoryDto
     }
   })
-  .callback(async ({ pb, query: { id }, body, response }) => {
+  .callback(async ({ db, query: { id }, body, response }) => {
     if (body.name.startsWith('_')) {
       return response.badRequest('Category name cannot start with _')
     }
 
-    return response.ok(
-      await pb.update.collection('categories').id(id).data(body).execute()
-    )
+    const [updated] = await db
+      .update(categories)
+      .set(body)
+      .where(eq(categories.id, id))
+      .returning()
+
+    return response.ok(updated)
   })
 
 export const remove = forge
@@ -98,19 +97,15 @@ export const remove = forge
     description: 'Delete an event category',
     input: {
       query: z.object({
-        id: z.string()
+        id: forge.existsIn(z.string(), categories)
       })
     },
-    existenceCheck: {
-      query: { id: 'categories' }
-    },
     output: {
-      NO_CONTENT: true,
-      NOT_FOUND: true
+      NO_CONTENT: true
     }
   })
-  .callback(async ({ pb, query: { id }, response }) => {
-    await pb.delete.collection('categories').id(id).execute()
+  .callback(async ({ db, query: { id }, response }) => {
+    await db.delete(categories).where(eq(categories.id, id))
 
     return response.noContent()
   })
