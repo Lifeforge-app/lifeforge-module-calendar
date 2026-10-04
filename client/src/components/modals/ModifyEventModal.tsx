@@ -103,7 +103,9 @@ function ModifyEventModal({
   })
 
   const updateMutation = useForgeMutation(
-    forgeAPI.events.update.input({ id: initialData?.id?.split('-')[0] || '' }),
+    forgeAPI.events.update.input({
+      id: initialData?.id?.replace(/-\d{8}_\d{2}:\d{2}:\d{2}$/, '') || ''
+    }),
     { action: 'update', queryKey: forgeAPI.key }
   )
 

@@ -37,7 +37,7 @@ function EventDetailsHeader({
   const addExceptionMutation = useMutation(
     forgeAPI.events.addException
       .input({
-        id: event.id.split('-')[0] ?? '',
+        id: event.id.replace(/-\d{8}_\d{2}:\d{2}:\d{2}$/, ''),
         date: dayjs(event.start).toISOString()
       })
       .mutationOptions({
@@ -74,7 +74,7 @@ function EventDetailsHeader({
 
   const deleteMutation = useForgeMutation(
     forgeAPI.events.remove.input({
-      id: event.id.split('-')[0] ?? ''
+      id: event.id.replace(/-\d{8}_\d{2}:\d{2}:\d{2}$/, '')
     }),
     { action: 'delete', queryKey: forgeAPI.key }
   )
