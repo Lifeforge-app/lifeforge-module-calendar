@@ -34,15 +34,9 @@ export default function useFilter() {
     value?: (typeof filter)[K]
   ) {
     if (typeof keyOrUpdates === 'string') {
-      setFilter(prev => ({
-        ...prev,
-        [keyOrUpdates]: value
-      }))
+      setFilter({ [keyOrUpdates]: value } as Partial<typeof filter>)
     } else {
-      setFilter(prev => ({
-        ...prev,
-        ...keyOrUpdates
-      }))
+      setFilter(keyOrUpdates)
     }
   }
 
