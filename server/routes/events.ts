@@ -178,11 +178,7 @@ export const getById = forge
     }
   })
   .callback(async ({ db, query: { id }, response }) => {
-    const row = await db.query.events.findFirst({ where: { id } })
-
-    if (!row) {
-      return response.notFound()
-    }
+    const row = (await db.query.events.findFirst({ where: { id } }))!
 
     return response.ok(serializeEvent(row))
   })
@@ -498,11 +494,7 @@ export const update = forge
       }
     }
 
-    const row = await db.query.events.findFirst({ where: { id } })
-
-    if (!row) {
-      return response.notFound()
-    }
+    const row = (await db.query.events.findFirst({ where: { id } }))!
 
     return response.ok(serializeEvent(row))
   })
