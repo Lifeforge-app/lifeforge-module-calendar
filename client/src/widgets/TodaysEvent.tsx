@@ -102,6 +102,7 @@ function EventItem({
         }}
         id={`calendar-event-${event.id}`}
         place="bottom-start"
+        zIndex="9999"
       >
         <EventDetails
           category={targetCategory}

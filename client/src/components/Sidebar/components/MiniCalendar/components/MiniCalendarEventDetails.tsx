@@ -28,6 +28,7 @@ function MiniCalendarEventDetails({
       id={`calendar-tooltip-${index}`}
       place="bottom"
       positionStrategy="absolute"
+      zIndex="9999"
     >
       <Flex align="start" gap="2xl" justify="between">
         <Text
