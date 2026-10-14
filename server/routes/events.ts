@@ -107,7 +107,7 @@ function parseDuration(rrule: string):
 
   const amount = matched[1]
 
-  const unit = matched[2]
+  const unit = matched[2] ?? ''
 
   if (
     Number.isNaN(Number(amount)) ||
@@ -117,7 +117,7 @@ function parseDuration(rrule: string):
   }
 
   return {
-    rule: rrule.split('||')[0],
+    rule: rrule.split('||')[0] ?? '',
     amount: Number(amount),
     unit: unit as 'hour' | 'year' | 'month' | 'day' | 'week'
   }
@@ -212,6 +212,10 @@ export const create = forge
         type: eventData.type
       })
       .returning()
+
+    if (!baseEvent) {
+      return response.badRequest('Failed to create event')
+    }
 
     if (eventData.type === 'recurring') {
       const parsed = parseDuration(eventData.rrule)
@@ -362,10 +366,14 @@ export const scanImage = forge
         )
 
         if (locationInGoogleMap.length > 0) {
-          finalResponse.location = locationInGoogleMap[0].name
-          finalResponse.location_coords = {
-            lat: locationInGoogleMap[0].location.latitude,
-            lon: locationInGoogleMap[0].location.longitude
+          const matchedLocation = locationInGoogleMap[0]
+
+          if (matchedLocation) {
+            finalResponse.location = matchedLocation.name
+            finalResponse.location_coords = {
+              lat: matchedLocation.location.latitude,
+              lon: matchedLocation.location.longitude
+            }
           }
         }
       }

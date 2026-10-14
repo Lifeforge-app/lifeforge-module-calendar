@@ -58,6 +58,10 @@ export const create = forge
 
     const [created] = await db.insert(categories).values(body).returning()
 
+    if (!created) {
+      return response.badRequest('Failed to create category')
+    }
+
     return response.created(created)
   })
 
@@ -84,6 +88,10 @@ export const update = forge
       .set(body)
       .where(eq(categories.id, id))
       .returning()
+
+    if (!updated) {
+      return response.notFound()
+    }
 
     return response.ok(updated)
   })

@@ -70,6 +70,10 @@ export const create = forge
       })
       .returning()
 
+    if (!newCalendar) {
+      return response.badRequest('Failed to create calendar')
+    }
+
     if (body.icsUrl) {
       const icalService = new ICalSyncService(db)
 
@@ -103,6 +107,10 @@ export const update = forge
       .set(body)
       .where(eq(calendars.id, id))
       .returning()
+
+    if (!updated) {
+      return response.notFound()
+    }
 
     return response.ok(updated)
   })
