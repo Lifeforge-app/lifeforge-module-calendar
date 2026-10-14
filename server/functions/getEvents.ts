@@ -103,7 +103,9 @@ export default async function getEvents({
     }
   )
 
-  const { RRule } = await import('rrule')
+  const { RRule } = (
+    (await import('rrule')) as unknown as { default: typeof import('rrule') }
+  ).default
 
   for (const event of recurringCalendarEvents) {
     const baseEvent = event.base
