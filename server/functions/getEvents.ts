@@ -103,9 +103,14 @@ export default async function getEvents({
     }
   )
 
-  const { RRule } = (
-    (await import('rrule')) as unknown as { default: typeof import('rrule') }
-  ).default
+  // `rrule` ships both an ESM and a CJS build. In development the ESM build is
+  // resolved (named exports only), while the production build resolves the CJS
+  // build and relies on the interop default export.
+  const rruleModule = (await import('rrule')) as typeof import('rrule') & {
+    default?: typeof import('rrule')
+  }
+
+  const { RRule } = rruleModule.RRule ? rruleModule : rruleModule.default!
 
   for (const event of recurringCalendarEvents) {
     const baseEvent = event.base
