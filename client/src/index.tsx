@@ -62,8 +62,8 @@ function CalendarModule() {
           setSelectedCategory={value => updateFilter('category', value ?? '')}
         />
         <ContentWrapperWithSidebar>
-          <Scrollbar>
-            <Box height="100%" pb="xl" pr="md" width="100%">
+          <Scrollbar pb={{ base: 'xl', md: 'none' }}>
+            <Box height="100%" pr="md" width="100%">
               <CalendarComponent
                 events={rawEventsQuery.data ?? []}
                 selectedCalendar={calendar}
