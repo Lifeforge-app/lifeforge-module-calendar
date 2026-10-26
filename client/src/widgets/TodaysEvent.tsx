@@ -13,6 +13,7 @@ import {
   Flex,
   Icon,
   Scrollbar,
+  Stack,
   Text,
   Tooltip,
   Widget,
@@ -20,7 +21,7 @@ import {
   surface
 } from '@lifeforge/ui'
 
-import type { CalendarCategory, CalendarEvent } from '@/components/Calendar'
+import type { CalendarEvent } from '@/components/Calendar'
 import EventDetails from '@/components/Calendar/components/EventDetails'
 import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
@@ -53,10 +54,9 @@ function EventItem({
 
   const targetCategory = useMemo(
     () =>
-      (event.category.startsWith('_')
+      event.category.startsWith('_')
         ? internalCategoryMap[event.category]
-        : categories.find(category => category.id === event.category)) as
-        CalendarCategory | undefined,
+        : categories.find(category => category.id === event.category),
     [event.category, categories, internalCategoryMap]
   )
 
@@ -150,7 +150,7 @@ export default function TodaysEvent() {
                 )
 
                 return targetEvents.length > 0 ? (
-                  <Flex as="ul" direction="column" gap="xs" pr="sm">
+                  <Stack as="ul" direction="column" pr="sm">
                     {targetEvents.map(event => (
                       <EventItem
                         key={event.id}
@@ -158,7 +158,7 @@ export default function TodaysEvent() {
                         event={event}
                       />
                     ))}
-                  </Flex>
+                  </Stack>
                 ) : (
                   <Flex centered flex="1">
                     <EmptyStateScreen
