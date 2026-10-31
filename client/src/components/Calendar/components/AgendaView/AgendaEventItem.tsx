@@ -7,7 +7,7 @@ import EventDetails from '@/components/Calendar/components/EventDetails'
 import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
-import type { CalendarCategory, CalendarEvent } from '../..'
+import type { CalendarEvent } from '../..'
 
 function AgendaEventItem({ event }: { event: CalendarEvent }) {
   const categoriesQuery = useQuery(forgeAPI.categories.list.queryOptions())
@@ -15,8 +15,7 @@ function AgendaEventItem({ event }: { event: CalendarEvent }) {
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {
-      return (internalCategoryMap[event.category] ?? {}) as
-        CalendarCategory | undefined
+      return (internalCategoryMap[event.category] ?? {})
     }
 
     return categoriesQuery.data?.find(

@@ -34,7 +34,7 @@ export default function useFilter() {
     value?: (typeof filter)[K]
   ) {
     if (typeof keyOrUpdates === 'string') {
-      setFilter({ [keyOrUpdates]: value } as Partial<typeof filter>)
+      setFilter({ [keyOrUpdates]: value })
     } else {
       setFilter(keyOrUpdates)
     }

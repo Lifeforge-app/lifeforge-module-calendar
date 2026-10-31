@@ -134,7 +134,7 @@ function CalendarComponent({
         return <CalendarHeader {...props} />
       },
       event: ({ event }: { event: object }) => {
-        return <EventItem event={event as CalendarEvent} />
+        return <EventItem event={event} />
       },
       week: {
         header: WeekHeader
@@ -142,7 +142,7 @@ function CalendarComponent({
       agenda: {
         date: AgendaDate as (props: unknown) => React.ReactElement,
         event: ({ event }: { event: object }) => (
-          <AgendaEventItem event={event as CalendarEvent} />
+          <AgendaEventItem event={event} />
         )
       }
     }),

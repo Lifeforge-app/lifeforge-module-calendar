@@ -189,9 +189,9 @@ function ModifyEventModal({
             await (
               type === 'create' ? createMutation : updateMutation
             ).mutateAsync({
-              title: data.title!,
-              category: data.category!,
-              calendar: data.calendar!,
+              title: data.title,
+              category: data.category,
+              calendar: data.calendar,
               location: data.location ?? undefined,
               reference_link: data.reference_link ?? '',
               description: data.description ?? '',
@@ -202,9 +202,9 @@ function ModifyEventModal({
             await (
               type === 'create' ? createMutation : updateMutation
             ).mutateAsync({
-              title: data.title!,
-              category: data.category!,
-              calendar: data.calendar!,
+              title: data.title,
+              category: data.category,
+              calendar: data.calendar,
               location: data.location ?? undefined,
               reference_link: data.reference_link ?? '',
               description: data.description ?? '',
@@ -220,7 +220,7 @@ function ModifyEventModal({
         icon: {
           create: 'tabler:plus',
           update: 'tabler:pencil'
-        }[type!],
+        }[type],
         loading: categoriesQuery.isLoading || calendarsQuery.isLoading,
 
         title: `event.${type}`,

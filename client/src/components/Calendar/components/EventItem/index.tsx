@@ -4,7 +4,7 @@ import { memo, useMemo } from 'react'
 import { useInternalCategories } from '@/hooks/useInternalCategories'
 import { forgeAPI } from '@/manifest'
 
-import type { CalendarCategory, CalendarEvent } from '../../index.js'
+import type { CalendarEvent } from '../../index.js'
 import EventItemButton from './components/EventItemButton.js'
 import EventItemTooltip from './components/EventItemTooltip.js'
 
@@ -15,7 +15,7 @@ function EventItem({ event }: { event: CalendarEvent }) {
 
   const category = useMemo(() => {
     if (event.category.startsWith('_')) {
-      return internalCategoryMap[event.category] as CalendarCategory | undefined
+      return internalCategoryMap[event.category]
     }
 
     return categoriesQuery.data?.find(
